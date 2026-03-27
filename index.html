@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dynasty HQ">
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="manifest.json">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap');
 .loading-screen{position:fixed;inset:0;z-index:9999;background:var(--g1);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
@@ -655,7 +655,7 @@ function buildTicker(){
   D.champions.forEach(c=>{tk+='<div class="tki">\u{1F3C6} <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
   D.standings_2025.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
   tk+='<div class="tki">\u{1F4A5} BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
-  tk+='<div class="tki">'+D.trades.length+' TRADES completed across 2024-2025</div><div class="tks">\u25C6</div>';'+'<div class="tks">◆</div>';
+  tk+='<div class="tki">'+D.trades.length+' TRADES completed across 2024-2025</div><div class="tks">\u25C6</div>';
   if(D.contracts){
     let fa2026=0;
     Object.keys(D.contracts).forEach(owner=>{
@@ -666,7 +666,6 @@ function buildTicker(){
     const mostYears=D.contracts[mostYearsOwner].reduce((s,c)=>s+c.years_2025,0);
     tk+='<div class="tki">'+mostYearsOwner+' most committed with <span class="hl">'+mostYears+'</span> total years</div><div class="tks">◆</div>';
   }
-  tk+='
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
 }
 // ═══ POWER RANKINGS ═══
@@ -1104,7 +1103,7 @@ function renderContracts(){
     const expiring=contracts.filter(c=>c.years_2025===1).length;
     const exempts=contracts.filter(c=>c.exemption_year).length;
     
-    h+='<div class="ct-team"><div class="ct-team-hdr" onclick="this.nextElementSibling.classList.toggle('open')">'+av(team.roster_id,40)+'<div class="ct-team-hdr-info"><div class="ct-team-name">'+team.team_name+'</div><div class="ct-team-stats"><span>'+years+' yrs</span><span>'+contracts.length+' players</span><span>'+expiring+' expiring</span></div></div></div>';
+    h+='<div class="ct-team"><div class="ct-team-hdr" onclick="this.nextElementSibling.classList.toggle(&quot;open&quot;)">'+av(team.roster_id,40)+'<div class="ct-team-hdr-info"><div class="ct-team-name">'+team.team_name+'</div><div class="ct-team-stats"><span>'+years+' yrs</span><span>'+contracts.length+' players</span><span>'+expiring+' expiring</span></div></div></div>';
     h+='<div class="ct-team-body">';
     
     const byPos={QB:[],RB:[],WR:[],TE:[],DEF:[]};
@@ -1208,7 +1207,7 @@ window.addEventListener('DOMContentLoaded',init);
 // ═══ SERVICE WORKER REGISTRATION ═══
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
       .then(reg => { console.log('SW registered'); reg.update(); })
       .catch(err => console.log('SW failed:', err));
   });
