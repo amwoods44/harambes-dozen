@@ -565,6 +565,12 @@ body{padding-bottom:48px}
 .bracket-yr-sel{display:flex;gap:4px;margin-bottom:12px}
 .bracket-yr-btn{font-family:var(--fd);font-size:12px;font-weight:700;padding:6px 16px;border-radius:4px;border:1px solid var(--g4);background:var(--g2);color:var(--t3);cursor:pointer;transition:all .2s}
 .bracket-yr-btn:hover,.bracket-yr-btn.active{background:var(--a);color:#000;border-color:var(--a)}
+/* ═══ SUB-TAB BUTTONS ═══ */
+.tab-sub{display:flex;gap:6px;flex-wrap:wrap}
+.tab-sub-btn{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:1px;padding:8px 18px;border-radius:6px;border:1px solid var(--g4);background:var(--g2);color:var(--t3);cursor:pointer;transition:all .2s cubic-bezier(.22,1,.36,1);text-transform:uppercase}
+.tab-sub-btn:hover:not(.active){border-color:var(--a);color:var(--t1)}
+.tab-sub-btn.active{background:var(--a);color:#000;border-color:var(--a);box-shadow:0 0 12px rgba(16,185,129,.25)}
+.tab-sub-btn:active{transform:scale(.94)}
 .bracket-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0}
 .bracket-slot{background:var(--g2);border:1px solid var(--g4);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
 .bracket-slot.winner{border-color:var(--y);background:rgba(245,158,11,.06)}
