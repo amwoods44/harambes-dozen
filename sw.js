@@ -1,5 +1,5 @@
 const CACHE_NAME = 'harambes-dozen-v3';
-const ASSETS = ['/', '/manifest.json'];
+const ASSETS = ['./', 'manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -44,4 +44,4 @@ self.addEventListener('fetch', e => {
       return res;
     }))
   );
-});
+});LW
