@@ -122,30 +122,30 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
 .panel{padding-bottom:32px}
 @keyframes wipeIn{from{clip-path:inset(0 100% 0 0);opacity:.8}to{clip-path:inset(0);opacity:1}}
 /* ═══ POWER RANKING CARDS ═══ */
-.plist{display:flex;flex-direction:column;gap:6px}
-.pcard{display:grid;grid-template-columns:56px 4px 1fr auto;align-items:center;background:var(--g2);border:1px solid var(--g5);border-radius:6px;overflow:hidden;transition:all .2s;cursor:pointer}
+.plist{display:flex;flex-direction:column;gap:8px}
+.pcard{display:grid;grid-template-columns:64px 5px 1fr auto;align-items:center;background:var(--g2);border:1px solid var(--g5);border-radius:6px;overflow:hidden;transition:all .2s;cursor:pointer}
 .pcard:hover{border-color:var(--g6);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.pcard.r1{border-color:rgba(204,0,0,.3)}
-.pcard.r1 .prk{background:var(--a)}
-.pcard.r2{border-color:rgba(245,158,11,.15)}
-.pcard.r2 .prk{background:var(--yd)}
-.pcard.r3{border-color:rgba(59,130,246,.15)}
-.pcard.r3 .prk{background:var(--blu)}
+.pcard.r1{border-color:rgba(204,0,0,.45);background:linear-gradient(135deg,var(--g2) 55%,rgba(204,0,0,.07))}
+.pcard.r1 .prk{background:linear-gradient(180deg,#cc0000,#880000)}
+.pcard.r2{border-color:rgba(212,160,23,.35);background:linear-gradient(135deg,var(--g2) 55%,rgba(212,160,23,.05))}
+.pcard.r2 .prk{background:linear-gradient(180deg,#d4a017,#9a7212)}
+.pcard.r3{border-color:rgba(59,130,246,.3);background:linear-gradient(135deg,var(--g2) 55%,rgba(59,130,246,.05))}
+.pcard.r3 .prk{background:linear-gradient(180deg,#3b82f6,#1e4db0)}
 .prk{background:var(--g4);display:flex;align-items:center;justify-content:center;padding:14px 0;align-self:stretch}
 .prk-n{font-family:var(--fd);font-size:34px;font-weight:800;min-width:32px;text-align:center;font-variant-numeric:tabular-nums}
-.pcbar{width:4px;align-self:stretch}
-.pinfo{padding:16px 20px;display:flex;align-items:center;gap:16px;min-width:0}
+.pcbar{width:5px;align-self:stretch}
+.pinfo{padding:18px 20px;display:flex;align-items:center;gap:16px;min-width:0}
 .p-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--g5);background:var(--g3);flex-shrink:0}
 .p-avatar-init{width:56px;height:56px;border-radius:50%;border:2px solid var(--g5);background:var(--g3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:22px;font-weight:800;color:var(--t4)}
 .pname{font-family:var(--fd);font-size:26px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .psub{font-family:var(--fd);font-size:12px;font-weight:400;color:var(--t3);margin-top:2px;letter-spacing:1px}
-.pnums{display:flex;align-items:center;gap:24px;padding:16px 24px;flex-shrink:0}
+.pnums{display:flex;align-items:center;gap:24px;padding:18px 28px;flex-shrink:0}
 .pnb{text-align:center;min-width:40px}
 .pnv{font-family:var(--fd);font-weight:800;line-height:1;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
-.pnv.w{font-size:38px;min-width:48px;display:inline-block;text-align:center}
+.pnv.w{font-size:42px;min-width:52px;display:inline-block;text-align:center;letter-spacing:-1px}
 .pnv.p{font-size:20px;color:var(--y)}
 .pnv.s{font-size:16px}
-.pnl{font-family:var(--fd);font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-top:4px}
+.pnl{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-top:5px}
 .parr{padding:0 12px;font-size:11px;color:var(--t4);transition:transform .3s}
 .pcard.open .parr{transform:rotate(180deg)}
 .pdet{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,1,.36,1);grid-column:1/-1}
@@ -168,11 +168,20 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
 .age-y{color:var(--grn)}.age-p{color:var(--y)}.age-v{color:var(--red-t)}
 .pl-starter{background:rgba(23,177,105,.06);border-left:3px solid rgba(23,177,105,.6)}
 /* ═══ TIER LABELS ═══ */
-.tier{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 14px;border-radius:6px;margin:18px 0 8px;display:inline-block}
-.tier-1{color:var(--a);background:rgba(204,0,0,.08);border:1px solid rgba(204,0,0,.2)}
-.tier-2{color:var(--blu);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2)}
-.tier-3{color:var(--y);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)}
-.tier-4{color:var(--red-t);background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}
+.tier{display:flex;align-items:center;gap:14px;font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin:28px 0 10px;white-space:nowrap}
+.tier::before,.tier::after{content:'';flex:1;height:1px}
+.tier-1{color:var(--a)}
+.tier-1::before{background:linear-gradient(90deg,transparent,rgba(204,0,0,.5))}
+.tier-1::after{background:linear-gradient(90deg,rgba(204,0,0,.5),transparent)}
+.tier-2{color:var(--blu)}
+.tier-2::before{background:linear-gradient(90deg,transparent,rgba(59,130,246,.4))}
+.tier-2::after{background:linear-gradient(90deg,rgba(59,130,246,.4),transparent)}
+.tier-3{color:var(--y)}
+.tier-3::before{background:linear-gradient(90deg,transparent,rgba(245,158,11,.4))}
+.tier-3::after{background:linear-gradient(90deg,rgba(245,158,11,.4),transparent)}
+.tier-4{color:var(--red-t)}
+.tier-4::before{background:linear-gradient(90deg,transparent,rgba(239,68,68,.4))}
+.tier-4::after{background:linear-gradient(90deg,rgba(239,68,68,.4),transparent)}
 /* ═══ NARRATIVE ═══ */
 .narrative{background:var(--g2);border:1px solid var(--g5);border-radius:8px;padding:20px;margin-top:16px;position:relative;overflow:hidden}
 .narrative::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--a)}
@@ -264,10 +273,10 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
   .sstrip{grid-template-columns:repeat(3,1fr)}
   .sstrip .ss:nth-child(n+4){display:none}
   .rec-grid{grid-template-columns:repeat(2,1fr)}
-  .pcard{grid-template-columns:42px 3px 1fr auto}
+  .pcard{grid-template-columns:50px 4px 1fr auto}
   .prk-n{font-size:22px}
-  .pnums{gap:10px;padding:12px 10px}
-  .pnv.w{font-size:24px}
+  .pnums{gap:10px;padding:12px 12px}
+  .pnv.w{font-size:26px}
   .pk-grid{grid-template-columns:1fr}
 }
 @media(max-width:480px){
@@ -1050,7 +1059,12 @@ function renderPower(){
   h+='<div class="nar-item"><div class="nar-icon">\u{1F4C8}</div><div class="nar-text"><b>'+youngest.team_name+'</b> has the youngest roster at <b>'+youngest.avgAge+'</b> avg \u2014 dynasty gold with a wide championship window.</div></div>';
   h+='<div class="nar-item"><div class="nar-icon">\u{1F6A8}</div><div class="nar-text"><b>'+teams[teams.length-1].team_name+'</b> at <b>'+teams[teams.length-1].pw+'</b> \u2014 deep rebuild. '+D.pick_trades.filter(p=>p.current_owner_roster_id===teams[teams.length-1].roster_id).length+' extra picks acquired.</div></div>';
   h+='</div>';
-  h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t4);margin:12px 0 4px;letter-spacing:.5px">40% Record \u00b7 30% Points \u00b7 20% Youth \u00b7 10% Draft Capital</div>';
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 6px">'
+    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(204,0,0,.1);color:var(--a);border:1px solid rgba(204,0,0,.2)">40% RECORD</span>'
+    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(59,130,246,.08);color:var(--blu);border:1px solid rgba(59,130,246,.2)">30% POINTS</span>'
+    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(23,177,105,.08);color:var(--grn);border:1px solid rgba(23,177,105,.2)">20% YOUTH</span>'
+    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(245,158,11,.08);color:var(--y);border:1px solid rgba(245,158,11,.2)">10% DRAFT CAPITAL</span>'
+    +'</div>';
   h+='<div class="plist stagger">';
   teams.forEach((t,i)=>{
     if(t.tier!==cT){cT=t.tier;h+='<div class="tier tier-'+cT+'">'+tierN[cT]+'</div>';}
