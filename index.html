@@ -27,17 +27,17 @@
 .data-status.fade-away:hover{opacity:.7;pointer-events:auto;transform:translateY(0);transition:opacity .2s ease-in,transform .2s ease-in}
 :root{
   --a:#cc0000;--ad:#990000;--ab:#e60000;--y:#ffcc00;--yd:#d4a017;
-  --g1:#0c0c0c;--g2:#141414;--g3:#1c1c1c;--g4:#262626;--g5:#333;--g6:#444;
-  --t1:#fff;--t2:#d4d4d4;--t3:#999;--t4:#666;
+  --g1:#0e0c0b;--g2:#161311;--g3:#1e1b18;--g4:#272320;--g5:#332d27;--g6:#443b34;
+  --t1:#fff;--t2:#d4d0cb;--t3:#9a9590;--t4:#6b6560;
   --grn:#17b169;--grn-bg:rgba(23,177,105,.12);--red-t:#ff4444;--red-bg:rgba(255,68,68,.12);
-  --blu:#3b82f6;--pur:#8b5cf6;
+  --blu:#3b82f6;--pur:#3b82f6;
   --fd:'Oswald',sans-serif;--fb:'Inter',sans-serif;--fm:'JetBrains Mono',monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh;overflow-x:hidden;padding-bottom:48px}
+body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh;overflow-x:hidden;padding-bottom:48px;line-height:1.4}
 /* ═══ HEADER ═══ */
-.hdr{background:linear-gradient(180deg,#1a1a1a,#111);border-bottom:3px solid var(--a);position:sticky;top:0;z-index:1000;box-shadow:0 2px 20px rgba(0,0,0,.5)}
+.hdr{background:linear-gradient(180deg,#1c1916,#110f0d);border-bottom:3px solid var(--a);position:sticky;top:0;z-index:1000;box-shadow:0 2px 20px rgba(0,0,0,.5)}
 .hdr-in{max-width:1440px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px}
 .hdr-left{display:flex;align-items:center;gap:10px}
 .hdr-gorilla{font-size:28px;filter:drop-shadow(0 0 8px rgba(204,0,0,.3))}
@@ -68,7 +68,7 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
 .hero-tag b{color:var(--t2);font-weight:600}
 .hero-bar{height:4px;background:linear-gradient(90deg,transparent 5%,var(--a) 20%,var(--a) 80%,transparent 95%);margin-top:28px}
 /* ═══ CAST STRIP ═══ */
-.cast{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--g1),rgba(10,10,15,.95));padding:8px 0;max-width:1440px;margin:0 auto}
+.cast{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--g1),rgba(12,10,8,.95));padding:8px 0;max-width:1440px;margin:0 auto}
 .cast::before,.cast::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
 .cast::before{left:0;background:linear-gradient(90deg,var(--g1),transparent)}
 .cast::after{right:0;background:linear-gradient(270deg,var(--g1),transparent)}
@@ -884,12 +884,12 @@ body{padding-bottom:48px}
   .sc-card,.pk-card,.narrative,.trophy-card,.const-section,.wr-timer{padding:12px 14px}
 }
 /* ═══ SPACING + ELEVATION PASS ═══ */
-/* Page depth: subtle top-to-base gradient breaks up flat black */
-body{background:linear-gradient(180deg,#141414 0%,#0c0c0c 30%,#090909 100%)}
+/* Page depth: warm gradient — base color matches new warm --g1/#0e0c0b */
+body{background:linear-gradient(180deg,#161311 0%,#0e0c0b 30%,#0b0906 100%)}
 /* Panel breathing room */
-.panel.active{padding-top:20px;padding-bottom:60px}
-/* Section headers: more air above each header, less above the first */
-.panel>.bh{margin-top:48px}
+.panel.active{padding-top:20px;padding-bottom:64px}
+/* Section headers: 60px luxury gap above each, 8px at panel top */
+.panel>.bh{margin-top:60px}
 .panel>.bh:first-child,.panel>*:first-child .bh{margin-top:8px}
 /* Smooth transitions cover box-shadow on these cards */
 .trade-card,.luck-card,.mu-card,.sc-card,.award-card,.gm-card,.rival-card,.move-card,.pk-card{transition:all .25s cubic-bezier(.22,1,.36,1)}
