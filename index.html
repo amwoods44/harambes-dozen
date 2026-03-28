@@ -1094,9 +1094,11 @@ function buildCast(){
   const h=D.teams.map(t=>{
     const c=TC[t.roster_id],pc=c?c.p:'var(--g4)';
     const hasAvatar=t.avatar&&!isDefaultAvatar(t.avatar);
-    const initDiv='<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(135deg,'+pc+','+pc+'99)">'+(c?c.i:t.team_name.substring(0,2).toUpperCase())+'</div>';
-    const inner=hasAvatar?'<img src="'+t.avatar+'" style="width:100%;height:100%;object-fit:cover;object-position:top" onerror="this.parentNode.innerHTML=''+initDiv.replace(/'/g,"\'")+''">':initDiv;
-    return'<div class="cast-fig" data-label="'+t.team_name.substring(0,16)+'" style="border-color:'+pc+'77;border-width:3px" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard">'+inner+'</div>';
+    const initials=(c?c.i:t.team_name.substring(0,2).toUpperCase());
+    // Always render initials as base; overlay avatar img on top
+    const initDiv='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(135deg,'+pc+','+pc+'99)">'+initials+'</div>';
+    const imgEl=hasAvatar?'<img src="'+t.avatar+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%" onerror="this.remove()">':'';
+    return'<div class="cast-fig" data-label="'+t.team_name.substring(0,16)+'" style="position:relative;border-color:'+pc+'77;border-width:3px" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard">'+initDiv+imgEl+'</div>';
   }).join('');
   document.getElementById('cast-strip').innerHTML='<div class="cast-in">'+h+'</div><div class="cast-line"></div>';
 }
@@ -1329,7 +1331,7 @@ function renderRosters(){
     // Headshot row for starters
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--g4)">';
-    starters.forEach(p=>{const logo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" style="width:14px;height:14px;object-fit:contain;display:block;margin:2px auto 0" onerror="this.style.display='none'">':'';h+='<div style="text-align:center;width:68px">'+pimg(p.id,60)+'<div style="font-family:var(--fd);font-size:9px;font-weight:700;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px">'+p.name.split(' ').pop()+'</div>'+logo+'</div>';});
+    starters.forEach(p=>{const logo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" style="width:14px;height:14px;object-fit:contain;display:block;margin:2px auto 0" onerror="this.remove()">':'';h+='<div style="text-align:center;width:68px">'+pimg(p.id,60)+'<div style="font-family:var(--fd);font-size:9px;font-weight:700;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px">'+p.name.split(' ').pop()+'</div>'+logo+'</div>';});
     h+='</div>';
     ['QB','RB','WR','TE','DEF'].forEach(pos=>{
       const ps=t.players.filter(p=>p.pos===pos);
@@ -1588,7 +1590,7 @@ function renderTrades(){
     h+='<div style="font-family:var(--fm);font-size:10px;margin-bottom:6px" class="trade-ktc '+(aNet>=0?'pos':'neg')+'">'+(aNet>0?'+':'')+aKtc+' KTC</div>';
     h+='<div class="trade-label">RECEIVES</div>';
     a.players.forEach(function(p){
-      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.style.display='none'" alt="'+pm.team+'">':'';
+      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.remove()" alt="'+pm.team+'">':'';
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+pimg(p.id,32)+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:var(--fb);font-size:13px;font-weight:600;color:var(--t1)">'+p.nm+'</span><div style="display:flex;align-items:center;gap:3px">'+teamLogo+'<span style="font-family:var(--fd);font-size:10px;color:var(--t3)">'+(pm?pm.team||'FA':'')+'</span>'+(pm&&pm.college?'<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">· '+pm.college+'</span>':'')+'</div></div></div>';
     });
     a.picks.forEach(function(pk){
@@ -1608,7 +1610,7 @@ function renderTrades(){
     h+='<div style="font-family:var(--fm);font-size:10px;margin-bottom:6px" class="trade-ktc '+(bNet>=0?'pos':'neg')+'">'+(bNet>0?'+':'')+bKtc+' KTC</div>';
     h+='<div class="trade-label">RECEIVES</div>';
     b.players.forEach(function(p){
-      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.style.display='none'" alt="'+pm.team+'">':'';
+      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.remove()" alt="'+pm.team+'">':'';
       h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+pimg(p.id,32)+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:var(--fb);font-size:13px;font-weight:600;color:var(--t1)">'+p.nm+'</span><div style="display:flex;align-items:center;gap:3px">'+teamLogo+'<span style="font-family:var(--fd);font-size:10px;color:var(--t3)">'+(pm?pm.team||'FA':'')+'</span>'+(pm&&pm.college?'<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">· '+pm.college+'</span>':'')+'</div></div></div>';
     });
     b.picks.forEach(function(pk){
