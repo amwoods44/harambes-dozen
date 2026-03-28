@@ -89,7 +89,7 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
 .ss.feat{background:linear-gradient(180deg,rgba(204,0,0,.08),var(--g2) 60%)}
 .ss.feat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
 .ss:not(.feat)::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:var(--g5)}
-.ss-l{font-family:var(--fd);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-bottom:10px}
+.ss-l{font-family:var(--fd);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
 .ss.feat .ss-l{color:var(--a);font-weight:700}
 .ss-v{font-family:var(--fd);font-size:36px;font-weight:800;line-height:1;letter-spacing:-1px;text-shadow:0 2px 12px rgba(0,0,0,.3);font-variant-numeric:tabular-nums}
 .ss.feat .ss-v{text-shadow:0 0 20px rgba(204,0,0,.3);color:var(--a)}
@@ -407,7 +407,7 @@ body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh
 .hm-grid{gap:3px}
 .hm-cell{min-width:28px;height:32px;border-radius:4px;font-size:9px;font-weight:700;cursor:crosshair;position:relative}
 .hm-cell:hover{transform:scale(1.25);z-index:5;box-shadow:0 0 16px rgba(0,0,0,.6)}
-.hm-label{min-width:120px;font-size:11px;height:32px}
+.hm-label{min-width:150px;font-size:11px;height:32px}
 .hm-wk{height:24px;font-size:10px}
 .hm-legend{display:flex;justify-content:center;gap:16px;margin:12px 0}
 .hm-legend span{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:4px}
@@ -794,8 +794,8 @@ body{padding-bottom:48px}
 .nav-bar:not(.scrolled-end) .nav-arrow.right{opacity:.8;pointer-events:auto}
 @media(max-width:480px){.nav-arrow{display:none}}
 /* Item 9: H2H rotated column headers */
-.h2h-hdr.rot{writing-mode:vertical-lr;transform:rotate(-45deg);transform-origin:bottom left;white-space:nowrap;overflow:visible;font-size:9px;height:72px;padding:2px;display:flex;align-items:flex-end;background:var(--g3)}
-.h2h-matrix{padding-top:56px}
+.h2h-hdr.rot{writing-mode:vertical-lr;transform:rotate(-45deg);transform-origin:bottom left;white-space:nowrap;overflow:visible;font-size:11px;height:88px;padding:2px;display:flex;align-items:flex-end;background:var(--g3)}
+.h2h-matrix{padding-top:68px}
 /* Item 14: Empty state */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;min-height:200px}
 .empty-state-icon{font-size:48px;opacity:.4;margin-bottom:16px;animation:emptyFloat 3s ease-in-out infinite}
@@ -1870,7 +1870,7 @@ function renderScoring(){
   var gMin=Math.min.apply(null,allPts),gMax=Math.max.apply(null,allPts);
   
   sd.forEach(function(t){
-    h+='<div class="hm-label">'+t.team_name.substring(0,12)+'</div>';
+    h+='<div class="hm-label">'+t.team_name.substring(0,18)+'</div>';
     t.wk.forEach(function(pts){
       var pct=(pts-gMin)/(gMax-gMin);
       var r,g,b;
@@ -2006,11 +2006,11 @@ function renderAnalytics(){
   h+='<div class="bh" style="margin-top:16px"><div class="bh-tag">H2H Matrix</div><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Record \u2022 All Matchups</span></div></div>';
   const rids=Object.keys(D.rid_to_name).map(Number).sort((a,b)=>a-b);
   const n=rids.length;
-  h+='<div class="h2h-matrix"><div class="h2h-grid" style="grid-template-columns:110px repeat('+n+',1fr)">';
+  h+='<div class="h2h-matrix"><div class="h2h-grid" style="grid-template-columns:140px repeat('+n+',1fr)">';
   h+='<div class="h2h-hdr"></div>';
-  rids.forEach(r=>{h+='<div class="h2h-hdr rot" title="'+D.rid_to_name[r]+'">'+D.rid_to_name[r].substring(0,12)+'</div>'});
+  rids.forEach(r=>{h+='<div class="h2h-hdr rot" title="'+D.rid_to_name[r]+'">'+D.rid_to_name[r].substring(0,16)+'</div>'});
   rids.forEach(a=>{
-    h+='<div class="h2h-hdr" style="text-align:left">'+D.rid_to_name[a].substring(0,14)+'</div>';
+    h+='<div class="h2h-hdr" style="text-align:left">'+D.rid_to_name[a].substring(0,18)+'</div>';
     rids.forEach(b=>{
       if(a===b){h+='<div class="h2h-cell h2h-self">\u2014</div>';return;}
       const key=a+'-'+b;
