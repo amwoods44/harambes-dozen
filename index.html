@@ -883,6 +883,42 @@ body{padding-bottom:48px}
   .trade-side{padding:12px 14px}
   .sc-card,.pk-card,.narrative,.trophy-card,.const-section,.wr-timer{padding:12px 14px}
 }
+/* ═══ SPACING + ELEVATION PASS ═══ */
+/* Page depth: subtle top-to-base gradient breaks up flat black */
+body{background:linear-gradient(180deg,#141414 0%,#0c0c0c 30%,#090909 100%)}
+/* Panel breathing room */
+.panel.active{padding-top:20px;padding-bottom:60px}
+/* Section headers: more air above each header, less above the first */
+.panel>.bh{margin-top:48px}
+.panel>.bh:first-child,.panel>*:first-child .bh{margin-top:8px}
+/* Smooth transitions cover box-shadow on these cards */
+.trade-card,.luck-card,.mu-card,.sc-card,.award-card,.gm-card,.rival-card,.move-card,.pk-card{transition:all .25s cubic-bezier(.22,1,.36,1)}
+/* Resting elevation — every card lifts slightly off the dark page */
+.pcard{box-shadow:0 2px 14px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.2)}
+.trade-card,.luck-card,.mu-card,.sc-card,.award-card,.gm-card,.rival-card,.pulse-card,.narrative,.move-card{box-shadow:0 2px 14px rgba(0,0,0,.38)}
+.pk-card,.const-section,.wr-timer,.scout-card,.mgr-card{box-shadow:0 2px 14px rgba(0,0,0,.38)}
+/* Trophy: featured depth + gold glow */
+.trophy-card{box-shadow:0 4px 28px rgba(0,0,0,.55),0 0 56px rgba(245,158,11,.05)}
+/* Hover: deeper lift + stronger shadow on all card types */
+.pcard:hover{box-shadow:0 10px 44px rgba(0,0,0,.65),0 4px 12px rgba(0,0,0,.3);transform:translateY(-2px)}
+.trade-card:hover,.luck-card:hover,.award-card:hover,.gm-card:hover,.rival-card:hover,.move-card:hover{box-shadow:0 8px 36px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.25);transform:translateY(-2px)}
+.mu-card:hover,.sc-card:hover{box-shadow:0 8px 36px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.25);transform:translateY(-2px);border-color:var(--g5)}
+.pk-card:hover{box-shadow:0 8px 36px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.25);transform:translateY(-2px);border-color:var(--g6)}
+.mgr-card:hover{box-shadow:0 10px 44px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.25)}
+/* List + grid gaps: more air between cards */
+.plist{gap:12px}
+.award-grid{gap:20px}
+.gm-grid{gap:20px}
+.move-feed{gap:12px}
+.pk-grid{gap:12px}
+/* Individual card bottom margins */
+.sc-card{margin-bottom:12px}
+.mu-card{margin-bottom:12px}
+.luck-card{margin-bottom:12px}
+/* Table / matrix sections: more vertical breathing */
+.h2h-matrix,.hm-wrap,.cmp-wrap{margin:24px 0}
+/* Rafters: more room below ceiling */
+.rafters-row{padding:0 4px 44px}
 </style>
 </head>
 <body>
