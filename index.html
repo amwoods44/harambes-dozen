@@ -3123,29 +3123,30 @@ function renderDraft(){
       var college=pdb.college||'';
       var colLogo=collegeLogoUrl(college);
       var nflLogo=p.tm&&p.tm!=='FA'?TL(p.tm):'';
-      var cardBg=isCut?'rgba(0,0,0,.2)':'linear-gradient(170deg,rgba('+rgb+',.1),#0c0c14)';
-      var cardOpacity=isCut?'opacity:.4;':'';
-      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:148px;flex-shrink:0;background:'+cardBg+';position:relative;padding:10px 10px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
+      var cardBg=isCut?'#0e0e14':'linear-gradient(170deg,rgba('+rgb+',.15),#10101a)';
+      var cardBorder=isCut?'1px solid rgba(255,255,255,.04)':'1px solid rgba('+rgb+',.2)';
+      var cardOpacity=isCut?'opacity:.45;':'';
+      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
       // Pick number top-left
-      h+='<div style="position:absolute;top:6px;left:8px;font-family:var(--fm);font-size:9px;font-weight:700;color:rgba(255,255,255,.22)">'+pickNum+'</div>';
+      h+='<div style="position:absolute;top:8px;left:10px;font-family:var(--fm);font-size:10px;font-weight:700;color:rgba(255,255,255,.35)">'+pickNum+'</div>';
       // Position badge top-right
-      h+='<div style="position:absolute;top:6px;right:8px"><span style="font-family:var(--fd);font-size:8px;font-weight:700;color:'+pCol+';padding:1px 4px;border-radius:2px;background:rgba('+rgb+','+(isCut?'.06':'.12')+')">'+p.pos+'</span></div>';
+      h+='<div style="position:absolute;top:8px;right:10px"><span style="font-family:var(--fd);font-size:9px;font-weight:700;color:'+pCol+';padding:2px 6px;border-radius:3px;background:rgba('+rgb+','+(isCut?'.06':'.15')+')">'+p.pos+'</span></div>';
       // Headshot
-      h+='<div style="width:48px;height:48px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.06':'.2')+');overflow:hidden;margin:6px 0 6px">';
+      h+='<div style="width:52px;height:52px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.08':'.3')+');overflow:hidden;margin:8px 0 8px">';
       h+='<img src="'+PI(p.pid)+'" style="width:100%;height:100%;object-fit:cover;object-position:top'+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       h+='</div>';
       // Name
-      h+='<div style="font-family:var(--fd);font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
+      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:136px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
       // Team · College
-      h+='<div style="font-family:var(--fb);font-size:9px;color:rgba(255,255,255,.3);margin-top:2px">'+(p.tm||'FA')+( college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
+      h+='<div style="font-family:var(--fb);font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">'+(p.tm||'FA')+(college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
       // Drafter
-      h+='<div style="font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.35);margin-top:3px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      h+='<div style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.5);margin-top:4px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
       // NCAA logo bottom-left
-      if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:8px;width:20px;height:20px;object-fit:contain;opacity:'+(isCut?'.15':'.45')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:10px;width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // NFL logo bottom-right
-      if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:8px;width:20px;height:20px;object-fit:contain;opacity:'+(isCut?'.15':'.45')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:10px;width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // Status bar
-      h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:'+statusBar+'"></div>';
+      h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:'+statusBar+';border-radius:0 0 10px 10px"></div>';
       h+='</div>';
     });
     h+='</div></div>';
