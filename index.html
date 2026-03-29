@@ -3153,6 +3153,17 @@ function renderDraft(){
   var maxRd=Math.max.apply(null,picks.map(function(p){return p.rd}));
   var hits=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft]:[];
   var hitMap={};hits.forEach(function(h2){hitMap[h2.pid]=h2;});
+  // Build pick history index: for each round+slot, who was picked in other years
+  var pickHistory={};
+  draftYears.forEach(function(yr){
+    if(yr===selDraft)return;
+    (D.draft_picks[yr]||[]).forEach(function(pk){
+      var slot=((pk.pk-1)%12)+1;
+      var key=pk.rd+'.'+String(slot).padStart(2,'0');
+      if(!pickHistory[key])pickHistory[key]=[];
+      pickHistory[key].push({yr:yr,nm:pk.nm,pos:pk.pos,tm:pk.tm});
+    });
+  });
   // ── SCROLL TICKER PER ROUND ──
   h+='<div style="background:#08080c;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.04)">';
   for(var rd=1;rd<=maxRd;rd++){
@@ -3184,7 +3195,12 @@ function renderDraft(){
       var cardBg=isCut?'#0e0e14':'linear-gradient(170deg,rgba('+rgb+',.15),#10101a)';
       var cardBorder=isCut?'1px solid rgba(255,255,255,.04)':'1px solid rgba('+rgb+',.2)';
       var cardOpacity=isCut?'opacity:.45;':'';
-      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
+      // Pick history for this slot
+      var histKey=pickNum;
+      var hist=pickHistory[histKey]||[];
+      var histTitle=hist.length?hist.map(function(h2){return h2.yr+': '+h2.nm+' ('+h2.pos+', '+h2.tm+')'}).join('\n'):'';
+      var fullTitle=pickNum+' '+p.nm+' — '+p.pos+' — '+(p.tm||'FA')+(histTitle?'\n\nThis pick in other years:\n'+histTitle:'');
+      h+='<div class="pp-trigger draft-card" data-pid="'+p.pid+'" data-pick="'+pickNum+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'" title="'+fullTitle.replace(/"/g,'&quot;')+'">';
       // Pick number top-left
       h+='<div style="position:absolute;top:8px;left:10px;font-family:var(--fd);font-size:12px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:.5px">'+pickNum+'</div>';
       // Position badge top-right
@@ -3203,6 +3219,21 @@ function renderDraft(){
       if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:10px;width:22px;height:22px;object-fit:contain'+(isCut?';opacity:.2;filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // NFL logo bottom-right — full opacity
       if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:10px;width:22px;height:22px;object-fit:contain'+(isCut?';opacity:.2;filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      // Pick history tooltip (visible on hover)
+      if(hist.length){
+        h+='<div class="draft-hist-tip" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:#1a1a24;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 10px;min-width:160px;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,.7);pointer-events:none">';
+        h+='<div style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px">PICK '+pickNum+' HISTORY</div>';
+        hist.forEach(function(h2){
+          var hPosRgb=posRgb[h2.pos]||'139,92,246';
+          h+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0">';
+          h+='<span style="font-family:var(--fm);font-size:9px;font-weight:700;color:rgba(255,255,255,.35);min-width:28px">'+h2.yr+'</span>';
+          h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+h2.nm+'</span>';
+          h+='<span style="font-family:var(--fd);font-size:8px;font-weight:700;color:rgb('+hPosRgb+');padding:1px 4px;border-radius:2px;background:rgba('+hPosRgb+',.15)">'+h2.pos+'</span>';
+          h+='</div>';
+        });
+        h+='<div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#1a1a24;border-right:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);transform:translateX(-50%) rotate(45deg)"></div>';
+        h+='</div>';
+      }
       // Status bar
       h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:'+statusBar+';border-radius:0 0 10px 10px"></div>';
       h+='</div>';
@@ -3236,6 +3267,13 @@ function renderDraft(){
     h+='</div>';
   }
   document.getElementById('tab-draft').innerHTML=h;
+  // Hover to show pick history tooltip
+  document.querySelectorAll('.draft-card').forEach(function(card){
+    var tip=card.querySelector('.draft-hist-tip');
+    if(!tip)return;
+    card.addEventListener('mouseenter',function(){tip.style.display='block';});
+    card.addEventListener('mouseleave',function(){tip.style.display='none';});
+  });
 }
 // ═══ AGE MAP ═══
 function renderAge(){
