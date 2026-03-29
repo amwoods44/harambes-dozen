@@ -1098,6 +1098,9 @@ body{background:linear-gradient(180deg,#1a1410 0%,#120e0c 30%,#0e0906 100%)}
 /* ═══ PHASE 9: SEMANTIC HEADING RESET ═══ */
 h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;font-family:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
 
+/* ═══ DRAFT PICK HISTORY TOOLTIP ═══ */
+.draft-hist-tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:rgba(12,12,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-width:160px;z-index:10;box-shadow:0 12px 40px rgba(0,0,0,.8);pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -3198,9 +3201,7 @@ function renderDraft(){
       // Pick history for this slot
       var histKey=pickNum;
       var hist=pickHistory[histKey]||[];
-      var histTitle=hist.length?hist.map(function(h2){return h2.yr+': '+h2.nm+' ('+h2.pos+', '+h2.tm+')'}).join('\n'):'';
-      var fullTitle=pickNum+' '+p.nm+' — '+p.pos+' — '+(p.tm||'FA')+(histTitle?'\n\nThis pick in other years:\n'+histTitle:'');
-      h+='<div class="pp-trigger draft-card" data-pid="'+p.pid+'" data-pick="'+pickNum+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'" title="'+fullTitle.replace(/"/g,'&quot;')+'">';
+      h+='<div class="pp-trigger draft-card" data-pid="'+p.pid+'" data-pick="'+pickNum+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
       // Pick number top-left
       h+='<div style="position:absolute;top:8px;left:10px;font-family:var(--fd);font-size:12px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:.5px">'+pickNum+'</div>';
       // Position badge top-right
@@ -3221,7 +3222,7 @@ function renderDraft(){
       if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:10px;width:22px;height:22px;object-fit:contain'+(isCut?';opacity:.2;filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // Pick history tooltip (visible on hover)
       if(hist.length){
-        h+='<div class="draft-hist-tip" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:#1a1a24;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 10px;min-width:160px;z-index:10;box-shadow:0 8px 24px rgba(0,0,0,.7);pointer-events:none">';
+        h+='<div class="draft-hist-tip">';
         h+='<div style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:4px">PICK '+pickNum+' HISTORY</div>';
         hist.forEach(function(h2){
           var hPosRgb=posRgb[h2.pos]||'139,92,246';
@@ -3231,7 +3232,7 @@ function renderDraft(){
           h+='<span style="font-family:var(--fd);font-size:8px;font-weight:700;color:rgb('+hPosRgb+');padding:1px 4px;border-radius:2px;background:rgba('+hPosRgb+',.15)">'+h2.pos+'</span>';
           h+='</div>';
         });
-        h+='<div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#1a1a24;border-right:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);transform:translateX(-50%) rotate(45deg)"></div>';
+        h+='<div style="position:absolute;bottom:-5px;left:50%;width:8px;height:8px;background:rgba(12,12,20,.95);border-right:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);transform:translateX(-50%) rotate(45deg)"></div>';
         h+='</div>';
       }
       // Status bar
