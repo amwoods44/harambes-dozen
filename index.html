@@ -1359,7 +1359,7 @@ function parseContractCSV(csv,ktcMap){
 
 // ═══ TIER 3: HISTORICAL SEASONS ═══
 async function fetchHistoricalSeason(leagueId,season){
-  const cacheKey=`hd_history_${season}`;
+  const cacheKey=`hd_history_v2_${season}`;
   const cached=cache.get(cacheKey);
   if(cached)return cached;
   const[league,rosters,users,picks,winnersBracket]=await Promise.all([
@@ -3099,7 +3099,7 @@ const COLLEGE_ESPN={
 'Idaho':70,'Illinois State':2287,'Indiana State':282,'Iowa Western CC':5765,
 'Jackson State':2296,'Lamar':2320,'Lehigh':2329,'Maine':311,'Massachusetts':113,'UMass':113,
 'McNeese State':2377,'Mercer':2382,'Missouri State':2623,'Monmouth':2405,
-'Montana':149,'Montana State':149,'Morgan State':2419,'Murray State':93,
+'Montana':149,'Montana State':2439,'Morgan State':2419,'Murray State':93,
 'NC State':152,'NC A&T':2448,'New Hampshire':160,'Nicholls State':2447,
 'Norfolk State':2450,'North Alabama':2453,'North Carolina A&T':2448,
 'North Dakota':2449,'North Dakota State':2449,'Northern Iowa':2460,
@@ -3109,7 +3109,7 @@ const COLLEGE_ESPN={
 'Southeast Missouri':2546,'Southeastern Louisiana':2545,'Southern':2582,
 'Southern Illinois':79,'Southern Utah':253,'Stephen F. Austin':2617,
 'Stony Brook':2619,'Tarleton State':2627,'Tennessee State':2634,'Tennessee Tech':2635,
-'Texas Southern':2640,'Towson':119,'Tuskegee':2653,'UT Martin':2630,
+'Texas Southern':2640,'Towson':119,'Tuskegee':2655,'UT Martin':2630,
 'Utah State':328,'Villanova':222,'Weber State':2692,'Western Carolina':2717,
 'Western Illinois':2710,'William & Mary':261,'Wofford':2747,'Yale':43,'Youngstown State':2754,
 // Sleeper spelling variants — these are what Sleeper actually uses
