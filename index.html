@@ -2076,7 +2076,8 @@ const playerMap={};
 function rebuildPlayerMap(){Object.keys(playerMap).forEach(k=>delete playerMap[k]);if(D.teams)D.teams.forEach(t=>t.players.forEach(p=>{playerMap[p.id]=p;}));}
 function showGM(rid){selGM=rid;if(window._showTab)window._showTab('gm');renderGM();}
 const av=(rid,sz)=>tcInit(rid,sz||56);
-const pimg=(id,sz)=>{const s=sz||40;const src=s>=40?PIF(id):PI(id);const pn=(playerMap[id]||{}).name||'Player';return`<img src="${src}" alt="${pn}" loading="lazy" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:cover;object-position:top;background:var(--g3);border:1px solid var(--g5);flex-shrink:0;cursor:pointer" class="pp-trigger" data-pid="${id}" onerror="this.src='${PI(id)}';this.onerror=null">`};
+const isDEF=id=>/^[A-Z]{2,3}$/.test(id);
+const pimg=(id,sz)=>{const s=sz||40;const pn=(playerMap[id]||{}).name||'Player';if(isDEF(id)){const logo=TL(id);return`<img src="${logo}" alt="${id} D/ST" loading="lazy" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:contain;background:var(--g3);border:1px solid var(--g5);flex-shrink:0;padding:4px">`;}const src=s>=40?PIF(id):PI(id);return`<img src="${src}" alt="${pn}" loading="lazy" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:cover;object-position:top;background:var(--g3);border:1px solid var(--g5);flex-shrink:0;cursor:pointer" class="pp-trigger" data-pid="${id}" onerror="this.src='${PI(id)}';this.onerror=null">`};
 let selGM=1;
 // Team identity colors keyed by roster_id
 const TC={
@@ -3206,9 +3207,11 @@ function renderDraft(){
       h+='<div style="position:absolute;top:8px;left:10px;font-family:var(--fd);font-size:12px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:.5px">'+pickNum+'</div>';
       // Position badge top-right
       h+='<div style="position:absolute;top:8px;right:10px"><span style="font-family:var(--fd);font-size:10px;font-weight:700;color:'+pCol+';padding:2px 6px;border-radius:3px;background:rgba('+rgb+','+(isCut?'.06':'.15')+')">'+p.pos+'</span></div>';
-      // Headshot
+      // Headshot (use team logo for DEF)
+      var imgSrc=isDEF(p.pid)?TL(p.pid):PI(p.pid);
+      var imgFit=isDEF(p.pid)?'object-fit:contain;padding:6px':'object-fit:cover;object-position:top';
       h+='<div style="width:52px;height:52px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.08':'.3')+');overflow:hidden;margin:8px 0 8px">';
-      h+='<img src="'+PI(p.pid)+'" style="width:100%;height:100%;object-fit:cover;object-position:top'+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      h+='<img src="'+imgSrc+'" style="width:100%;height:100%;'+imgFit+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       h+='</div>';
       // Name
       h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:136px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
