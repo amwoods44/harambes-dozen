@@ -3056,65 +3056,106 @@ function renderMatchups(){
     });
   },50);
 }
+// ═══ COLLEGE ESPN ID MAP ═══
+const COLLEGE_ESPN={
+'Alabama':333,'Arizona State':9,'Arkansas':8,'Auburn':2,'Baylor':239,'Boise State':68,'Boston College':103,
+'BYU':252,'California':25,'Central Florida':2116,'Cincinnati':2132,'Clemson':228,'Colorado':38,'Duke':150,
+'East Carolina':151,'Florida':57,'Florida Atlantic':2226,'Florida International':2229,'Florida State':52,
+'Fresno State':278,'Georgia':61,'Georgia Tech':59,'Hawaii':62,'Houston':248,'Illinois':356,'Indiana':84,
+'Iowa':2294,'Iowa State':66,'Kansas':2305,'Kansas State':2306,'Kentucky':96,'Liberty':2335,'Louisiana Tech':2348,
+'Louisville':97,'LSU':99,'Marshall':276,'Maryland':120,'Memphis':235,'Miami':2390,'Michigan':130,
+'Michigan State':127,'Middle Tennessee':2393,'Minnesota':135,'Mississippi State':344,'Missouri':142,
+'Montana':149,'Navy':2426,'NC State':152,'Nebraska':158,'Nevada':2440,'New Mexico':167,'North Carolina':153,
+'North Dakota State':2449,'Northern Illinois':2459,'Northwestern':77,'Notre Dame':87,'Ohio State':194,
+'Oklahoma':201,'Oklahoma State':197,'Old Dominion':295,'Ole Miss':145,'Oregon':2483,'Oregon State':204,
+'Penn State':213,'Pittsburgh':221,'Purdue':2509,'Rice':242,'Rutgers':164,'San Diego State':21,
+'San Jose State':23,'SMU':2567,'South Carolina':2579,'South Florida':58,'Southern Mississippi':2572,
+'Stanford':24,'Syracuse':183,'TCU':2628,'Temple':218,'Tennessee':2633,'Texas':251,'Texas A&M':245,
+'Texas Tech':2641,'Toledo':2649,'Tulane':2655,'Tulsa':202,'UAB':5,'UCLA':26,'USC':264,'Utah':254,
+'Utah State':328,'Vanderbilt':238,'Virginia':258,'Virginia Tech':259,'Wake Forest':154,'Washington':264,
+'Washington State':265,'West Virginia':277,'Western Kentucky':98,'Western Michigan':2711,'Wisconsin':275,
+'Wyoming':2751,'Appalachian State':2026,'Coastal Carolina':324,'James Madison':256,'Jacksonville State':55,
+'Sam Houston State':2534,'South Alabama':6,'Troy':2653,'UTSA':2636,'Charlotte':2429,'Connecticut':41,
+'Colorado State':36,'Oregon State':204,'Montana State':149,'South Dakota State':2571,'Kennesaw State':338,
+'Georgia Southern':290,'Louisiana':309,'Louisiana Monroe':2433,'Arkansas State':2032,'Texas State':326
+};
+function collegeLogoUrl(col){var id=COLLEGE_ESPN[col];return id?'https://a.espncdn.com/i/teamlogos/ncaa/500-dark/'+id+'.png':'';}
 // ═══ DRAFT ═══
 function renderDraft(){
   var draftYears=Object.keys(D.draft_picks||{}).sort().reverse();
   if(!selDraft&&draftYears.length)selDraft=draftYears[0];
+  var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
+  var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
   let h='<div class="bh"><h2 class="bh-tag">Draft</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Rookie Draft History</span></div></div>';
-  h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:12px">';
-  draftYears.forEach(yr=>{
-    h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+' Draft</button>';
-  });
+  h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:16px">';
+  draftYears.forEach(yr=>{h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+'</button>';});
   h+='</div>';
-  const picks=D.draft_picks[selDraft]||[];
+  var picks=D.draft_picks[selDraft]||[];
   if(!picks.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No draft data</div>';document.getElementById('tab-draft').innerHTML=h;return;}
-  // ── DRAFT BOARD GRID ──
-  const maxRd=Math.max(...picks.map(p=>p.rd));
-  const posColors={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
-  h+='<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap"><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px"><span style="color:var(--red-t)">\u25CF</span> QB</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px"><span style="color:var(--a)">\u25CF</span> RB</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px"><span style="color:var(--blu)">\u25CF</span> WR</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px"><span style="color:var(--y)">\u25CF</span> TE</span></div>';
-  h+='<div class="draft-board"><div class="db-grid" id="db-grid-el" style="grid-template-columns:80px repeat(12,minmax(72px,1fr));min-width:900px">';
-  // Header: pick numbers 1-12
-  h+='<div class="db-cell hdr" data-col="0">Round</div>';
-  for(let i=1;i<=12;i++){h+='<div class="db-cell hdr" data-col="'+i+'">Pick '+i+'</div>';}
-  for(let rd=1;rd<=maxRd;rd++){
-    h+='<div class="db-cell hdr" data-row="'+rd+'" data-col="0">Rd '+rd+'</div>';
-    const rdPicks=picks.filter(p=>p.rd===rd).sort((a,b)=>a.pk-b.pk);
-    for(let slot=0;slot<12;slot++){
-      const p=rdPicks[slot];
-      if(!p){h+='<div class="db-cell" data-row="'+rd+'" data-col="'+(slot+1)+'" style="background:var(--g2)"></div>';continue;}
-      const bg=posColors[p.pos]||'var(--g5)';
-      const hit=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft].find(x=>x.pid===p.pid):null;
-      var statusBorder=hit?(hit.status==="starter"?"border:2px solid var(--a)":hit.status==="cut"?"border:2px solid var(--red-t)":""):"";
-      var rgbMap={"var(--red-t)":"239,68,68","var(--a)":"16,185,129","var(--blu)":"59,130,246","var(--y)":"245,158,11"};
-      var rgb=rgbMap[bg]||"139,92,246";
-      h+='<div class="db-cell" data-row="'+rd+'" data-col="'+(slot+1)+'" style="background:rgba('+rgb+',.22);'+statusBorder+'">';
-      h+='<div class="db-name">'+p.nm.split(' ').pop()+'</div>';
-      h+='<div class="db-pos" style="color:'+bg+'">'+p.pos+' \u00b7 '+tn(p.rid).substring(0,12)+'</div>';
-      h+='</div>';
-    }
-  }
-  h+='</div></div>';
-  // ── TRADITIONAL LIST ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Pick List</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Detailed View</span></div></div>';
-  let curRd=0;
-  picks.forEach(p=>{
-    if(p.rd!==curRd){curRd=p.rd;h+='<div style="font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:3px;color:var(--a);text-transform:uppercase;margin:16px 0 6px;padding-left:4px;border-left:3px solid var(--a);padding-left:10px">Round '+curRd+'</div>';}
-    h+='<div class="pl-row" style="gap:10px">'+pimg(p.pid,36)+'<span style="font-family:var(--fd);font-size:12px;font-weight:800;color:var(--y);min-width:32px;font-variant-numeric:tabular-nums">'+curRd+'.'+String((p.pk-1)%12+1).padStart(2,'0')+'</span><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span><span class="pl-name" style="font-weight:700">'+p.nm+'</span><span class="pl-nfl">'+p.tm+'</span><span style="font-family:var(--fd);font-size:11px;color:var(--t4)">'+tn(p.rid)+'</span></div>';
-  });
-  // ── MEMORY LANE ──
-  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">\u{1F4F8} Memory Lane</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+selDraft+' Class Results \u2022 Hit Rate Analysis</span></div></div>';
+  var maxRd=Math.max.apply(null,picks.map(function(p){return p.rd}));
   var hits=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft]:[];
-  var hitMap={};
-  hits.forEach(function(h2){hitMap[h2.pid]=h2;});
+  var hitMap={};hits.forEach(function(h2){hitMap[h2.pid]=h2;});
+  // ── SCROLL TICKER PER ROUND ──
+  h+='<div style="background:#08080c;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.04)">';
+  for(var rd=1;rd<=maxRd;rd++){
+    var rdPicks=picks.filter(function(p){return p.rd===rd}).sort(function(a,b){return a.pk-b.pk});
+    var rdStarters=rdPicks.filter(function(p){var hi=hitMap[p.pid];return hi&&hi.status==='starter'}).length;
+    var isRd1=rd===1;
+    h+='<div style="display:flex;'+(rd>1?'border-top:1px solid rgba(255,255,255,.04)':'')+'">';
+    // Round label
+    h+='<div style="width:72px;flex-shrink:0;background:linear-gradient(180deg,'+(isRd1?'#cc0000,#8b0000':'#1a1a2e,#12121a')+');display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;gap:2px">';
+    h+='<span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,'+(isRd1?'.5':'.4')+')">ROUND</span>';
+    h+='<span style="font-family:var(--fd);font-size:28px;font-weight:800;color:rgba(255,255,255,'+(isRd1?'1':'.7')+');line-height:1">'+rd+'</span>';
+    h+='<span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">'+rdStarters+'/'+rdPicks.length+' hit</span>';
+    h+='</div>';
+    // Scrollable picks
+    h+='<div style="flex:1;overflow-x:auto;display:flex;gap:1px;background:rgba(255,255,255,.02)">';
+    rdPicks.forEach(function(p){
+      var rgb=posRgb[p.pos]||'139,92,246';
+      var pCol=posCls[p.pos]||'var(--g5)';
+      var hit=hitMap[p.pid];
+      var status=hit?hit.status:'rostered';
+      var isCut=status==='cut';
+      var isStarter=status==='starter';
+      var statusBar=isStarter?'#10b981':isCut?'#ef4444':'rgba(255,255,255,.1)';
+      var pickNum=p.rd+'.'+String((p.pk-1)%12+1).padStart(2,'0');
+      var pdb=playerMap[p.pid]||{};
+      var college=pdb.college||'';
+      var colLogo=collegeLogoUrl(college);
+      var nflLogo=p.tm&&p.tm!=='FA'?TL(p.tm):'';
+      var cardBg=isCut?'rgba(0,0,0,.2)':'linear-gradient(170deg,rgba('+rgb+',.1),#0c0c14)';
+      var cardOpacity=isCut?'opacity:.4;':'';
+      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:148px;flex-shrink:0;background:'+cardBg+';position:relative;padding:10px 10px 14px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
+      // Pick number top-left
+      h+='<div style="position:absolute;top:6px;left:8px;font-family:var(--fm);font-size:9px;font-weight:700;color:rgba(255,255,255,.22)">'+pickNum+'</div>';
+      // Position badge top-right
+      h+='<div style="position:absolute;top:6px;right:8px"><span style="font-family:var(--fd);font-size:8px;font-weight:700;color:'+pCol+';padding:1px 4px;border-radius:2px;background:rgba('+rgb+','+(isCut?'.06':'.12')+')">'+p.pos+'</span></div>';
+      // Headshot
+      h+='<div style="width:48px;height:48px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.06':'.2')+');overflow:hidden;margin:6px 0 6px">';
+      h+='<img src="'+PI(p.pid)+'" style="width:100%;height:100%;object-fit:cover;object-position:top'+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      h+='</div>';
+      // Name
+      h+='<div style="font-family:var(--fd);font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
+      // Team · College
+      h+='<div style="font-family:var(--fb);font-size:9px;color:rgba(255,255,255,.3);margin-top:2px">'+(p.tm||'FA')+( college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
+      // Drafter
+      h+='<div style="font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.35);margin-top:3px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      // NCAA logo bottom-left
+      if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:8px;width:20px;height:20px;object-fit:contain;opacity:'+(isCut?'.15':'.45')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      // NFL logo bottom-right
+      if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:8px;width:20px;height:20px;object-fit:contain;opacity:'+(isCut?'.15':'.45')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      // Status bar
+      h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:'+statusBar+'"></div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+  h+='</div>';
+  // ── MEMORY LANE ──
+  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">\u{1F4F8} Memory Lane</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+selDraft+' Class \u2022 Hit Rate Analysis</span></div></div>';
   // Per-team hit rate
   var teamHits={};
-  picks.forEach(function(p){
-    var nm=tn(p.rid);
-    teamHits[nm]=teamHits[nm]||{starters:0,total:0};
-    teamHits[nm].total++;
-    var hit=hitMap[p.pid];
-    if(hit&&hit.status==='starter')teamHits[nm].starters++;
-  });
+  picks.forEach(function(p){var nm=tn(p.rid);teamHits[nm]=teamHits[nm]||{starters:0,total:0};teamHits[nm].total++;var hit=hitMap[p.pid];if(hit&&hit.status==='starter')teamHits[nm].starters++;});
   h+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">';
   Object.entries(teamHits).forEach(function(entry){
     var nm=entry[0],data=entry[1];
@@ -3127,68 +3168,15 @@ function renderDraft(){
   });
   h+='</div>';
   // Best steal and biggest bust
-  var starters=hits.filter(function(h2){return h2.status==='starter';}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk;});
-  var cuts=hits.filter(function(h2){return h2.status==='cut';});
-  if(starters.length){
-    var steal=starters[0];
-    var c=D.contracts&&D.contracts[steal.nm];
+  var starters=hits.filter(function(h2){return h2.status==='starter'}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
+  var cuts=hits.filter(function(h2){return h2.status==='cut'});
+  if(starters.length||cuts.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">';
-    h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px">';
-    h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">\u{1F48E} BIGGEST STEAL</div>';
-    h+=pimg(steal.pid,40);
-    h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1);margin-top:6px">'+steal.nm+'</div>';
-    h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">Rd'+steal.rd+' Pk'+steal.pk+' \u2022 '+steal.drafter+'</div>';
-    if(c)h+='<div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--a);margin-top:4px">'+c.ktc.toLocaleString()+' KTC</div>';
-    h+='</div>';
-    if(cuts.length){
-      var bust=cuts[0];
-      h+='<div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px">';
-      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--red-t);margin-bottom:6px">\u{1F4C9} BIGGEST BUST</div>';
-      h+=pimg(bust.pid,40);
-      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1);margin-top:6px;text-decoration:line-through;opacity:.6">'+bust.nm+'</div>';
-      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">Rd'+bust.rd+' Pk'+bust.pk+' \u2022 '+bust.drafter+'</div>';
-      h+='<div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--red-t);margin-top:4px">CUT</div>';
-      h+='</div>';
-    }
+    if(starters.length){var steal=starters[0];var sc=D.contracts&&D.contracts[steal.nm];h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">\u{1F48E} BIGGEST STEAL</div>'+pimg(steal.pid,40)+'<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1);margin-top:6px">'+steal.nm+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3)">Rd'+steal.rd+' Pk'+steal.pk+' \u2022 '+(steal.drafter||'')+'</div>'+(sc&&sc.ktc?'<div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--a);margin-top:4px">'+sc.ktc.toLocaleString()+' KTC</div>':'')+'</div>';}
+    if(cuts.length){var bust=cuts[0];h+='<div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--red-t);margin-bottom:6px">\u{1F4C9} BIGGEST BUST</div>'+pimg(bust.pid,40)+'<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1);margin-top:6px;text-decoration:line-through;opacity:.6">'+bust.nm+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3)">Rd'+bust.rd+' Pk'+bust.pk+' \u2022 '+(bust.drafter||'')+'</div><div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--red-t);margin-top:4px">CUT</div></div>';}
     h+='</div>';
   }
-  // Full memory lane grid
-  h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px">';
-  picks.forEach(function(p){
-    var hit=hitMap[p.pid];
-    var statusBorder=hit?(hit.status==='starter'?'border-color:rgba(204,0,0,.4)':hit.status==='cut'?'border-color:rgba(239,68,68,.4)':'border-color:var(--g4)'):'border-color:var(--g4)';
-    var statusLabel=hit?hit.status:'rostered';
-    var statusCol=statusLabel==='starter'?'var(--a)':statusLabel==='cut'?'var(--red-t)':'var(--t4)';
-    var c=D.contracts&&D.contracts[p.nm];
-    var posColors2={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
-    var pCol=posColors2[p.pos]||'var(--g5)';
-    h+='<div style="background:var(--g2);border:1px solid;'+statusBorder+';border-radius:8px;padding:10px;text-align:center">';
-    h+=pimg(p.pid,44);
-    h+='<div style="font-family:var(--fd);font-size:11px;font-weight:700;color:var(--t1);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'+(statusLabel==='cut'?';text-decoration:line-through;opacity:.5':'')+'">'+p.nm.split(' ').pop()+'</div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;color:'+pCol+';margin:2px 0">'+p.pos+'</div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:'+statusCol+';text-transform:uppercase">'+statusLabel+'</div>';
-    if(c&&c.ktc)h+='<div style="font-family:var(--fm);font-size:10px;font-weight:700;color:var(--a);margin-top:2px">'+c.ktc+'</div>';
-    h+='</div>';
-  });
-  h+='</div>';
   document.getElementById('tab-draft').innerHTML=h;
-  // Crosshair hover
-  var dbG=document.getElementById('db-grid-el');
-  if(dbG){
-    dbG.addEventListener('mouseover',function(ev){
-      var cell=ev.target.closest('.db-cell');
-      if(!cell||cell.classList.contains('hdr'))return;
-      var row=cell.dataset.row,col=cell.dataset.col;
-      dbG.classList.add('crosshair-active');
-      dbG.querySelectorAll('.db-cell-highlight').forEach(function(c){c.classList.remove('db-cell-highlight')});
-      if(row)dbG.querySelectorAll('[data-row="'+row+'"]').forEach(function(c){c.classList.add('db-cell-highlight')});
-      if(col)dbG.querySelectorAll('[data-col="'+col+'"]').forEach(function(c){c.classList.add('db-cell-highlight')});
-    });
-    dbG.addEventListener('mouseleave',function(){
-      dbG.classList.remove('crosshair-active');
-      dbG.querySelectorAll('.db-cell-highlight').forEach(function(c){c.classList.remove('db-cell-highlight')});
-    });
-  }
 }
 // ═══ AGE MAP ═══
 function renderAge(){
