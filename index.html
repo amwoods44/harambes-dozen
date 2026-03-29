@@ -3139,8 +3139,14 @@ function renderDraft(){
       h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:136px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
       // College · NFL Team
       h+='<div style="font-family:var(--fb);font-size:11px;color:rgba(255,255,255,.85);margin-top:3px">'+(college?'<i>'+college+'</i> \u00b7 ':'')+(p.tm||'FA')+'</div>';
-      // Drafter
-      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.9);margin-top:4px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      // Drafter ribbon — 3D sash across card
+      var drafterName=tn(p.rid).substring(0,14).toUpperCase();
+      var tc=TC[p.rid]||{p:'#333',s:'#fff'};
+      h+='<div style="position:absolute;left:0;right:0;bottom:38px;z-index:1">';
+      h+='<div style="background:linear-gradient(180deg,'+tc.p+','+tc.p+'cc);padding:4px 12px;text-align:center;box-shadow:0 3px 8px rgba(0,0,0,.5),0 -1px 0 rgba(255,255,255,.08) inset;position:relative">';
+      h+='<div style="position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.15)"></div>';
+      h+='<span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1.5px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4)">'+drafterName+'</span>';
+      h+='</div></div>';
       // NCAA logo bottom-left — full opacity
       if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:10px;width:22px;height:22px;object-fit:contain'+(isCut?';opacity:.2;filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // NFL logo bottom-right — full opacity
