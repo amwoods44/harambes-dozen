@@ -5,7 +5,7 @@
 <title>Harambe's Dozen — Dynasty HQ</title>
 <meta name="description" content="Dynasty league headquarters for Harambe's Dozen. 12 teams, 3 seasons, full broadcast-quality dashboard.">
 <meta name="theme-color" content="#cc0000">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dynasty HQ">
 <link rel="manifest" href="manifest.json">
@@ -2091,6 +2091,16 @@ function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{con
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
 // Item 1: Contract pill helper
 function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||!c.contracted)return'';const y=c.yrs;const cls=y>=4?'cpill-4':y>=2?'cpill-23':y===1?'cpill-1':'cpill-0';const lbl=y<=0?'EXP':y+'yr';const tag=c.tag?'\uD83C\uDFF7':c.exm?'\uD83D\uDD12':'';return'<span class="cpill '+cls+'">'+tag+lbl+'</span>';}
+// ═══ DYNAMIC SEASON CONSTANTS ═══
+var SEASON_YEARS=[],CURRENT_YEAR='2025',FIRST_YEAR='2021',YEAR_RANGE='2021-2025',NUM_SEASONS=1;
+function initSeasonConstants(){
+  SEASON_YEARS=Object.keys(D).filter(function(k){return/^standings_\d{4}$/.test(k)&&k!=='standings_2024_full'}).map(function(k){return k.replace('standings_','')}).sort();
+  if(!SEASON_YEARS.length)SEASON_YEARS=[D.league?D.league.season:'2025'];
+  CURRENT_YEAR=SEASON_YEARS[SEASON_YEARS.length-1];
+  FIRST_YEAR=SEASON_YEARS[0];
+  YEAR_RANGE=FIRST_YEAR+(SEASON_YEARS.length>1?'\u2013'+CURRENT_YEAR:'');
+  NUM_SEASONS=SEASON_YEARS.length;
+}
 async function init(){
   // Global image error safety net
   document.addEventListener('error',function(e){if(e.target.tagName==='IMG'&&!e.target.dataset.errHandled){e.target.dataset.errHandled='1';e.target.style.display='none';}},true);
@@ -2119,6 +2129,7 @@ async function init(){
     setLoadingStatus('BUILDING DASHBOARD...');
     D=buildCurrentSeasonData(cur,playerDB,contractData,disc.state);
     D._loaded=new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    initSeasonConstants();
     rebuildPlayerMap();
 
     // ── CACHE for fallback ──
@@ -2150,6 +2161,7 @@ async function init(){
     const cached=cache.get('hd_cache_current');
     if(cached){
       D=cached;
+      initSeasonConstants();
       rebuildPlayerMap();
       injectEmptyStates();
       buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
