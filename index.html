@@ -149,7 +149,7 @@ button{min-height:36px}
 /* ═══ NAV BAR — WINS POOL STYLE ═══ */
 .nav-bar{background:rgba(26,20,16,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--g3);position:sticky;top:59px;z-index:900;overflow-x:auto;scrollbar-width:none}
 .nav-bar::-webkit-scrollbar{display:none}
-.nav-bar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(270deg,var(--g2),transparent);pointer-events:none;z-index:1}
+.nav-bar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(270deg,rgba(26,20,16,.95),transparent);pointer-events:none;z-index:1}
 .nav-in{max-width:1440px;margin:0 auto;padding:0 12px;display:flex;gap:0;flex-wrap:nowrap;min-width:max-content}
 .nav-btn{font-family:var(--fd);padding:14px 28px;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;position:relative}
 .nav-btn:hover{color:var(--t1);background:rgba(255,255,255,.02)}
@@ -873,9 +873,8 @@ body{padding-bottom:48px}
 @media(max-width:900px){.trade-grid{grid-template-columns:1fr;gap:12px}}
 .trade-grid .trade-card{margin-bottom:0}
 /* Item 12: Winner emphasis — now handled by .mu-sc.win/.lose in matchup card section */
-/* Item 15: Nav scroll indicators */
-.nav-bar{position:relative}
-.nav-bar::before{content:'';position:absolute;top:0;left:0;bottom:0;width:32px;background:linear-gradient(90deg,var(--g2),transparent);pointer-events:none;z-index:2;opacity:0;transition:opacity .2s}
+/* Item 15: Nav scroll indicators — position:sticky from line 150 already establishes containing block */
+.nav-bar::before{content:'';position:absolute;top:0;left:0;bottom:0;width:32px;background:linear-gradient(90deg,rgba(26,20,16,.95),transparent);pointer-events:none;z-index:2;opacity:0;transition:opacity .2s}
 .nav-bar.scrolled-right::before{opacity:1}
 .nav-bar.scrolled-end::after{opacity:0}
 .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:28px;height:28px;border-radius:50%;background:var(--g3);border:1px solid var(--g5);color:var(--t3);font-size:12px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
@@ -1113,7 +1112,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 </div></div>
 <div class="cast" id="cast-strip"></div>
 <div class="sstrip" id="sstrip"></div>
-<nav class="nav-bar"><div class="nav-in" id="nav"></div></nav>
+<nav class="nav-bar" id="nav-bar"><button class="nav-arrow left" aria-label="Scroll tabs left">&#x25C0;</button><div class="nav-in" id="nav"></div><button class="nav-arrow right" aria-label="Scroll tabs right">&#x25B6;</button></nav>
 <main class="main" id="main">
   <section class="panel active" id="tab-power"></section>
   <section class="panel" id="tab-rosters"></section>
@@ -1257,8 +1256,24 @@ function buildNav(){
   n.innerHTML=html;
   n.querySelectorAll('.nav-btn').forEach(b=>{b.onclick=()=>showTab(b.dataset.t);});
   n.querySelectorAll('.nav-drop-item').forEach(b=>{b.onclick=e=>{e.stopPropagation();showTab(b.dataset.t);b.closest('.nav-group').classList.remove('open');};});
-  n.querySelectorAll('.nav-group-btn').forEach(b=>{b.onclick=e=>{e.stopPropagation();const g=b.closest('.nav-group');const wasOpen=g.classList.contains('open');n.querySelectorAll('.nav-group').forEach(x=>x.classList.remove('open'));if(!wasOpen){const r=b.getBoundingClientRect();const dd=g.querySelector('.nav-dropdown');dd.style.top=(r.bottom+1)+'px';dd.style.left=r.left+'px';g.classList.add('open');}};});
+  n.querySelectorAll('.nav-group-btn').forEach(b=>{b.onclick=e=>{e.stopPropagation();const g=b.closest('.nav-group');const wasOpen=g.classList.contains('open');n.querySelectorAll('.nav-group').forEach(x=>x.classList.remove('open'));if(!wasOpen){const r=b.getBoundingClientRect();const dd=g.querySelector('.nav-dropdown');const nbr=document.getElementById('nav-bar').getBoundingClientRect();dd.style.top=(r.bottom-nbr.top+1)+'px';dd.style.left=(r.left-nbr.left)+'px';g.classList.add('open');}};});
   document.addEventListener('click',()=>n.querySelectorAll('.nav-group').forEach(g=>g.classList.remove('open')));
+  // Nav scroll indicators + arrow buttons
+  const nb=document.getElementById('nav-bar');
+  if(nb){
+    function updateNavScroll(){
+      const sl=nb.scrollLeft,sw=nb.scrollWidth,cw=nb.clientWidth;
+      nb.classList.toggle('scrolled-right',sl>10);
+      nb.classList.toggle('scrolled-end',sl+cw>=sw-10);
+    }
+    nb.addEventListener('scroll',updateNavScroll,{passive:true});
+    updateNavScroll();
+    nb.querySelector('.nav-arrow.left').onclick=function(e){e.stopPropagation();nb.scrollBy({left:-200,behavior:'smooth'});};
+    nb.querySelector('.nav-arrow.right').onclick=function(e){e.stopPropagation();nb.scrollBy({left:200,behavior:'smooth'});};
+    // Scroll active tab into view on load
+    var act=n.querySelector('.nav-btn.active')||n.querySelector('.nav-group-btn.active');
+    if(act)act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
   window._showTab=showTab;  // expose early so hash routing can use it
 }
 function buildCast(){
