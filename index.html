@@ -2193,7 +2193,7 @@ async function loadHistory(disc,playerDB){
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
       renderTrophies();renderRivals();renderPulse();renderChronicle();
-      buildStats();buildTicker();renderPower();renderAnalytics();renderTrades();
+      buildStats();buildTicker();renderPower();renderAnalytics();renderTrades();selDraft=null;renderDraft();
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
     }
