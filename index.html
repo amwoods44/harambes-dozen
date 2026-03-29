@@ -3126,27 +3126,33 @@ function renderDraft(){
       var cardBg=isCut?'#0e0e14':'linear-gradient(170deg,rgba('+rgb+',.15),#10101a)';
       var cardBorder=isCut?'1px solid rgba(255,255,255,.04)':'1px solid rgba('+rgb+',.2)';
       var cardOpacity=isCut?'opacity:.45;':'';
-      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;padding:12px 12px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;'+cardOpacity+'">';
+      h+='<div class="pp-trigger" data-pid="'+p.pid+'" style="min-width:156px;flex-shrink:0;background:'+cardBg+';border:'+cardBorder+';border-radius:10px;position:relative;overflow:hidden;cursor:pointer;'+cardOpacity+'">';
+      // Top area with padding
+      h+='<div style="padding:10px 12px 6px;display:flex;flex-direction:column;align-items:center;text-align:center">';
       // Pick number top-left
       h+='<div style="position:absolute;top:8px;left:10px;font-family:var(--fm);font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">'+pickNum+'</div>';
       // Position badge top-right
       h+='<div style="position:absolute;top:8px;right:10px"><span style="font-family:var(--fd);font-size:10px;font-weight:700;color:'+pCol+';padding:2px 6px;border-radius:3px;background:rgba('+rgb+','+(isCut?'.06':'.15')+')">'+p.pos+'</span></div>';
       // Headshot
-      h+='<div style="width:52px;height:52px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.08':'.3')+');overflow:hidden;margin:8px 0 8px">';
+      h+='<div style="width:52px;height:52px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.08':'.3')+');overflow:hidden;margin:8px 0 4px">';
       h+='<img src="'+PI(p.pid)+'" style="width:100%;height:100%;object-fit:cover;object-position:top'+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       h+='</div>';
-      // Text banner strip
-      h+='<div style="background:rgba(0,0,0,.45);margin:4px -12px 0;padding:6px 12px 8px;width:calc(100% + 24px)">';
-      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
-      h+='<div style="font-family:var(--fb);font-size:11px;color:rgba(255,255,255,.8);margin-top:2px;text-align:center">'+(p.tm||'FA')+(college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
-      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.9);margin-top:3px;text-align:center">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
       h+='</div>';
-      // NCAA logo bottom-left
-      if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:10px;width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
-      // NFL logo bottom-right
-      if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:8px;right:10px;width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      // Dark banner strip — full width, no padding inheritance
+      h+='<div style="background:rgba(0,0,0,.5);padding:8px 12px 10px;text-align:center">';
+      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
+      h+='<div style="font-family:var(--fb);font-size:11px;color:rgba(255,255,255,.85);margin-top:3px">'+(college?'<i>'+college+'</i> \u00b7 ':'')+(p.tm||'FA')+'</div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.9);margin-top:3px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      h+='</div>';
+      // Logo footer area
+      h+='<div style="padding:8px 10px 10px;display:flex;justify-content:space-between;align-items:center;min-height:30px">';
+      if(colLogo)h+='<img src="'+colLogo+'" style="width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      else h+='<div style="width:22px"></div>';
+      if(nflLogo)h+='<img src="'+nflLogo+'" style="width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
+      else h+='<div style="width:22px"></div>';
+      h+='</div>';
       // Status bar
-      h+='<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:'+statusBar+';border-radius:0 0 10px 10px"></div>';
+      h+='<div style="height:3px;background:'+statusBar+'"></div>';
       h+='</div>';
     });
     h+='</div></div>';
