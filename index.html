@@ -1663,6 +1663,14 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state){
 
   // ── Cross-season fields (empty until mergeHistoricalData) ──
   d.champions=[];
+  // Populate current season champion from winners_bracket if available
+  if(winnersBracket&&winnersBracket.length){
+    const maxRound=Math.max(...winnersBracket.map(m=>m.r||0));
+    const champMatch=winnersBracket.find(m=>m.r===maxRound&&m.p===1);
+    if(champMatch&&champMatch.w&&champMatch.l){
+      d.champions.push({year:String(currentSeason),champion:d.rid_to_name[champMatch.w]||'?',runner_up:d.rid_to_name[champMatch.l]||'?',champ_rid:champMatch.w,runner_up_rid:champMatch.l,week:maxRound});
+    }
+  }
   d.unified_trades=[];
   d.rivalries=[];
   d.luck={};
@@ -1695,7 +1703,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
 
   // ── Process each historical season ──
   historicalSeasons.forEach(hs=>{
-    const{season,league,rosters,users,matchups,transactions,draftPicks,picks,weekNums,playoffStart}=hs;
+    const{season,league,rosters,users,matchups,transactions,draftPicks,picks,winnersBracket,weekNums,playoffStart}=hs;
     const rtn=ridToNameForSeason(rosters,users);
     const sk='standings_'+season;
 
@@ -1804,16 +1812,12 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       });
     }
 
-    // Champions — find championship week (last playoff week with data)
-    const allPlayoffWks=Object.keys(hsMatchupWeeks).map(Number).filter(w=>w>=pStart).sort((a,b)=>b-a);
-    if(allPlayoffWks.length){
-      const champWk=allPlayoffWks[0];
-      const champGames=hsMatchupWeeks[champWk]||[];
-      if(champGames.length){
-        const champGame=champGames.reduce((best,g)=>Math.max(g.team_a.points,g.team_b.points)>Math.max(best.team_a.points,best.team_b.points)?g:best,champGames[0]);
-        const champRid=champGame.winner.roster_id;
-        const runnerRid=champGame.loser.roster_id;
-        d.champions.push({year:String(season),champion:rtn[champRid]||'?',runner_up:rtn[runnerRid]||'?',champ_rid:champRid,runner_up_rid:runnerRid,week:champWk});
+    // Champions — use winners_bracket (p=1 in highest round = championship game)
+    if(winnersBracket&&winnersBracket.length){
+      const maxRound=Math.max(...winnersBracket.map(m=>m.r||0));
+      const champMatch=winnersBracket.find(m=>m.r===maxRound&&m.p===1);
+      if(champMatch&&champMatch.w&&champMatch.l){
+        d.champions.push({year:String(season),champion:rtn[champMatch.w]||'?',runner_up:rtn[champMatch.l]||'?',champ_rid:champMatch.w,runner_up_rid:champMatch.l,week:maxRound});
       }
     }
   });
