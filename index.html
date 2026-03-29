@@ -1710,10 +1710,18 @@ function renderTrades(){
     h+='<div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text">Draft retention: <b>'+D.retention_2025.rostered+'/'+D.retention_2025.total+'</b> of the 2025 class still rostered ('+Math.round(D.retention_2025.rostered/D.retention_2025.total*100)+'%)'+(D.retention_2024?'. 2024 class: <b>'+D.retention_2024.rostered+'/'+D.retention_2024.total+'</b> ('+Math.round(D.retention_2024.rostered/D.retention_2024.total*100)+'%)':'')+'.</div></div>';
   }
   h+='</div>';
-  // Trade grade helpers
+  // Trade grade helpers — contract-adjusted KTC
   function ktcVal(players,picks){
     var total=0;
-    players.forEach(function(p){var c=D.contracts&&D.contracts[p.nm];if(c&&c.ktc)total+=c.ktc;});
+    players.forEach(function(p){
+      var c=D.contracts&&D.contracts[p.nm];
+      if(!c||!c.ktc)return;
+      var raw=c.ktc;
+      // Discount expiring contracts: 0yr=40%, 1yr=70%, 2yr=90%, 3+=100%
+      var yrs=c.yrs!==undefined?c.yrs:3;
+      var mult=yrs<=0?0.4:yrs===1?0.7:yrs===2?0.9:1.0;
+      total+=Math.round(raw*mult);
+    });
     picks.forEach(function(pk){var r=pk.match(/Rd(\d)/);var rd=r?parseInt(r[1]):3;total+=(rd===1?5000:rd===2?2000:500);});
     return total;
   }
@@ -1730,7 +1738,7 @@ function renderTrades(){
     ktcRecord[b.name]=(ktcRecord[b.name]||0)+bNet;
   });
   // Trade grade leaderboard
-  h+='<div class="bh" style="margin-top:4px"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost Across All Trades</span></div></div>';
+  h+='<div class="bh" style="margin-top:4px"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract-Adjusted KTC Value \u2022 All Trades</span></div></div>';
   var krArr=Object.entries(ktcRecord).sort(function(a,b){return b[1]-a[1]});
   var maxKR=Math.max.apply(null,krArr.map(function(x){return Math.abs(x[1])}));
   krArr.forEach(function(entry){
