@@ -3135,12 +3135,12 @@ function renderDraft(){
       h+='<div style="width:52px;height:52px;border-radius:12px;background:#1a1a2a;border:2px solid rgba('+rgb+','+(isCut?'.08':'.3')+');overflow:hidden;margin:8px 0 8px">';
       h+='<img src="'+PI(p.pid)+'" style="width:100%;height:100%;object-fit:cover;object-position:top'+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       h+='</div>';
-      // Name
-      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:136px'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
-      // Team · College
-      h+='<div style="font-family:var(--fb);font-size:11px;color:rgba(255,255,255,.75);margin-top:3px">'+(p.tm||'FA')+(college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
-      // Drafter
-      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.8);margin-top:4px">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      // Text banner strip
+      h+='<div style="background:rgba(0,0,0,.45);margin:4px -12px 0;padding:6px 12px 8px;width:calc(100% + 24px)">';
+      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center'+(isCut?';text-decoration:line-through':'')+'">'+p.nm+'</div>';
+      h+='<div style="font-family:var(--fb);font-size:11px;color:rgba(255,255,255,.8);margin-top:2px;text-align:center">'+(p.tm||'FA')+(college?' \u00b7 <i>'+college+'</i>':'')+'</div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.9);margin-top:3px;text-align:center">'+tn(p.rid).substring(0,14).toUpperCase()+'</div>';
+      h+='</div>';
       // NCAA logo bottom-left
       if(colLogo)h+='<img src="'+colLogo+'" style="position:absolute;bottom:8px;left:10px;width:22px;height:22px;object-fit:contain;opacity:'+(isCut?'.15':'.55')+(isCut?';filter:grayscale(1)':'')+'" onerror="this.style.display=\'none\'">';
       // NFL logo bottom-right
