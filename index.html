@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dynasty HQ">
-<link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta property="og:title" content="Harambe's Dozen — Dynasty HQ">
 <meta property="og:description" content="12-team PPR dynasty league dashboard. Power rankings, trade history, player profiles, and more.">
 <meta property="og:type" content="website">
@@ -1141,7 +1141,7 @@ let D={};
 const CFG={
   userId:'393634863552425984',
   leagueName:"Harambe's Dozen",
-  avatarOverrides:{10:'Kevin.png'},
+  avatarOverrides:{10:'assets/avatars/Kevin.png'},
   sleeperBase:'https://api.sleeper.app/v1',
   sheetCsvUrl:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrwFZSQor9KOXxYX9CGxX8uyPTzRdahn2Pch_uLjQFe0YUSoUuoQ7n7akevWWB9dfgVl2wIeZOeEim/pub?output=csv',
   ktcUrl:'https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams=12&ppr=1'
@@ -1321,11 +1321,21 @@ function parseContractCSV(csv,ktcMap){
     const name=r[nameIdx];
     const sid=r[idIdx]||null;
     const ktcEntry=sid&&ktcMap[sid]?ktcMap[sid]:{};
+    // Parse contract years: empty/blank = uncontracted (null), number = years remaining
+    const rawYrs=(r[yrsIdx]||'').trim();
+    const parsedYrs=rawYrs===''?null:parseInt(rawYrs)||0;
+    // Parse tag: "true"/"Franchise"/"Transition" all count, "None"/empty = null
+    const rawTag=(r[tagIdx]||'').trim().toLowerCase();
+    const tag=rawTag===''||rawTag==='none'?null:rawTag==='true'?'Franchise':r[tagIdx].trim();
+    // Parse exemption: year strings ("2024","2025") or type strings, "None"/empty = null
+    const rawExm=(r[exIdx]||'').trim().toLowerCase();
+    const exm=rawExm===''||rawExm==='none'?null:r[exIdx].trim();
     contracts[name]={
       sleeperId:sid,
-      yrs:parseInt(r[yrsIdx])||0,
-      tag:(r[tagIdx]||'').toLowerCase()==='none'?null:r[tagIdx]||null,
-      exm:(r[exIdx]||'').toLowerCase()==='none'?null:r[exIdx]||null,
+      yrs:parsedYrs,
+      contracted:parsedYrs!==null,
+      tag,
+      exm,
       note:r[noteIdx]||'',
       ktc:ktcEntry.val||0,
       rnk:ktcEntry.rnk||0,
@@ -1333,7 +1343,7 @@ function parseContractCSV(csv,ktcMap){
     };
     if(sid)contracts['_id_'+sid]=contracts[name];
   }
-  cache.set('hd_contracts',{contracts,exemptions:{}});
+  cache.set('hd_contracts',{contracts,exemptions:{}},2*60*60*1000);
   return{contracts,exemptions:{}};
 }
 
@@ -1369,7 +1379,7 @@ async function fetchHistoricalSeason(leagueId,season){
     transactions:Object.fromEntries(weekNums.map((w,i)=>[w,txns[i]||[]])),
     playoffStart,weekNums
   };
-  cache.set(cacheKey,result);
+  cache.set(cacheKey,result,7*24*60*60*1000);
   return result;
 }
 
@@ -2070,7 +2080,7 @@ function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{con
 // Item 16: Dynasty value tier tag helper
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
 // Item 1: Contract pill helper
-function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||c.yrs===undefined)return'';const y=c.yrs;if(y===undefined)return'';const cls=y>=4?'cpill-4':y>=2?'cpill-23':y===1?'cpill-1':'cpill-0';const lbl=y<=0?'EXP':y+'yr';const tag=c.tag?'\uD83C\uDFF7':c.cut?'✂':c.exm?'🔒':'';return'<span class="cpill '+cls+'">'+tag+lbl+'</span>';}
+function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||!c.contracted)return'';const y=c.yrs;const cls=y>=4?'cpill-4':y>=2?'cpill-23':y===1?'cpill-1':'cpill-0';const lbl=y<=0?'EXP':y+'yr';const tag=c.tag?'\uD83C\uDFF7':c.exm?'\uD83D\uDD12':'';return'<span class="cpill '+cls+'">'+tag+lbl+'</span>';}
 async function init(){
   // Global image error safety net
   document.addEventListener('error',function(e){if(e.target.tagName==='IMG'&&!e.target.dataset.errHandled){e.target.dataset.errHandled='1';e.target.style.display='none';}},true);
@@ -2098,6 +2108,7 @@ async function init(){
     // ── BUILD D ──
     setLoadingStatus('BUILDING DASHBOARD...');
     D=buildCurrentSeasonData(cur,playerDB,contractData,disc.state);
+    D._loaded=new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
     rebuildPlayerMap();
 
     // ── CACHE for fallback ──
@@ -2284,7 +2295,8 @@ function buildTicker(){
   D.champions.forEach(c=>{tk+='<div class="tki">\u{1F3C6} <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
   D.standings_2025.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
   tk+='<div class="tki">\u{1F4A5} BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
-  tk+='<div class="tki">'+D.trades.length+' TRADES completed across 2024-2025</div><div class="tks">\u25C6</div>';
+  tk+='<div class="tki">'+D.trades.length+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
+  if(D._loaded)tk+='<div class="tki" style="color:var(--t4)">Data as of '+D._loaded+'</div><div class="tks">\u25C6</div>';
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
 }
 // ═══ POWER RANKINGS ═══
@@ -2684,7 +2696,13 @@ function renderTrades(){
   // Trade grade helpers
   function ktcVal(players,picks){
     var total=0;
-    players.forEach(function(p){var c=D.contracts&&D.contracts[p.nm];if(c&&c.ktc)total+=c.ktc;});
+    players.forEach(function(p){
+      var c=D.contracts&&D.contracts[p.nm];
+      if(!c||!c.ktc)return;
+      // Contract-adjusted value: fewer years = less control = less value
+      var mult=!c.contracted?0.5:c.yrs<=1?0.6:c.yrs<=2?0.85:1;
+      total+=Math.round(c.ktc*mult);
+    });
     picks.forEach(function(pk){var r=pk.match(/Rd(\d)/);var rd=r?parseInt(r[1]):3;total+=(rd===1?5000:rd===2?2000:500);});
     return total;
   }
@@ -3769,48 +3787,87 @@ function renderRivals(){
 // ═══ CONTRACTS ═══
 function renderContracts(){
   if(!D.contracts){document.getElementById('tab-contracts').innerHTML='<div style="text-align:center;padding:40px;color:var(--t4)">No contract data</div>';return;}
-  var h='<div class="bh"><h2 class="bh-tag">\u{1F4DD} Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Contract Management \u2022 2026 Season</span></div></div>';
-  // Build per-team contract data
+  var curSeason=parseInt(D.league.season)||2026;
+  var h='<div class="bh"><h2 class="bh-tag">\u{1F4DD} Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Contract Management \u2022 '+curSeason+' Season</span></div></div>';
+  // ── Build per-team contract data ──
   var teamContracts={};
   D.teams.forEach(function(t){
-    var tc={name:t.team_name,rid:t.roster_id,players:[],total:0,expiring:0,cuttable:0,tagged:0,avgYrs:0,totalKtc:0};
+    var tc={name:t.team_name,rid:t.roster_id,contracted:[],uncontracted:[],tagged:0,expiring:0,totalKtc:0};
     t.players.forEach(function(p){
-      var c=D.contracts[p.name];
-      if(c){
-        tc.players.push({name:p.name,pos:p.pos,age:p.age,team:p.team,id:p.id,yrs:c.yrs,exp:c.exp,cut:c.cut,tag:c.tag,exm:c.exm,ktc:c.ktc,rnk:c.rnk,starter:p.is_starter});
-        tc.total++;
-        if(c.yrs===0)tc.expiring++;
-        if(c.cut)tc.cuttable++;
-        if(c.tag)tc.tagged++;
-        tc.totalKtc+=c.ktc;
+      var c=D.contracts[p.name]||D.contracts['_id_'+p.id];
+      var entry={name:p.name,pos:p.pos,age:p.age,team:p.team,id:p.id,ktc:c?c.ktc:0,rnk:c?c.rnk:9999,starter:p.is_starter,tag:c?c.tag:null,exm:c?c.exm:null,contracted:c?c.contracted:false,yrs:c?c.yrs:null};
+      if(entry.contracted){
+        tc.contracted.push(entry);
+        tc.totalKtc+=entry.ktc;
+        if(entry.yrs<=1)tc.expiring++;
+        if(entry.tag)tc.tagged++;
+      }else{
+        tc.uncontracted.push(entry);
       }
     });
-    tc.avgYrs=tc.total>0?(tc.players.reduce(function(s,p){return s+p.yrs},0)/tc.total).toFixed(1):0;
+    var cPlayers=tc.contracted;
+    tc.avgYrs=cPlayers.length?(cPlayers.reduce(function(s,p){return s+(p.yrs||0)},0)/cPlayers.length).toFixed(1):'0';
     teamContracts[t.team_name]=tc;
   });
-  // ── LEAGUE OVERVIEW ──
   var allC=Object.values(teamContracts);
-  var totalContracts=allC.reduce(function(s,t){return s+t.total},0);
+  var totalContracted=allC.reduce(function(s,t){return s+t.contracted.length},0);
+  var totalUncontracted=allC.reduce(function(s,t){return s+t.uncontracted.length},0);
   var totalExp=allC.reduce(function(s,t){return s+t.expiring},0);
-  var totalCut=allC.reduce(function(s,t){return s+t.cuttable},0);
   var totalTag=allC.reduce(function(s,t){return s+t.tagged},0);
-  h+='<div class="narrative">';
-  h+='<div class="nar-item"><div class="nar-icon">\u{1F4CB}</div><div class="nar-text"><b>'+totalContracts+'</b> active contracts across the league. <b style="color:var(--red-t)">'+totalExp+'</b> expiring this offseason. <b>'+totalCut+'</b> cuttable. <b>'+totalTag+'</b> franchise tagged.</div></div>';
-  h+='<div class="nar-item"><div class="nar-icon">\u{23F3}</div><div class="nar-text">Players with <b style="color:var(--red-t)">0 years</b> remaining are still on their teams until Memorial Day. Each team gets <b>1 exemption</b> to restructure a single contract.</div></div>';
+  // ── LEAGUE SNAPSHOT (stat cards) ──
+  h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">';
+  h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px;text-align:center">';
+  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--a)">'+totalContracted+'</div>';
+  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">CONTRACTED</div></div>';
+  h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px;text-align:center">';
+  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--t3)">'+totalUncontracted+'</div>';
+  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">UNCONTRACTED</div></div>';
+  h+='<div style="background:var(--g2);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:16px;text-align:center">';
+  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--red-t)">'+totalExp+'</div>';
+  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">EXPIRING (1yr)</div></div>';
+  h+='<div style="background:var(--g2);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:16px;text-align:center">';
+  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--y)">'+totalTag+'</div>';
+  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">FRANCHISE TAGGED</div></div>';
   h+='</div>';
-  // ── EXPIRING CONTRACTS (the action items) ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag" style="background:var(--red-bg);color:var(--red-t)">\u{26A0}\uFE0F Expiring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+totalExp+' Players at 0 Years \u2022 Decision Time</span></div></div>';
+  // ── FRANCHISE TAGGED PLAYERS ──
+  if(totalTag){
+    var taggedPlayers=[];
+    allC.forEach(function(tc){tc.contracted.filter(function(p){return p.tag}).forEach(function(p){taggedPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
+    taggedPlayers.sort(function(a,b){return b.ktc-a.ktc});
+    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag" style="background:rgba(245,158,11,.12);color:var(--y)">\u{1F3F7}\uFE0F Tagged</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+totalTag+' Franchise Tagged Players</span></div></div>';
+    h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th></th><th>Player</th><th>Pos</th><th>Age</th><th>Team</th><th>Owner</th><th>Tag</th><th>Contract</th><th>KTC</th></tr></thead><tbody>';
+    taggedPlayers.forEach(function(p){
+      var yc=p.yrs>=4?'var(--a)':p.yrs>=2?'var(--y)':'var(--red-t)';
+      h+='<tr><td>'+pimg(p.id,28)+'</td>';
+      h+='<td style="font-weight:700">'+p.name+'</td>';
+      h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
+      h+='<td>'+(p.age||'')+'</td><td>'+(p.team||'FA')+'</td>';
+      h+='<td style="font-family:var(--fd);font-size:11px;color:var(--t3)">'+p.team_name+'</td>';
+      h+='<td><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.12);color:var(--y)">'+p.tag.toUpperCase()+'</span></td>';
+      h+='<td style="font-family:var(--fm);font-weight:700;color:'+yc+'">'+(p.yrs||0)+'yr</td>';
+      h+='<td style="font-family:var(--fm);font-weight:700;color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  }
+  // ── EXPIRING CONTRACTS (1yr or less, contracted only) ──
   var expPlayers=[];
-  allC.forEach(function(tc){tc.players.filter(function(p){return p.yrs===0}).forEach(function(p){expPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
-  expPlayers.sort(function(a,b){return a.rnk-b.rnk});
+  allC.forEach(function(tc){tc.contracted.filter(function(p){return p.yrs<=1}).forEach(function(p){expPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
+  expPlayers.sort(function(a,b){return b.ktc-a.ktc});
   if(expPlayers.length){
-    h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th></th><th>Player</th><th>Pos</th><th>Age</th><th>Team</th><th>Owner</th><th>KTC</th><th>Rank</th><th>Status</th></tr></thead><tbody>';
+    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag" style="background:rgba(239,68,68,.12);color:var(--red-t)">\u{26A0}\uFE0F Expiring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+expPlayers.length+' Players at 1yr or Less \u2022 Decision Time</span></div></div>';
+    h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th></th><th>Player</th><th>Pos</th><th>Age</th><th>Team</th><th>Owner</th><th>Yrs</th><th>KTC</th><th>Status</th></tr></thead><tbody>';
     expPlayers.forEach(function(p){
-      var tags=[];
-      if(p.cut)tags.push('<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(239,68,68,.12);color:var(--red-t)">CUTTABLE</span>');
-      if(p.tag)tags.push('<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(245,158,11,.12);color:var(--y)">TAGGED</span>');
-      if(p.exm)tags.push('<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(139,92,246,.12);color:var(--pur)">EXEMPT'+p.exm+'</span>');
-      h+='<tr><td>'+pimg(p.id,28)+'</td><td style="font-weight:700">'+p.name+'</td><td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td><td>'+(p.age||'')+'</td><td>'+(p.team||'FA')+'</td><td style="font-family:var(--fd);font-size:11px;color:var(--t3)">'+p.team_name+'</td><td style="font-family:var(--fm);color:var(--a)">'+(p.ktc||'')+'</td><td style="font-family:var(--fm)">'+Math.round(p.rnk)+'</td><td>'+tags.join(' ')+'</td></tr>';
+      var badges='';
+      if(p.tag)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(245,158,11,.12);color:var(--y)">'+p.tag.toUpperCase()+'</span> ';
+      if(p.exm)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(139,92,246,.12);color:var(--pur)">EXEMPT \u2022 '+p.exm+'</span>';
+      h+='<tr><td>'+pimg(p.id,28)+'</td>';
+      h+='<td style="font-weight:700">'+p.name+'</td>';
+      h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
+      h+='<td>'+(p.age||'')+'</td><td>'+(p.team||'FA')+'</td>';
+      h+='<td style="font-family:var(--fd);font-size:11px;color:var(--t3)">'+p.team_name+'</td>';
+      h+='<td style="font-family:var(--fm);font-weight:700;color:var(--red-t)">'+(p.yrs||0)+'yr</td>';
+      h+='<td style="font-family:var(--fm);color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td>';
+      h+='<td>'+badges+'</td></tr>';
     });
     h+='</tbody></table></div>';
   }
@@ -3819,27 +3876,25 @@ function renderContracts(){
   var exmYears=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
   if(exmYears.length){
     h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F3F7}\uFE0F Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year (Tradeable)</span></div></div>';
-    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4DD}</div><div class="nar-text">Each team gets <b>1 exemption per year</b> to restructure any contract \u2014 not just expiring ones. Exemptions can be <b>traded</b> like draft picks, so a team may use 2+ in one year. Used to lock up core players long-term or re-up guys before they hit the market.</div></div></div>';
+    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4DD}</div><div class="nar-text">Each team gets <b>1 exemption per year</b> to restructure any contract \u2014 not just expiring ones. Exemptions can be <b>traded</b> like draft picks, so a team may use 2+ in one year.</div></div></div>';
     h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:12px">';
     exmYears.forEach(function(yr,i){
       h+='<button class="tab-sub-btn'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.exm-yr-panel\').forEach(function(el){el.style.display=\'none\'});document.getElementById(\'exm-'+yr+'\').style.display=\'block\';this.parentNode.querySelectorAll(\'.tab-sub-btn\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">'+yr+' ('+exmH[yr].length+')</button>';
     });
-    // Add a 2026 placeholder
-    h+='<button class="tab-sub-btn" style="opacity:.4;cursor:default">2026 \u2014 TBD</button>';
+    h+='<button class="tab-sub-btn" style="opacity:.4;cursor:default">'+curSeason+' \u2014 TBD</button>';
     h+='</div>';
     exmYears.forEach(function(yr,i){
       var entries=exmH[yr];
       h+='<div class="exm-yr-panel" id="exm-'+yr+'" style="display:'+(i===0?'block':'none')+'">';
-      // Count per owner to detect traded exemptions
       var ownerCounts={};
       entries.forEach(function(e){ownerCounts[e.o]=(ownerCounts[e.o]||0)+1});
-      h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>Player</th><th>Pos</th><th>Owner</th><th>Exemption Used</th><th>Had</th><th>Added</th><th>New Deal</th><th>Now (2026)</th><th>Notes</th></tr></thead><tbody>';
+      h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>Player</th><th>Pos</th><th>Owner</th><th>Source</th><th>Had</th><th>Added</th><th>New Deal</th><th>Now ('+curSeason+')</th><th>Notes</th></tr></thead><tbody>';
       entries.forEach(function(e){
         var ynowCol=e.ynow<=0?'var(--red-t)':e.ynow<=2?'var(--y)':'var(--a)';
         var isTraded=e.from&&e.from!==e.o;
         var badges='';
         if(isTraded)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(59,130,246,.12);color:var(--blu)">TRADED</span> ';
-        if(e.note==='Early extension')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.12);color:var(--pur)">EARLY EXTENSION</span>';
+        if(e.note==='Early extension')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.12);color:var(--pur)">EARLY EXT</span>';
         else if(e.note==='Expiring save')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.12);color:var(--y)">EXPIRING SAVE</span>';
         else if(e.note==='Pre-data exemption')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(102,102,120,.15);color:var(--t4)">PRE-DATA</span>';
         h+='<tr>';
@@ -3856,16 +3911,11 @@ function renderContracts(){
         h+='</tr>';
       });
       h+='</tbody></table></div>';
-      // Summary for this year
       var usedBy=Object.entries(ownerCounts);
       var multiUsers=usedBy.filter(function(x){return x[1]>1});
       if(multiUsers.length||usedBy.length<12){
         h+='<div style="margin-top:8px;font-family:var(--fb);font-size:12px;color:var(--t3);line-height:1.5">';
-        if(multiUsers.length){
-          multiUsers.forEach(function(mu){
-            h+='<b>'+mu[0]+'</b> used <b>'+mu[1]+' exemptions</b> (traded for '+(mu[1]-1)+' extra). ';
-          });
-        }
+        if(multiUsers.length){multiUsers.forEach(function(mu){h+='<b>'+mu[0]+'</b> used <b>'+mu[1]+' exemptions</b> (traded for '+(mu[1]-1)+' extra). '});}
         var unused=12-entries.length;
         if(unused>0)h+=unused+' exemption'+(unused>1?'s':'')+' unused league-wide.';
         h+='</div>';
@@ -3874,15 +3924,16 @@ function renderContracts(){
     });
   }
   // ── CONTRACT HEALTH PER TEAM ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years \u2022 Expiring Count</span></div></div>';
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years \u2022 Contracted Players Only</span></div></div>';
   var sorted=allC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs)});
   sorted.forEach(function(tc){
+    var cCount=tc.contracted.length;
     var healthCol=tc.avgYrs>=3?'var(--a)':tc.avgYrs>=2?'var(--y)':'var(--red-t)';
     var healthPct=Math.min(100,tc.avgYrs/5*100);
     h+='<div class="h-row" style="gap:8px">';
     h+=av(tc.rid,28);
     h+='<span class="h-team" style="min-width:120px">'+tc.name+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4);min-width:30px">'+tc.total+'</span>';
+    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4);min-width:40px">'+cCount+'/'+( cCount+tc.uncontracted.length)+'</span>';
     h+='<div style="flex:1;height:8px;background:var(--g3);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+healthPct+'%;background:'+healthCol+';border-radius:4px"></div></div>';
     h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+healthCol+';min-width:36px;text-align:right">'+tc.avgYrs+'yr</span>';
     if(tc.expiring)h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(239,68,68,.12);color:var(--red-t)">'+tc.expiring+' EXP</span>';
@@ -3902,39 +3953,40 @@ function renderContracts(){
     h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+tc.totalKtc.toLocaleString()+'</span>';
     h+='</div>';
   });
-  // ── CONTRACT CLIFF (years 2026-2031) ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4C9} Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contracted Talent Dropping Off by Year</span></div></div>';
+  // ── CONTRACT CLIFF ──
+  var cliffStart=curSeason;
+  var cliffYears=Array.from({length:6},function(_,i){return cliffStart+i});
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4C9} Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contracted Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text">How many contracted players each team retains through future years. Steeper drops = bigger rebuild windows coming.</div></div></div>';
-  var years=[2026,2027,2028,2029,2030,2031,2032];
   h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>Team</th>';
-  years.forEach(function(y){h+='<th>'+y+'</th>'});
+  cliffYears.forEach(function(y){h+='<th>'+y+'</th>'});
   h+='</tr></thead><tbody>';
-  allC.sort(function(a,b){return b.total-a.total}).forEach(function(tc){
+  allC.slice().sort(function(a,b){return b.contracted.length-a.contracted.length}).forEach(function(tc){
     h+='<tr><td style="font-weight:700">'+tc.name.substring(0,14)+'</td>';
-    years.forEach(function(yr){
-      var count=tc.players.filter(function(p){return p.exp>=yr}).length;
-      var pct=tc.total>0?count/tc.total:0;
+    cliffYears.forEach(function(yr,yi){
+      var count=tc.contracted.filter(function(p){return(p.yrs||0)>yi}).length;
+      var pct=tc.contracted.length>0?count/tc.contracted.length:0;
       var col=pct>=0.7?'var(--a)':pct>=0.4?'var(--y)':'var(--red-t)';
       h+='<td style="font-family:var(--fm);font-weight:700;color:'+col+'">'+count+'</td>';
     });
     h+='</tr>';
   });
   h+='</tbody></table></div>';
-  // ── TOP DYNASTY ASSETS (highest KTC under contract) ──
+  // ── TOP DYNASTY ASSETS ──
   h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F48E} Top Assets</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Highest Value Contracted Players</span></div></div>';
   var allPlayers=[];
-  allC.forEach(function(tc){tc.players.forEach(function(p){allPlayers.push({owner:tc.name,rid:tc.rid,...p})})});
+  allC.forEach(function(tc){tc.contracted.forEach(function(p){allPlayers.push({owner:tc.name,rid:tc.rid,...p})})});
   allPlayers.sort(function(a,b){return b.ktc-a.ktc});
   allPlayers.slice(0,25).forEach(function(p,i){
-    var yc=p.yrs>=4?'var(--a)':p.yrs>=2?'var(--y)':'var(--red-t)';
+    var yc=(p.yrs||0)>=4?'var(--a)':(p.yrs||0)>=2?'var(--y)':'var(--red-t)';
     h+='<div class="h-row" style="gap:6px">';
     h+='<span class="h-rk">'+(i+1)+'</span>';
     h+=pimg(p.id,28);
     h+='<span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span>';
     h+='<span class="h-team" style="font-weight:700;flex:1">'+p.name+'</span>';
     h+='<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">'+p.owner.substring(0,12)+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+yc+';min-width:28px;text-align:right">'+p.yrs+'yr</span>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:44px;text-align:right">'+p.ktc+'</span>';
+    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+yc+';min-width:28px;text-align:right">'+(p.yrs||0)+'yr</span>';
+    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:44px;text-align:right">'+(p.ktc?p.ktc.toLocaleString():'--')+'</span>';
     h+='</div>';
   });
   // ── EXEMPTION ROI DASHBOARD ──
@@ -3944,15 +3996,15 @@ function renderContracts(){
     var yr=entry[0],exms=entry[1];
     exms.forEach(function(e){
       var c=D.contracts&&D.contracts[e.p];
-      allExms.push({player:e.p,pos:e.pos,owner:e.o,year:yr,ktc:c?c.ktc:0,yrs:c?c.yrs:0,exp:c?c.exp:0,new_yrs:e.new_yrs,note:e.note,isTraded:e.from&&e.from!==e.o,from:e.from});
+      allExms.push({player:e.p,pos:e.pos,owner:e.o,year:yr,ktc:c?c.ktc:0,yrs:c?(c.yrs||0):0,new_yrs:e.new_yrs,note:e.note,isTraded:e.from&&e.from!==e.o,from:e.from});
     });
   });
   allExms.sort(function(a,b){return b.ktc-a.ktc});
   var totalExmKtc=allExms.reduce(function(s,e){return s+e.ktc},0);
   var avgExmKtc=allExms.length?Math.round(totalExmKtc/allExms.length):0;
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Value of Every Exemption Used \u2022 Ranked by KTC</span></div></div>';
-  h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text"><b>'+allExms.length+'</b> exemptions used across all years. Average KTC value: <b>'+avgExmKtc.toLocaleString()+'</b>. Total exemption portfolio: <b>'+totalExmKtc.toLocaleString()+'</b> KTC.</div></div></div>';
   if(allExms.length){
+    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Value of Every Exemption Used \u2022 Ranked by KTC</span></div></div>';
+    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text"><b>'+allExms.length+'</b> exemptions used across all years. Average KTC value: <b>'+avgExmKtc.toLocaleString()+'</b>. Total exemption portfolio: <b>'+totalExmKtc.toLocaleString()+'</b> KTC.</div></div></div>';
     var best=allExms[0];
     var worst=allExms[allExms.length-1];
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
@@ -4289,7 +4341,7 @@ window.addEventListener('DOMContentLoaded',init);
 // ═══ SERVICE WORKER REGISTRATION ═══
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
       .then(reg => { console.log('SW registered'); reg.update(); })
       .catch(err => console.log('SW failed:', err));
   });
@@ -4381,14 +4433,28 @@ function openPP(playerId) {
   });
   if (!player) return;
 
-  const con = D.contracts ? D.contracts[player.name] : null;
-  const acqIcon = player.acq === 'draft' ? '🎰' : player.acq === 'trade' ? '🔄' : player.acq === 'waiver' ? '📥' : player.acq === 'free_agent' ? '🌐' : '➕';
+  const con = D.contracts ? (D.contracts[player.name] || D.contracts['_id_'+player.id]) : null;
+  const acqIcon = player.acq === 'draft' ? '\uD83C\uDFB0' : player.acq === 'trade' ? '\uD83D\uDD04' : player.acq === 'waiver' ? '\uD83D\uDCE5' : player.acq === 'free_agent' ? '\uD83C\uDF10' : '\u2795';
   const acqText = player.acq_detail ? player.acq_detail : player.acq ? player.acq.replace('_', ' ') : 'Original Roster';
 
   // Find trade history for this player
   const trades = (D.unified_trades || []).filter(t =>
     t.sides.some(s => s.players.some(p => String(p.id) === String(playerId)))
   );
+
+  // Find exemption history for this player
+  const exmH = D.exemption_history || {};
+  const playerExms = [];
+  Object.entries(exmH).forEach(([yr, exms]) => {
+    exms.forEach(e => { if (e.p === player.name) playerExms.push({...e, year: yr}); });
+  });
+
+  // Draft capital — where was this player drafted?
+  let draftInfo = null;
+  Object.entries(D.draft_picks || {}).forEach(([yr, picks]) => {
+    const pk = (picks || []).find(p => String(p.pid || p.player_id) === String(playerId));
+    if (pk) draftInfo = { year: yr, round: pk.rd || pk.round, pick: pk.pk || pk.pick_no, rid: pk.rid || pk.roster_id };
+  });
 
   // Build position color
   const posColors = {QB:'#ef4444',RB:'#10b981',WR:'#3b82f6',TE:'#f59e0b',DEF:'#6b7280',K:'#8b5cf6'};
@@ -4397,27 +4463,50 @@ function openPP(playerId) {
   // Owner avatar
   const ownerAv = ownerTeam ? av(ownerTeam.roster_id, 32) : '';
 
-  // Contract section
+  // Contract & Dynasty Value section
   let contractHTML = '';
-  if (con) {
+  const ktcVal = con ? con.ktc : 0;
+  const ktcRnk = con ? con.rnk : 0;
+  const tierLbl = ktcRnk ? (ktcRnk <= 24 ? 'ELITE' : ktcRnk <= 60 ? 'STARTER' : ktcRnk <= 120 ? 'DEPTH' : 'FRINGE') : '';
+  const tierCol = ktcRnk ? (ktcRnk <= 24 ? 'var(--a)' : ktcRnk <= 60 ? 'var(--y)' : ktcRnk <= 120 ? 'var(--t3)' : 'var(--t4)') : 'var(--t4)';
+  if (con && con.contracted) {
     const yrColor = con.yrs >= 4 ? 'var(--grn)' : con.yrs >= 2 ? 'var(--y)' : 'var(--red-t)';
-    const yrlbl = con.yrs <= 0 ? 'EXPIRED' : con.yrs + ' YR' + (con.yrs !== 1 ? 'S' : '');
+    const yrlbl = con.yrs <= 0 ? 'EXPIRING' : con.yrs + ' YR' + (con.yrs !== 1 ? 'S' : '');
     contractHTML = `<div class="pp-section">
       <div class="pp-section-title">Contract & Value</div>
       <div class="pp-contract-block">
         <div>
           <div class="pp-ktc-lbl">KTC Value</div>
-          <div class="pp-ktc">${con.ktc ? con.ktc.toLocaleString() : '—'}</div>
+          <div class="pp-ktc">${ktcVal ? ktcVal.toLocaleString() : '\u2014'}</div>
         </div>
         <div>
-          <div class="pp-ktc-lbl">KTC Rank</div>
-          <div class="pp-ktc" style="font-size:22px;color:var(--t2)">${con.rnk ? '#' + Math.round(con.rnk) : '—'}</div>
+          <div class="pp-ktc-lbl">Dynasty Rank</div>
+          <div class="pp-ktc" style="font-size:22px;color:var(--t2)">${ktcRnk ? '#' + Math.round(ktcRnk) : '\u2014'}</div>
         </div>
         <div class="pp-contract-pills">
           <span style="font-family:var(--fd);font-size:14px;font-weight:800;padding:6px 14px;border-radius:6px;background:${yrColor}22;color:${yrColor};border:1px solid ${yrColor}55">${yrlbl}</span>
-          ${con.exp ? '<span style="font-family:var(--fd);font-size:12px;color:var(--t4);padding:4px 8px;border-radius:4px;background:var(--g4)">EXP ' + con.exp + '</span>' : ''}
-          ${con.tag ? '<span style="font-family:var(--fd);font-size:11px;padding:4px 8px;border-radius:4px;background:rgba(139,92,246,.15);color:var(--pur)">🏷️ TAG</span>' : ''}
-          ${con.cut ? '<span style="font-family:var(--fd);font-size:11px;padding:4px 8px;border-radius:4px;background:var(--red-bg);color:var(--red-t)">✂ CUT CANDIDATE</span>' : ''}
+          ${tierLbl ? '<span style="font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 8px;border-radius:4px;background:' + tierCol + '22;color:' + tierCol + ';border:1px solid ' + tierCol + '44">' + tierLbl + '</span>' : ''}
+          ${con.tag ? '<span style="font-family:var(--fd);font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;background:rgba(245,158,11,.15);color:var(--y)">\uD83C\uDFF7\uFE0F ' + con.tag.toUpperCase() + '</span>' : ''}
+          ${con.exm ? '<span style="font-family:var(--fd);font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;background:rgba(139,92,246,.15);color:var(--pur)">\uD83D\uDD12 EXEMPT \u2022 ' + con.exm + '</span>' : ''}
+        </div>
+      </div>
+    </div>`;
+  } else {
+    // Uncontracted or not in sheet — still show KTC value if available
+    contractHTML = `<div class="pp-section">
+      <div class="pp-section-title">Contract & Value</div>
+      <div class="pp-contract-block">
+        <div>
+          <div class="pp-ktc-lbl">KTC Value</div>
+          <div class="pp-ktc">${ktcVal ? ktcVal.toLocaleString() : '\u2014'}</div>
+        </div>
+        <div>
+          <div class="pp-ktc-lbl">Dynasty Rank</div>
+          <div class="pp-ktc" style="font-size:22px;color:var(--t2)">${ktcRnk ? '#' + Math.round(ktcRnk) : '\u2014'}</div>
+        </div>
+        <div class="pp-contract-pills">
+          <span style="font-family:var(--fd);font-size:14px;font-weight:800;padding:6px 14px;border-radius:6px;background:var(--g4);color:var(--t3)">NO CONTRACT</span>
+          ${tierLbl ? '<span style="font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 8px;border-radius:4px;background:' + tierCol + '22;color:' + tierCol + ';border:1px solid ' + tierCol + '44">' + tierLbl + '</span>' : ''}
         </div>
       </div>
     </div>`;
@@ -4508,11 +4597,26 @@ function openPP(playerId) {
         </div>
       </div>
       ${contractHTML}
+      ${playerExms.length ? `<div class="pp-section">
+        <div class="pp-section-title">Exemption History</div>
+        ${playerExms.map(e => {
+          const isTraded = e.from && e.from !== e.o;
+          return `<div class="pp-acq-row" style="flex-wrap:wrap;gap:8px">
+            <span style="font-family:var(--fd);font-size:13px;font-weight:800;color:var(--pur);min-width:36px">${e.year}</span>
+            <span style="font-family:var(--fb);font-size:13px;color:var(--t2);flex:1">${e.o} used exemption${isTraded ? ' <span style="color:var(--blu)">(traded from ' + e.from + ')</span>' : ''}</span>
+            <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a)">${e.had !== null ? e.had + 'yr' : '\u2014'} \u2192 ${e.new_yrs}yr</span>
+            ${e.note ? '<div style="width:100%;font-family:var(--fb);font-size:11px;color:var(--t4);font-style:italic;padding-left:44px">' + e.note + '</div>' : ''}
+          </div>`;
+        }).join('')}
+      </div>` : ''}
       <div class="pp-section">
         <div class="pp-section-title">Acquisition</div>
         <div class="pp-acq-row">
           <span class="pp-acq-icon">${acqIcon}</span>
-          <div class="pp-acq-detail">${acqText}</div>
+          <div class="pp-acq-detail">
+            <div>${acqText}</div>
+            ${draftInfo ? '<div style="font-family:var(--fd);font-size:11px;color:var(--t4);margin-top:4px">Drafted ' + draftInfo.year + ' \u2022 Rd' + draftInfo.round + ' Pick ' + draftInfo.pick + '</div>' : ''}
+          </div>
         </div>
       </div>
       ${tradesHTML}
