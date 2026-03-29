@@ -1623,7 +1623,9 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state){
     d.draft_picks[currentSeason]=(draftPicks||[]).map(pk=>{
       const pid=pk.player_id;
       const p=playerDB[pid]||{};
-      return{round:pk.round,pick_no:pk.pick_no,roster_id:pk.roster_id,player_id:pid,pid,nm:p.fn||pid,name:p.fn||pid,pos:p.pos||'',tm:p.tm||'',team:p.tm||'',rd:pk.round,pk:pk.pick_no,rid:pk.roster_id};
+      const meta=pk.metadata||{};
+      const draftTm=meta.team||p.tm||'';
+      return{round:pk.round,pick_no:pk.pick_no,roster_id:pk.roster_id,player_id:pid,pid,nm:p.fn||pid,name:p.fn||pid,pos:meta.position||p.pos||'',tm:draftTm,team:draftTm,rd:pk.round,pk:pk.pick_no,rid:pk.roster_id};
     });
   }
 
@@ -1808,7 +1810,9 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       draftPicks.forEach(pk=>{
         const pid=pk.player_id;
         const p=playerDB[pid]||{};
-        d.draft_picks[seasonStr].push({round:pk.round,pick_no:pk.pick_no,roster_id:pk.roster_id,player_id:pid,pid,nm:p.fn||pid,name:p.fn||pid,pos:p.pos||'',tm:p.tm||'',team:p.tm||'',rd:pk.round,pk:pk.pick_no,rid:pk.roster_id});
+        const meta=pk.metadata||{};
+        const draftTm=meta.team||p.tm||'';
+        d.draft_picks[seasonStr].push({round:pk.round,pick_no:pk.pick_no,roster_id:pk.roster_id,player_id:pid,pid,nm:p.fn||pid,name:p.fn||pid,pos:meta.position||p.pos||'',tm:draftTm,team:draftTm,rd:pk.round,pk:pk.pick_no,rid:pk.roster_id});
       });
     }
 
