@@ -335,31 +335,31 @@ button{min-height:36px}
 .nav-drop-item.active{color:var(--a);border-left-color:var(--a);background:rgba(204,0,0,.05)}
 /* ═══ THE RAFTERS ═══ */
 /* ═══ RAFTERS — Iron Mount Cloth Banners ═══ */
-.rafters-scene{background:linear-gradient(180deg,#060608,#0c0c12 40%,#0f0f16);border-radius:16px;padding:40px 20px 48px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.rafters-scene{background:linear-gradient(180deg,#060608,#0c0c12 40%,#0f0f16);border-radius:16px;padding:40px 24px 48px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
 .rafters-scene::before{content:'';position:absolute;top:0;left:0;right:0;height:12px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-.rafters-beam{width:100%;height:10px;background:linear-gradient(180deg,#3a3a3a,#1e1e1e,#2a2a2a);border-radius:2px;box-shadow:0 6px 24px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.04)}
+.rafters-beam{width:100%;height:12px;background:linear-gradient(180deg,#4a4a4a,#2a2a2a,#3a3a3a);border-radius:3px;box-shadow:0 8px 28px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.06),inset 0 1px 0 rgba(255,255,255,.08)}
 .rafters-row{display:flex;gap:24px;padding:0;justify-content:center;flex-wrap:wrap;align-items:flex-start}
 .rafter-banner{display:flex;flex-direction:column;align-items:center;transition:transform .3s}
 .rafter-banner:hover{transform:translateY(-3px)}
-.banner-mount{width:126px;height:7px;background:linear-gradient(180deg,#3a3a3a,#1e1e1e,#2a2a2a);border-radius:2px;box-shadow:0 3px 10px rgba(0,0,0,.7);position:relative;z-index:1;margin-top:4px}
-.banner-rivet{position:absolute;top:-1px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#555,#222);border:1px solid #444;box-shadow:0 2px 4px rgba(0,0,0,.5)}
-.banner-rivet-l{left:5px}
-.banner-rivet-r{right:5px}
-.banner-cloth{width:116px;overflow:hidden;box-shadow:0 16px 45px rgba(0,0,0,.7);margin-top:-1px}
-.banner-top{padding:12px 8px 8px;text-align:center;position:relative;overflow:hidden}
-.banner-fold-l{position:absolute;top:0;left:0;width:8px;height:100%;background:linear-gradient(90deg,rgba(0,0,0,.12),transparent);pointer-events:none}
-.banner-fold-r{position:absolute;top:0;right:0;width:8px;height:100%;background:linear-gradient(-90deg,rgba(0,0,0,.12),transparent);pointer-events:none}
-.banner-felt{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 1px,rgba(0,0,0,.012) 1px,rgba(0,0,0,.012) 2px);pointer-events:none}
-.banner-dynasty{font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;position:relative}
-.banner-year{font-family:var(--fd);font-size:42px;font-weight:800;line-height:1;position:relative}
-.banner-champ{font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-top:2px;position:relative}
+.banner-mount{width:136px;height:8px;background:linear-gradient(180deg,#4a4a4a,#2a2a2a,#3a3a3a);border-radius:2px;box-shadow:0 4px 14px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.06);position:relative;z-index:1;margin-top:6px}
+.banner-rivet{position:absolute;top:-2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#777,#333);border:1px solid #555;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.banner-rivet-l{left:6px}
+.banner-rivet-r{right:6px}
+.banner-cloth{width:124px;overflow:hidden;box-shadow:0 16px 45px rgba(0,0,0,.7);margin-top:-1px}
+.banner-top{padding:14px 10px 10px;text-align:center;position:relative;overflow:hidden}
+.banner-fold-l{position:absolute;top:0;left:0;width:10px;height:100%;background:linear-gradient(90deg,rgba(0,0,0,.15),transparent);pointer-events:none}
+.banner-fold-r{position:absolute;top:0;right:0;width:10px;height:100%;background:linear-gradient(-90deg,rgba(0,0,0,.15),transparent);pointer-events:none}
+.banner-felt{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 1px,rgba(0,0,0,.015) 1px,rgba(0,0,0,.015) 2px);pointer-events:none}
+.banner-dynasty{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative}
+.banner-year{font-family:var(--fd);font-size:48px;font-weight:800;line-height:1;position:relative;letter-spacing:-1px}
+.banner-champ{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:2px;position:relative}
 .banner-seam{height:1px}
-.banner-bottom{padding:8px 6px 12px;text-align:center}
-.banner-av{width:30px;height:30px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:11px;font-weight:800}
-.banner-name{font-family:var(--fd);font-size:11px;font-weight:700;text-align:center;letter-spacing:.5px;text-transform:uppercase}
-.banner-sub{font-family:var(--fb);font-size:8px;margin-top:3px}
-.banner-fringe{width:116px;height:8px;clip-path:polygon(0 0,8% 100%,16% 0,24% 100%,32% 0,40% 100%,48% 0,56% 100%,64% 0,72% 100%,80% 0,88% 100%,96% 0,100% 0)}
-.rafter-latest-glow{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:140px;height:320px;background:radial-gradient(ellipse at top,rgba(255,204,0,.045),transparent 50%);pointer-events:none}
+.banner-bottom{padding:10px 8px 14px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.banner-av{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:12px;font-weight:800;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.banner-name{font-family:var(--fd);font-size:10px;font-weight:700;text-align:center;letter-spacing:.5px;text-transform:uppercase;line-height:1.2;max-height:24px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.banner-sub{font-family:var(--fb);font-size:8px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:108px}
+.banner-fringe{width:124px;height:10px;clip-path:polygon(0 0,7% 100%,14% 0,21% 100%,28% 0,35% 100%,42% 0,49% 100%,56% 0,63% 100%,70% 0,77% 100%,84% 0,91% 100%,98% 0,100% 0)}
+.rafter-latest-glow{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:160px;height:340px;background:radial-gradient(ellipse at top,rgba(255,204,0,.05),transparent 50%);pointer-events:none}
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   .sstrip .ss:nth-child(n+4){display:none}
@@ -2554,18 +2554,21 @@ function renderTrophies(){
     const avBg=isLight?sec+'1a':'rgba('+parseInt(sec.replace('#','').substring(0,2),16)+','+parseInt(sec.replace('#','').substring(2,4),16)+','+parseInt(sec.replace('#','').substring(4,6),16)+',.12)';
     const avBorder=isLight?sec+'66':'rgba('+parseInt(sec.replace('#','').substring(0,2),16)+','+parseInt(sec.replace('#','').substring(2,4),16)+','+parseInt(sec.replace('#','').substring(4,6),16)+',.25)';
     const avText=isLight?sec:sec;
-    const stripeGrad='linear-gradient(90deg,#0a0a12,'+pri+',#0a0a12)';
-    const accentCol=isLight?sec+'8c':sec+'8c';
+    const stripeGrad='linear-gradient(90deg,#0c0c14,'+pri+',#0c0c14)';
+    const accentCol=sec;
     const fringeBg='linear-gradient(180deg,'+clothDark+',transparent)';
+    // Truncate long names
+    const dispName=c.champion.length>14?c.champion.substring(0,13)+'\u2026':c.champion;
+    const dispRunner=c.runner_up.length>16?c.runner_up.substring(0,15)+'\u2026':c.runner_up;
 
     h+='<div class="rafter-banner" style="position:relative">';
     if(isLatest)h+='<div class="rafter-latest-glow"></div>';
     // Iron mount
     h+='<div class="banner-mount"><div class="banner-rivet banner-rivet-l"></div><div class="banner-rivet banner-rivet-r"></div></div>';
     // Cloth body
-    h+='<div class="banner-cloth"'+(isLatest?' style="box-shadow:0 16px 45px rgba(0,0,0,.7),0 0 30px rgba(255,204,0,.04)"':'')+'>';
+    h+='<div class="banner-cloth"'+(isLatest?' style="box-shadow:0 16px 45px rgba(0,0,0,.7),0 0 30px rgba(255,204,0,.05)"':'')+'>';
     // Top stripe
-    h+='<div style="height:3px;background:'+stripeGrad+'"></div>';
+    h+='<div style="height:4px;background:'+stripeGrad+'"></div>';
     h+='<div style="height:2px;background:'+accentCol+'"></div>';
     // Top section (cloth color)
     h+='<div class="banner-top" style="background:linear-gradient(170deg,'+pri+','+clothDark+')">';
@@ -2579,12 +2582,12 @@ function renderTrophies(){
     // Bottom section (slightly darker cloth)
     h+='<div class="banner-bottom" style="background:linear-gradient(180deg,'+clothDark+','+darken(pri,55)+')">';
     h+='<div class="banner-av" style="background:'+avBg+';border:2px solid '+avBorder+';color:'+avText+'">'+ini+'</div>';
-    h+='<div class="banner-name" style="color:'+nameCol+'">'+c.champion+'</div>';
-    h+='<div class="banner-sub" style="color:'+subCol+'">def. '+c.runner_up+'</div>';
+    h+='<div class="banner-name" style="color:'+nameCol+'">'+dispName+'</div>';
+    h+='<div class="banner-sub" style="color:'+subCol+'">def. '+dispRunner+'</div>';
     h+='</div>';
     // Bottom stripe
     h+='<div style="height:2px;background:'+accentCol+'"></div>';
-    h+='<div style="height:3px;background:'+stripeGrad+'"></div>';
+    h+='<div style="height:4px;background:'+stripeGrad+'"></div>';
     h+='</div>';
     // Fringe
     h+='<div class="banner-fringe" style="background:'+fringeBg+'"></div>';
