@@ -1099,7 +1099,7 @@ body{background:linear-gradient(180deg,#1a1410 0%,#120e0c 30%,#0e0906 100%)}
 h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;font-family:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
 
 /* ═══ DRAFT PICK HISTORY TOOLTIP ═══ */
-.draft-hist-tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:rgba(12,12,20,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-width:160px;z-index:10;box-shadow:0 12px 40px rgba(0,0,0,.8);pointer-events:none}
+.draft-hist-tip{display:none;position:fixed;z-index:9999;background:rgba(12,12,20,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-width:170px;max-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.8);pointer-events:none}
 
 </style>
 </head>
@@ -3268,11 +3268,21 @@ function renderDraft(){
     h+='</div>';
   }
   document.getElementById('tab-draft').innerHTML=h;
-  // Hover to show pick history tooltip
+  // Hover to show pick history tooltip (fixed position to escape overflow clip)
   document.querySelectorAll('.draft-card').forEach(function(card){
     var tip=card.querySelector('.draft-hist-tip');
     if(!tip)return;
-    card.addEventListener('mouseenter',function(){tip.style.display='block';});
+    // Move tooltip to body so it's not clipped by overflow containers
+    document.body.appendChild(tip);
+    card.addEventListener('mouseenter',function(){
+      var r=card.getBoundingClientRect();
+      tip.style.display='block';
+      tip.style.left=Math.max(8,Math.min(window.innerWidth-tip.offsetWidth-8,r.left+r.width/2-tip.offsetWidth/2))+'px';
+      tip.style.top=(r.top-tip.offsetHeight-8)+'px';
+      if(r.top-tip.offsetHeight-8<8){
+        tip.style.top=(r.bottom+8)+'px';
+      }
+    });
     card.addEventListener('mouseleave',function(){tip.style.display='none';});
   });
 }
