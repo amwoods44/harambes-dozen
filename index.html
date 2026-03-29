@@ -147,10 +147,10 @@ button{min-height:36px}
 .bh-line{flex:1;display:flex;align-items:center;border-bottom:1px solid var(--g4);margin-left:-1px}
 .bh-sub{font-family:var(--fd);font-size:var(--text-xs);font-weight:400;letter-spacing:1px;text-transform:uppercase;color:var(--t4);padding-left:var(--sp-4)}
 /* ═══ NAV BAR — WINS POOL STYLE ═══ */
-.nav-bar{background:rgba(26,20,16,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--g3);position:sticky;top:59px;z-index:900;overflow-x:auto;scrollbar-width:none}
-.nav-bar::-webkit-scrollbar{display:none}
+.nav-bar{background:rgba(26,20,16,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--g3);position:sticky;top:59px;z-index:900}
 .nav-bar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(270deg,rgba(26,20,16,.95),transparent);pointer-events:none;z-index:1}
-.nav-in{max-width:1440px;margin:0 auto;padding:0 12px;display:flex;gap:0;flex-wrap:nowrap;min-width:max-content}
+.nav-in{max-width:1440px;margin:0 auto;padding:0 12px;display:flex;gap:0;flex-wrap:nowrap;min-width:max-content;overflow-x:auto;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
 .nav-btn{font-family:var(--fd);padding:14px 28px;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;position:relative}
 .nav-btn:hover{color:var(--t1);background:rgba(255,255,255,.02)}
 .nav-btn.active{color:white;border-bottom-color:var(--a)}
@@ -1258,18 +1258,18 @@ function buildNav(){
   n.querySelectorAll('.nav-drop-item').forEach(b=>{b.onclick=e=>{e.stopPropagation();showTab(b.dataset.t);b.closest('.nav-group').classList.remove('open');};});
   n.querySelectorAll('.nav-group-btn').forEach(b=>{b.onclick=e=>{e.stopPropagation();const g=b.closest('.nav-group');const wasOpen=g.classList.contains('open');n.querySelectorAll('.nav-group').forEach(x=>x.classList.remove('open'));if(!wasOpen){const r=b.getBoundingClientRect();const dd=g.querySelector('.nav-dropdown');const nbr=document.getElementById('nav-bar').getBoundingClientRect();dd.style.top=(r.bottom-nbr.top+1)+'px';dd.style.left=(r.left-nbr.left)+'px';g.classList.add('open');}};});
   document.addEventListener('click',()=>n.querySelectorAll('.nav-group').forEach(g=>g.classList.remove('open')));
-  // Nav scroll indicators + arrow buttons
+  // Nav scroll indicators + arrow buttons — scroll targets .nav-in, classes on .nav-bar
   const nb=document.getElementById('nav-bar');
   if(nb){
     function updateNavScroll(){
-      const sl=nb.scrollLeft,sw=nb.scrollWidth,cw=nb.clientWidth;
+      const sl=n.scrollLeft,sw=n.scrollWidth,cw=n.clientWidth;
       nb.classList.toggle('scrolled-right',sl>10);
       nb.classList.toggle('scrolled-end',sl+cw>=sw-10);
     }
-    nb.addEventListener('scroll',updateNavScroll,{passive:true});
+    n.addEventListener('scroll',updateNavScroll,{passive:true});
     updateNavScroll();
-    nb.querySelector('.nav-arrow.left').onclick=function(e){e.stopPropagation();nb.scrollBy({left:-200,behavior:'smooth'});};
-    nb.querySelector('.nav-arrow.right').onclick=function(e){e.stopPropagation();nb.scrollBy({left:200,behavior:'smooth'});};
+    nb.querySelector('.nav-arrow.left').onclick=function(e){e.stopPropagation();n.scrollBy({left:-200,behavior:'smooth'});};
+    nb.querySelector('.nav-arrow.right').onclick=function(e){e.stopPropagation();n.scrollBy({left:200,behavior:'smooth'});};
     // Scroll active tab into view on load
     var act=n.querySelector('.nav-btn.active')||n.querySelector('.nav-group-btn.active');
     if(act)act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
