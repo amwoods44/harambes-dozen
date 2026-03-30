@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+*.backup
+
+# Large binary files
+*.xlsx
+
+# Tool directories
+.playwright-mcp/
+.superpowers/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git worktrees
+.worktrees/
