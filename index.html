@@ -3157,23 +3157,20 @@ function renderTrades(){
     });
   }
   document.getElementById('tab-trades').innerHTML=h;
-  setTimeout(function(){
-    document.querySelectorAll('.trade-share-btn').forEach(function(btn){
-      btn.onclick=function(){
-        var ti=parseInt(btn.getAttribute('data-ti'));
-        var tr=trades[ti];if(!tr||tr.sides.length<2)return;
-        var a=tr.sides[0],b=tr.sides[1];
-        var aAssets=a.players.map(function(p){return p.nm}).concat(a.picks).join(', ')||'Nothing';
-        var bAssets=b.players.map(function(p){return p.nm}).concat(b.picks).join(', ')||'Nothing';
-        var aK=ktcVal(a.players,a.picks),bK=ktcVal(b.players,b.picks);
-        showShareCard('Trade #'+(ti+1)+' \u2022 '+tr.yr+' Wk '+tr.wk,
-          '<div style="font-family:var(--fd)">'+
-          '<div style="padding:8px 0;border-bottom:1px solid #24242e"><b style="color:#fff">'+a.name+'</b> receives: <span style="color:#10B981">'+aAssets+'</span> | Grade: <b>'+gradeLabel(aK-bK)+'</b></div>'+
-          '<div style="padding:8px 0"><b style="color:#fff">'+b.name+'</b> receives: <span style="color:#10B981">'+bAssets+'</span> | Grade: <b>'+gradeLabel(bK-aK)+'</b></div>'+
-          '</div>');
-      };
+
+  // Card flip + height matching
+  document.querySelectorAll('.tc-wrap').forEach(function(wrap){
+    var front=wrap.querySelector('.tc-front');
+    var back=wrap.querySelector('.tc-back');
+    if(front&&back){
+      var maxH=Math.max(front.scrollHeight, back.scrollHeight);
+      wrap.querySelector('.tc-inner').style.height=maxH+'px';
+    }
+    wrap.addEventListener('click',function(e){
+      if(e.target.closest('.share-btn'))return;
+      wrap.classList.toggle('flipped');
     });
-  },50);
+  });
 }
 // ═══ MATCHUPS ═══
 function renderMatchups(){
