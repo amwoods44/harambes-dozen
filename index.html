@@ -3013,73 +3013,75 @@ function renderTrades(){
     h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+col+';min-width:64px;text-align:right">'+(net>0?'+':'')+net.toLocaleString()+'</span>';
     h+='</div>';
   });
-  // Unified trade cards — 2-column grid
+  // ═══ BROADCAST TRADE CARDS ═══
   h+='<div class="trade-grid">';
   trades.forEach(function(t,ti){
-    const a=t.sides[0],b=t.sides[1];
-    const aKtc=ktcVal(a.players,a.picks),bKtc=ktcVal(b.players,b.picks);
-    const aNet=aKtc-bKtc,bNet=bKtc-aKtc;
-    const aGrade=gradeLabel(aNet),bGrade=gradeLabel(bNet);
-    const aGradeCls=gradeCls(aNet),bGradeCls=gradeCls(bNet);
-    h+='<div class="trade-card tilt-card">';
+    if(t.sides.length<2)return;
+    var a=t.sides[0],b=t.sides[1];
+    var aKtc=ktcVal(a.players,a.picks),bKtc=ktcVal(b.players,b.picks);
+    var aNet=aKtc-bKtc,bNet=bKtc-aKtc;
+    var aGrade=gradeLabel(aNet),bGrade=gradeLabel(bNet);
+    var aGCls=gradeClass(aNet),bGCls=gradeClass(bNet);
+    var aPc=a.players.length,bPc=b.players.length;
 
-    // Header
-    h+='<div class="trade-hdr">';
-    h+='<span class="trade-hdr-yr">'+t.yr+' \u2022 Wk '+t.wk+'</span>';
-    h+='<span style="display:flex;align-items:center;gap:6px"><button class="share-btn trade-share-btn" data-ti="'+ti+'" style="padding:3px 8px">\u{1F4F1} SHARE</button>';
-    h+='<span class="trade-hdr-num">#'+(ti+1)+'</span></span></div>';
-    
-    // Two-column trade view
-    h+='<div class="trade-body">';
-    
-    // Side A
-    h+='<div class="trade-side">';
-    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="trade-team">'+a.name+'</div><div class="trade-grade '+aGradeCls+'" title="Trade grade: '+aGrade+'">'+aGrade+'</div></div>';
-    h+='<div style="font-family:var(--fm);font-size:10px;margin-bottom:6px" class="trade-ktc '+(aNet>=0?'pos':'neg')+'">'+(aNet>0?'+':'')+aKtc+' KTC</div>';
-    h+='<div class="trade-label">RECEIVES</div>';
-    a.players.forEach(function(p){
-      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.remove()" alt="'+pm.team+'">':'';
-      h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+pimg(p.id,32)+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:var(--fb);font-size:13px;font-weight:600;color:var(--t1)">'+p.nm+'</span><div style="display:flex;align-items:center;gap:3px">'+teamLogo+'<span style="font-family:var(--fd);font-size:10px;color:var(--t3)">'+(pm?pm.team||'FA':'')+'</span>'+(pm&&pm.college?'<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">· '+pm.college+'</span>':'')+'</div></div></div>';
-    });
-    a.picks.forEach(function(pk){
-      const resolved=pk.indexOf('\u2192')>-1;
-      h+='<div class="trade-pick"><span class="trade-pick-icon">\u{1F4E6}</span><span class="trade-pick-text '+(resolved?'trade-pick-resolved':'trade-pick-future')+'">'+pk+'</span></div>';
-    });
-    if(!a.players.length&&!a.picks.length)h+='<span style="font-family:var(--fb);font-size:11px;color:var(--t4)">Nothing</span>';
-    h+='</div>';
-    
-    // VS divider
-    h+='<div class="trade-divider"><span class="trade-divider-icon">\u{1F504}</span></div>';
-    
-    // Side B
-    h+='<div class="trade-side">';
-    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div class="trade-team">'+b.name+'</div><div class="trade-grade '+bGradeCls+'" title="Trade grade: '+bGrade+'">'+bGrade+'</div></div>';
-    h+='<div style="font-family:var(--fm);font-size:10px;margin-bottom:6px" class="trade-ktc '+(bNet>=0?'pos':'neg')+'">'+(bNet>0?'+':'')+bKtc+' KTC</div>';
-    h+='<div class="trade-label">RECEIVES</div>';
-    b.players.forEach(function(p){
-      const pm=playerMap[p.id];const teamLogo=pm&&pm.team&&pm.team!=='FA'?'<img src="'+TL(pm.team)+'" class="tl-img" style="width:16px;height:16px" onerror="this.remove()" alt="'+pm.team+'">':'';
-      h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'+pimg(p.id,32)+'<div style="display:flex;flex-direction:column;gap:1px"><span style="font-family:var(--fb);font-size:13px;font-weight:600;color:var(--t1)">'+p.nm+'</span><div style="display:flex;align-items:center;gap:3px">'+teamLogo+'<span style="font-family:var(--fd);font-size:10px;color:var(--t3)">'+(pm?pm.team||'FA':'')+'</span>'+(pm&&pm.college?'<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">· '+pm.college+'</span>':'')+'</div></div></div>';
-    });
-    b.picks.forEach(function(pk){
-      const resolved=pk.indexOf('\u2192')>-1;
-      h+='<div class="trade-pick"><span class="trade-pick-icon">\u{1F4E6}</span><span class="trade-pick-text '+(resolved?'trade-pick-resolved':'trade-pick-future')+'">'+pk+'</span></div>';
-    });
-    if(!b.players.length&&!b.picks.length)h+='<span style="font-family:var(--fb);font-size:11px;color:var(--t4)">Nothing</span>';
-    h+='</div>';
+    h+='<div class="tc-wrap" data-ti="'+ti+'">';
+    h+='<div class="tc-inner">';
 
-    h+='</div>';
-    // Exemption annotation
+    // ── FRONT ──
+    h+='<div class="tc-front" style="position:relative">';
+    h+='<div class="tc-rh"><span class="tc-rh-t">TRADE</span><span class="tc-rh-d">WEEK '+t.wk+' \u00B7 '+t.yr+'</span></div>';
+    h+='<div class="tc-split" style="display:flex;min-height:200px">';
+
+    // Left side
+    if(aPc===1){
+      h+=heroSide(a.players[0], aGrade, aGCls, a.name, true);
+    } else if(aPc===0){
+      h+=picksOnlySide(a.picks, t.exm&&t.exm.to===a.name?t.exm:null, aGrade, aGCls, a.name);
+    } else {
+      var aFlex=aPc<bPc?1:1;
+      h+=gridSide(a.players, a.picks, t.exm&&t.exm.to===a.name?t.exm:null, aGrade, aGCls, a.name, aFlex);
+    }
+
+    // FOR divider
+    h+='<div class="tc-for"><div class="tc-for-badge">FOR</div></div>';
+
+    // Right side
+    if(bPc===1&&aPc===1){
+      h+=heroSide(b.players[0], bGrade, bGCls, b.name, false);
+    } else if(bPc===1&&aPc!==1){
+      h+=heroSide(b.players[0], bGrade, bGCls, b.name, false);
+    } else if(bPc===0){
+      h+=picksOnlySide(b.picks, t.exm&&t.exm.to===b.name?t.exm:null, bGrade, bGCls, b.name);
+    } else {
+      var bFlex=bPc>aPc?1.4:bPc===aPc?1:1;
+      h+=gridSide(b.players, b.picks, t.exm&&t.exm.to===b.name?t.exm:null, bGrade, bGCls, b.name, bFlex);
+    }
+
+    h+='</div>'; // .tc-split
+
+    // Exemption detail strip
     if(t.exm){
-      h+='<div style="padding:10px 16px;border-top:1px dashed rgba(139,92,246,.3);background:rgba(139,92,246,.04)">';
-      h+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
-      h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(139,92,246,.15);color:var(--pur)">EXEMPTION</span>';
-      h+='<span style="font-family:var(--fb);font-size:12px;color:var(--pur);font-weight:600">'+t.exm.year+' Exemption: <span style="color:var(--t1)">'+t.exm.from+'</span> \u2192 <span style="color:var(--t1)">'+t.exm.to+'</span></span>';
-      h+='</div>';
-      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:4px">\u{1F3AF} Used on: <span style="font-weight:700;color:var(--pur)">'+t.exm.used_on+'</span></div>';
-      if(t.exm.note)h+='<div style="font-family:var(--fb);font-size:10px;color:var(--t4);margin-top:2px;font-style:italic">'+t.exm.note+'</div>';
+      h+='<div class="tc-exstrip">';
+      h+='<span style="font-family:var(--fd);font-size:9px;font-weight:900;letter-spacing:2px;padding:3px 8px;border-radius:4px;background:rgba(239,68,68,.15);color:rgb(239,68,68)">EXEMPTION</span>';
+      h+='<span style="font-family:var(--fd);font-size:11px;font-weight:700;color:rgba(239,68,68,.7)">'+t.exm.year+'</span>';
+      h+='<span style="font-family:var(--fd);font-size:11px;color:#fff;font-weight:700">'+t.exm.from+'</span>';
+      h+='<span style="font-size:11px;color:rgba(255,255,255,.3)">\u2192</span>';
+      h+='<span style="font-family:var(--fd);font-size:11px;color:#fff;font-weight:700">'+t.exm.to+'</span>';
+      h+='<div style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="font-family:var(--fd);font-size:10px;color:rgba(239,68,68,.5)">Used on:</span><span style="font-family:var(--fd);font-size:11px;font-weight:900;color:rgb(239,68,68)">'+t.exm.used_on+'</span></div>';
       h+='</div>';
     }
-    h+='</div>';
+
+    // Bottom accent bar
+    var leftColor=aNet>=0?'#22c55e':'#f97316',rightColor=aNet>=0?'#f97316':'#22c55e';
+    h+='<div class="tc-bb" style="background:linear-gradient(90deg,'+leftColor+' 50%,'+rightColor+')"></div>';
+    h+='<div class="tc-flip">\u21BB</div>';
+    h+='</div>'; // .tc-front
+
+    // ── BACK ──
+    h+=tradeBack(t, aGrade, bGrade, aGCls, bGCls, aKtc, bKtc, aNet);
+
+    h+='</div>'; // .tc-inner
+    h+='</div>'; // .tc-wrap
   });
   h+='</div>'; // .trade-grid
   // H2H Rivalries
