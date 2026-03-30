@@ -2656,11 +2656,10 @@ function renderTrophies(){
     var pri=tc.p, sec=tc.s;
     var clothDark=darken(pri,60);
     var isWhite=sec==='#fff'||sec==='#FFFFFF'||sec==='#ffffff';
-    // Label + defeated colors
-    var lblCol=isWhite?'rgba(255,255,255,.65)':sec;
-    var lblOp=isWhite?'1':'0.7';
-    var defCol=isWhite?'rgba(255,255,255,.55)':sec;
-    var defOp=isWhite?'1':'0.6';
+    // Label + defeated colors (use rgba for all to avoid element-level opacity)
+    function hexRgba(hex,a){var h=hex.replace('#','');return'rgba('+parseInt(h.substring(0,2),16)+','+parseInt(h.substring(2,4),16)+','+parseInt(h.substring(4,6),16)+','+a+')';}
+    var lblCol=isWhite?'rgba(255,255,255,.65)':hexRgba(sec,0.7);
+    var defCol=isWhite?'rgba(255,255,255,.55)':hexRgba(sec,0.6);
     var divBg=isWhite?'rgba(255,255,255,.15)':sec+'33';
 
     h+='<div class="rafter-banner" style="position:relative">';
@@ -2674,12 +2673,12 @@ function renderTrophies(){
     h+='<div class="banner-accent" style="background:'+sec+'"></div>';
     h+='<div class="banner-panel" style="background:linear-gradient(175deg,'+pri+','+clothDark+')">';
     h+='<div class="banner-fold-l"></div><div class="banner-fold-r"></div><div class="banner-felt"></div>';
-    h+='<div class="banner-label" style="color:'+lblCol+';opacity:'+lblOp+'">DYNASTY CHAMPS</div>';
+    h+='<div class="banner-label" style="color:'+lblCol+'">DYNASTY CHAMPS</div>';
     h+='<div class="banner-year" style="color:'+sec+'">'+c.year+'</div>';
     h+='<div class="banner-trophy">'+trophySvg(ci)+'</div>';
     h+='<div class="banner-name">'+c.champion+'</div>';
     h+='<div class="banner-divider" style="background:'+divBg+'"></div>';
-    h+='<div class="banner-defeated" style="color:'+defCol+';opacity:'+defOp+'">DEF. '+c.runner_up+'</div>';
+    h+='<div class="banner-defeated" style="color:'+defCol+'">DEF. '+c.runner_up+'</div>';
     h+='</div>';
     h+='</div>';
     h+='</div>';
