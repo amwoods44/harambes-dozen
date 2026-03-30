@@ -2103,6 +2103,48 @@ function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{con
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
 // Item 1: Contract pill helper
 function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||!c.contracted)return'';const y=c.yrs;const cls=y>=4?'cpill-4':y>=2?'cpill-23':y===1?'cpill-1':'cpill-0';const lbl=y<=0?'EXP':y+'yr';const tag=c.tag?'\uD83C\uDFF7':c.exm?'\uD83D\uDD12':'';return'<span class="cpill '+cls+'">'+tag+lbl+'</span>';}
+// ═══ SHARED CARD INFRASTRUCTURE ═══
+var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
+var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
+let selConTeam=null;
+function yrsColor(yrs){return(yrs||0)>=3?'16,185,129':(yrs||0)>=2?'245,158,11':'239,68,68';}
+function yrsHex(yrs){return(yrs||0)>=3?'#10b981':(yrs||0)>=2?'#f59e0b':'#ef4444';}
+function cbadge(text,color){var m={'y':'245,158,11','blu':'59,130,246','pur':'139,92,246','red':'239,68,68','gray':'102,102,120'};var rgb=m[color]||'102,102,120';var cc=color==='y'?'var(--y)':color==='blu'?'var(--blu)':color==='pur'?'var(--pur)':color==='red'?'var(--red-t)':'var(--t4)';return'<span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba('+rgb+',.12);color:'+cc+'">'+text+'</span>';}
+function conCard(p,opts){
+  opts=opts||{};
+  var rgb=posRgb[p.pos]||'139,92,246';var pCol=posCls[p.pos]||'var(--g5)';
+  var yc=yrsColor(p.yrs);var yh=yrsHex(p.yrs);
+  var nflLogo=p.team&&p.team!=='FA'?TL(p.team):'';
+  var h='<div class="con-card pp-trigger" data-pid="'+p.id+'" style="border-radius:10px;overflow:hidden;border:1px solid rgba('+yc+',.18);cursor:pointer;min-width:160px;flex-shrink:0;transition:transform .2s,box-shadow .2s" onmouseenter="this.style.transform=\'translateY(-3px)\'" onmouseleave="this.style.transform=\'\'">';
+  // Top banner — years-colored gradient
+  h+='<div style="background:linear-gradient(90deg,rgba('+yc+',.15),transparent);padding:4px 10px;display:flex;align-items:center;justify-content:space-between">';
+  h+='<div style="display:flex;align-items:baseline;gap:2px"><span style="font-family:var(--fm);font-size:16px;font-weight:800;color:'+yh+'">'+(p.yrs||0)+'</span><span style="font-family:var(--fd);font-size:8px;font-weight:700;color:rgba('+yc+',.6);letter-spacing:1px">'+(p.yrs===1?'YR':'YRS')+'</span></div>';
+  h+='<span style="font-family:var(--fd);font-size:9px;font-weight:700;color:'+pCol+';padding:1px 5px;border-radius:3px;background:rgba('+rgb+',.12)">'+p.pos+'</span>';
+  h+='</div>';
+  // Card body
+  h+='<div style="background:linear-gradient(170deg,rgba('+yc+',.06),#0e0e16);padding:8px 12px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative">';
+  // Headshot with ring
+  h+='<div style="position:relative">';
+  h+='<img src="'+(isDEF(p.id)?TL(p.id):PI(p.id))+'" style="width:48px;height:48px;border-radius:50%;object-fit:'+(isDEF(p.id)?'contain':'cover')+';object-position:top;background:#1a1a2a;border:2px solid rgba('+rgb+',.2)'+(isDEF(p.id)?';padding:4px':'')+'" onerror="this.style.display=\'none\'">';
+  // Years ring badge
+  h+='<div style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:50%;background:'+yh+';display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;font-weight:800;color:'+(p.yrs>=2&&p.yrs<=2?'#000':'#fff')+';box-shadow:0 2px 6px rgba(0,0,0,.5);border:2px solid #0e0e16">'+(p.yrs||0)+'</div>';
+  h+='</div>';
+  // Name — ALL CAPS, modern spacing
+  h+='<div style="font-family:var(--fd);font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">'+p.name+'</div>';
+  // Meta
+  h+='<div style="font-family:var(--fb);font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">'+(p.team||'FA')+' \u00b7 '+(opts.owner||'').substring(0,14)+'</div>';
+  // KTC
+  if(p.ktc)h+='<div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--a);margin-top:4px">'+p.ktc.toLocaleString()+' KTC</div>';
+  // Top-left label
+  if(opts.topLeft)h+='<div style="position:absolute;top:4px;left:8px;font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.4)">'+opts.topLeft+'</div>';
+  // NFL logo bottom-right
+  if(nflLogo)h+='<img src="'+nflLogo+'" style="position:absolute;bottom:6px;right:10px;width:18px;height:18px;object-fit:contain;opacity:.5" onerror="this.style.display=\'none\'">';
+  h+='</div>';
+  // Status bar
+  h+='<div style="height:3px;background:'+yh+'"></div>';
+  h+='</div>';
+  return h;
+}
 // ═══ DYNAMIC SEASON CONSTANTS ═══
 var SEASON_YEARS=[],CURRENT_YEAR='2025',FIRST_YEAR='2021',YEAR_RANGE='2021-2025',NUM_SEASONS=1,CUR_STANDINGS=[],TOTAL_GAMES=14;
 function getStandings(yr){return D['standings_'+yr]||[];}
@@ -3146,8 +3188,7 @@ function collegeLogoUrl(col){var id=COLLEGE_ESPN[col];return id?'https://a.espnc
 function renderDraft(){
   var draftYears=Object.keys(D.draft_picks||{}).sort().reverse();
   if(!selDraft&&draftYears.length)selDraft=draftYears[0];
-  var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
-  var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
+  // posRgb and posCls hoisted to module scope
   let h='<div class="bh"><h2 class="bh-tag">Draft</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Rookie Draft History</span></div></div>';
   h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:16px">';
   draftYears.forEach(yr=>{h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+'</button>';});
@@ -3966,6 +4007,11 @@ function renderRivals(){
 function renderContracts(){
   if(!D.contracts){document.getElementById('tab-contracts').innerHTML='<div style="text-align:center;padding:40px;color:var(--t4)">No contract data</div>';return;}
   var curSeason=parseInt(D.league.season)||2026;
+  // Strip helper for scroll sections
+  function stripWrap(labelBg,tag,num,numCol,sub,cards){
+    if(!cards)return'';
+    return'<div style="background:#08080c;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-bottom:20px"><div style="display:flex"><div style="width:72px;flex-shrink:0;background:'+labelBg+';display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;gap:2px"><span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.5)">'+tag+'</span><span style="font-family:var(--fd);font-size:28px;font-weight:800;color:'+numCol+';line-height:1">'+num+'</span><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">'+sub+'</span></div><div style="flex:1;overflow-x:auto;display:flex;gap:1px;background:rgba(255,255,255,.02);padding:8px 4px">'+cards+'<div style="min-width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.08);font-size:18px">\u2192</div></div></div></div>';
+  }
   var h='<div class="bh"><h2 class="bh-tag">\u{1F4DD} Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Contract Management \u2022 '+curSeason+' Season</span></div></div>';
   // ── Build per-team contract data ──
   var teamContracts={};
@@ -3992,118 +4038,91 @@ function renderContracts(){
   var totalUncontracted=allC.reduce(function(s,t){return s+t.uncontracted.length},0);
   var totalExp=allC.reduce(function(s,t){return s+t.expiring},0);
   var totalTag=allC.reduce(function(s,t){return s+t.tagged},0);
-  // ── LEAGUE SNAPSHOT (stat cards) ──
+  // ── TEAM FILTER PILLS ──
+  var filtC=selConTeam?allC.filter(function(tc){return tc.name===selConTeam}):allC;
+  h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px">';
+  h+='<button class="tab-sub-btn'+(selConTeam===null?' active':'')+'" onclick="selConTeam=null;renderContracts()">ALL</button>';
+  allC.forEach(function(tc){
+    h+='<button class="tab-sub-btn'+(selConTeam===tc.name?' active':'')+'" onclick="selConTeam=\''+tc.name.replace(/'/g,"\\'")+'\';renderContracts()" style="display:flex;align-items:center;gap:5px">'+av(tc.rid,18)+tc.name.substring(0,12)+'</button>';
+  });
+  h+='</div>';
+  // Recompute stats for filtered view
+  var fContracted=filtC.reduce(function(s,t){return s+t.contracted.length},0);
+  var fUncontracted=filtC.reduce(function(s,t){return s+t.uncontracted.length},0);
+  var fExp=filtC.reduce(function(s,t){return s+t.expiring},0);
+  var fTag=filtC.reduce(function(s,t){return s+t.tagged},0);
+  // ── STAT CARDS ──
+  function statCard(num,label,col,borderCol){return'<div style="background:var(--g2);border:1px solid '+(borderCol||'var(--g4)')+';border-radius:12px;padding:16px;text-align:center"><div style="font-family:var(--fm);font-size:28px;font-weight:800;color:'+col+'">'+num+'</div><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">'+label+'</div></div>';}
   h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">';
-  h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px;text-align:center">';
-  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--a)">'+totalContracted+'</div>';
-  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">CONTRACTED</div></div>';
-  h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px;text-align:center">';
-  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--t3)">'+totalUncontracted+'</div>';
-  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">UNCONTRACTED</div></div>';
-  h+='<div style="background:var(--g2);border:1px solid rgba(239,68,68,.3);border-radius:12px;padding:16px;text-align:center">';
-  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--red-t)">'+totalExp+'</div>';
-  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">EXPIRING (1yr)</div></div>';
-  h+='<div style="background:var(--g2);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:16px;text-align:center">';
-  h+='<div style="font-family:var(--fm);font-size:28px;font-weight:800;color:var(--y)">'+totalTag+'</div>';
-  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--t4)">FRANCHISE TAGGED</div></div>';
+  h+=statCard(fContracted,'CONTRACTED','var(--a)');
+  h+=statCard(fUncontracted,'UNCONTRACTED','var(--t3)');
+  h+=statCard(fExp,'EXPIRING (1yr)','var(--red-t)','rgba(239,68,68,.3)');
+  h+=statCard(fTag,'FRANCHISE TAGGED','var(--y)','rgba(245,158,11,.3)');
   h+='</div>';
   // ── FRANCHISE TAGGED PLAYERS ──
-  if(totalTag){
-    var taggedPlayers=[];
-    allC.forEach(function(tc){tc.contracted.filter(function(p){return p.tag}).forEach(function(p){taggedPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
-    taggedPlayers.sort(function(a,b){return b.ktc-a.ktc});
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag" style="background:rgba(245,158,11,.12);color:var(--y)">\u{1F3F7}\uFE0F Tagged</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+totalTag+' Franchise Tagged Players</span></div></div>';
-    h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th></th><th>Player</th><th>Pos</th><th>Age</th><th>Team</th><th>Owner</th><th>Tag</th><th>Contract</th><th>KTC</th></tr></thead><tbody>';
-    taggedPlayers.forEach(function(p){
-      var yc=p.yrs>=4?'var(--a)':p.yrs>=2?'var(--y)':'var(--red-t)';
-      h+='<tr><td>'+pimg(p.id,28)+'</td>';
-      h+='<td style="font-weight:700">'+p.name+'</td>';
-      h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
-      h+='<td>'+(p.age||'')+'</td><td>'+(p.team||'FA')+'</td>';
-      h+='<td style="font-family:var(--fd);font-size:11px;color:var(--t3)">'+p.team_name+'</td>';
-      h+='<td><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.12);color:var(--y)">'+p.tag.toUpperCase()+'</span></td>';
-      h+='<td style="font-family:var(--fm);font-weight:700;color:'+yc+'">'+(p.yrs||0)+'yr</td>';
-      h+='<td style="font-family:var(--fm);font-weight:700;color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td></tr>';
-    });
-    h+='</tbody></table></div>';
+  var taggedPlayers=[];
+  filtC.forEach(function(tc){tc.contracted.filter(function(p){return p.tag}).forEach(function(p){taggedPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
+  taggedPlayers.sort(function(a,b){return b.ktc-a.ktc});
+  if(taggedPlayers.length){
+    var tagCards='';
+    taggedPlayers.forEach(function(p){tagCards+=conCard(p,{owner:p.team_name,topLeft:p.tag?p.tag.toUpperCase():''});});
+    h+=stripWrap('linear-gradient(180deg,rgba(245,158,11,.2),rgba(245,158,11,.05))','TAGGED',taggedPlayers.length,'var(--y)','players',tagCards);
   }
-  // ── EXPIRING CONTRACTS (1yr or less, contracted only) ──
+  // ── EXPIRING CONTRACTS ──
   var expPlayers=[];
-  allC.forEach(function(tc){tc.contracted.filter(function(p){return p.yrs<=1}).forEach(function(p){expPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
+  filtC.forEach(function(tc){tc.contracted.filter(function(p){return p.yrs<=1}).forEach(function(p){expPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
   expPlayers.sort(function(a,b){return b.ktc-a.ktc});
   if(expPlayers.length){
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag" style="background:rgba(239,68,68,.12);color:var(--red-t)">\u{26A0}\uFE0F Expiring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+expPlayers.length+' Players at 1yr or Less \u2022 Decision Time</span></div></div>';
-    h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th></th><th>Player</th><th>Pos</th><th>Age</th><th>Team</th><th>Owner</th><th>Yrs</th><th>KTC</th><th>Status</th></tr></thead><tbody>';
-    expPlayers.forEach(function(p){
-      var badges='';
-      if(p.tag)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(245,158,11,.12);color:var(--y)">'+p.tag.toUpperCase()+'</span> ';
-      if(p.exm)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:1px 5px;border-radius:2px;background:rgba(139,92,246,.12);color:var(--pur)">EXEMPT \u2022 '+p.exm+'</span>';
-      h+='<tr><td>'+pimg(p.id,28)+'</td>';
-      h+='<td style="font-weight:700">'+p.name+'</td>';
-      h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
-      h+='<td>'+(p.age||'')+'</td><td>'+(p.team||'FA')+'</td>';
-      h+='<td style="font-family:var(--fd);font-size:11px;color:var(--t3)">'+p.team_name+'</td>';
-      h+='<td style="font-family:var(--fm);font-weight:700;color:var(--red-t)">'+(p.yrs||0)+'yr</td>';
-      h+='<td style="font-family:var(--fm);color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td>';
-      h+='<td>'+badges+'</td></tr>';
-    });
-    h+='</tbody></table></div>';
+    var expCards='';
+    expPlayers.forEach(function(p){expCards+=conCard(p,{owner:p.team_name,topLeft:'EXPIRING'});});
+    h+=stripWrap('linear-gradient(180deg,rgba(239,68,68,.2),rgba(239,68,68,.05))','EXPIRING',expPlayers.length,'var(--red-t)','1yr or less',expCards);
   }
-  // ── EXEMPTION HISTORY (year tabs) ──
+  // ── EXEMPTION HISTORY (timeline cards) ──
   var exmH=D.exemption_history||{};
   var exmYears=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
   if(exmYears.length){
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F3F7}\uFE0F Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year (Tradeable)</span></div></div>';
-    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4DD}</div><div class="nar-text">Each team gets <b>1 exemption per year</b> to restructure any contract \u2014 not just expiring ones. Exemptions can be <b>traded</b> like draft picks, so a team may use 2+ in one year.</div></div></div>';
-    h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:12px">';
+    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F3F7}\uFE0F Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year</span></div></div>';
+    h+='<div style="display:flex;gap:4px;margin-bottom:12px">';
     exmYears.forEach(function(yr,i){
-      h+='<button class="tab-sub-btn'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.exm-yr-panel\').forEach(function(el){el.style.display=\'none\'});document.getElementById(\'exm-'+yr+'\').style.display=\'block\';this.parentNode.querySelectorAll(\'.tab-sub-btn\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">'+yr+' ('+exmH[yr].length+')</button>';
+      h+='<button class="tab-sub-btn'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.exm-yr-panel\').forEach(function(el){el.style.display=\'none\'});document.getElementById(\'exm-'+yr+'\').style.display=\'flex\';this.parentNode.querySelectorAll(\'.tab-sub-btn\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">'+yr+' ('+exmH[yr].length+')</button>';
     });
-    h+='<button class="tab-sub-btn" style="opacity:.4;cursor:default">'+curSeason+' \u2014 TBD</button>';
     h+='</div>';
     exmYears.forEach(function(yr,i){
       var entries=exmH[yr];
-      h+='<div class="exm-yr-panel" id="exm-'+yr+'" style="display:'+(i===0?'block':'none')+'">';
-      var ownerCounts={};
-      entries.forEach(function(e){ownerCounts[e.o]=(ownerCounts[e.o]||0)+1});
-      h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>Player</th><th>Pos</th><th>Owner</th><th>Source</th><th>Had</th><th>Added</th><th>New Deal</th><th>Now ('+curSeason+')</th><th>Notes</th></tr></thead><tbody>';
+      if(selConTeam)entries=entries.filter(function(e){return e.o===selConTeam});
+      h+='<div class="exm-yr-panel" id="exm-'+yr+'" style="display:'+(i===0?'flex':'none')+';overflow-x:auto;gap:10px;padding:8px 0">';
       entries.forEach(function(e){
-        var ynowCol=e.ynow<=0?'var(--red-t)':e.ynow<=2?'var(--y)':'var(--a)';
         var isTraded=e.from&&e.from!==e.o;
-        var badges='';
-        if(isTraded)badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(59,130,246,.12);color:var(--blu)">TRADED</span> ';
-        if(e.note==='Early extension')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(139,92,246,.12);color:var(--pur)">EARLY EXT</span>';
-        else if(e.note==='Expiring save')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(245,158,11,.12);color:var(--y)">EXPIRING SAVE</span>';
-        else if(e.note==='Pre-data exemption')badges+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba(102,102,120,.15);color:var(--t4)">PRE-DATA</span>';
-        h+='<tr>';
-        h+='<td style="font-weight:700">'+e.p+'</td>';
-        h+='<td><span class="pl-pos pos-'+(e.pos||'WR')+'">'+e.pos+'</span></td>';
-        h+='<td style="font-family:var(--fd);font-size:12px;color:var(--t2)">'+e.o+'</td>';
-        h+='<td style="font-family:var(--fd);font-size:11px;color:'+(isTraded?'var(--blu)':'var(--t4)')+'">'+( isTraded?'via '+e.from:'Own')+'</td>';
-        h+='<td style="font-family:var(--fm);font-weight:700;color:'+(e.had===0?'var(--red-t)':e.had===null?'var(--t4)':'var(--y)')+'">'+( e.had!==null?e.had+'yr':'\u2014')+'</td>';
-        h+='<td style="font-family:var(--fm);font-weight:700;color:var(--a)">'+(e.added!==null?'+'+e.added+'yr':'\u2014')+'</td>';
-        h+='<td style="font-family:var(--fm);font-weight:700;color:var(--blu)">'+e.new_yrs+'yr</td>';
-        h+='<td style="font-family:var(--fm);font-weight:700;color:'+ynowCol+'">'+e.ynow+'yr</td>';
-        if(e.trade)badges+='<br><span style="font-family:var(--fb);font-size:10px;font-style:italic;color:var(--blu)">Trade: '+e.trade+'</span>';
-        h+='<td>'+badges+'</td>';
-        h+='</tr>';
-      });
-      h+='</tbody></table></div>';
-      var usedBy=Object.entries(ownerCounts);
-      var multiUsers=usedBy.filter(function(x){return x[1]>1});
-      if(multiUsers.length||usedBy.length<12){
-        h+='<div style="margin-top:8px;font-family:var(--fb);font-size:12px;color:var(--t3);line-height:1.5">';
-        if(multiUsers.length){multiUsers.forEach(function(mu){h+='<b>'+mu[0]+'</b> used <b>'+mu[1]+' exemptions</b> (traded for '+(mu[1]-1)+' extra). '});}
-        var unused=12-entries.length;
-        if(unused>0)h+=unused+' exemption'+(unused>1?'s':'')+' unused league-wide.';
+        var hadCol=e.had===0?'var(--red-t)':e.had===null?'var(--t4)':'var(--y)';
+        var ynowCol=e.ynow<=0?'var(--red-t)':e.ynow<=2?'var(--y)':'var(--a)';
+        var borderCol=isTraded?'var(--blu)':e.note==='Early extension'?'var(--pur)':'var(--y)';
+        h+='<div style="min-width:240px;max-width:260px;flex-shrink:0;background:var(--g2);border:1px solid var(--g4);border-left:3px solid '+borderCol+';border-radius:12px;padding:16px">';
+        h+='<div style="font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:1px">'+e.p+'</div>';
+        h+='<div style="font-family:var(--fd);font-size:11px;color:var(--t3);margin-top:3px">'+e.o+(isTraded?' \u00b7 <span style="color:var(--blu)">via '+e.from+'</span>':'')+'</div>';
+        // Contract flow
+        h+='<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px">';
+        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:'+hadCol+'">'+(e.had!==null?e.had:'--')+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">HAD</div></div>';
+        h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
+        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--a)">'+(e.added!==null?'+'+e.added:'--')+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">ADDED</div></div>';
+        h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
+        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--blu)">'+e.new_yrs+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">NEW</div></div>';
         h+='</div>';
-      }
+        // Badges
+        var badges='';
+        if(isTraded)badges+=cbadge('TRADED','blu');
+        if(e.note==='Early extension')badges+=cbadge('EARLY EXT','pur');
+        else if(e.note==='Expiring save')badges+=cbadge('EXPIRING SAVE','y');
+        else if(e.note==='Pre-data exemption')badges+=cbadge('PRE-DATA','gray');
+        if(badges)h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">'+badges+'</div>';
+        h+='</div>';
+      });
+      if(!entries.length)h+='<div style="padding:20px;color:var(--t4);font-family:var(--fb);font-size:12px">No exemptions'+(selConTeam?' for '+selConTeam:'')+'</div>';
       h+='</div>';
     });
   }
   // ── CONTRACT HEALTH PER TEAM ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years \u2022 Contracted Players Only</span></div></div>';
-  var sorted=allC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs)});
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years</span></div></div>';
+  var sorted=filtC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs)});
   sorted.forEach(function(tc){
     var cCount=tc.contracted.length;
     var healthCol=tc.avgYrs>=3?'var(--a)':tc.avgYrs>=2?'var(--y)':'var(--red-t)';
@@ -4111,15 +4130,15 @@ function renderContracts(){
     h+='<div class="h-row" style="gap:8px">';
     h+=av(tc.rid,28);
     h+='<span class="h-team" style="min-width:120px">'+tc.name+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4);min-width:40px">'+cCount+'/'+( cCount+tc.uncontracted.length)+'</span>';
+    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4);min-width:40px">'+cCount+'/'+(cCount+tc.uncontracted.length)+'</span>';
     h+='<div style="flex:1;height:8px;background:var(--g3);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+healthPct+'%;background:'+healthCol+';border-radius:4px"></div></div>';
     h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+healthCol+';min-width:36px;text-align:right">'+tc.avgYrs+'yr</span>';
-    if(tc.expiring)h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(239,68,68,.12);color:var(--red-t)">'+tc.expiring+' EXP</span>';
+    if(tc.expiring)h+=cbadge(tc.expiring+' EXP','red');
     h+='</div>';
   });
   // ── DYNASTY VALUE RANKINGS ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Dynasty Value</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Portfolio Value by KTC \u2022 Contracted Players Only</span></div></div>';
-  var valSorted=allC.slice().sort(function(a,b){return b.totalKtc-a.totalKtc});
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Dynasty Value</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Portfolio Value by KTC</span></div></div>';
+  var valSorted=filtC.slice().sort(function(a,b){return b.totalKtc-a.totalKtc});
   var maxKtc=valSorted[0]?valSorted[0].totalKtc:1;
   valSorted.forEach(function(tc,i){
     var pct=(tc.totalKtc/maxKtc*100).toFixed(0);
@@ -4131,84 +4150,59 @@ function renderContracts(){
     h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+tc.totalKtc.toLocaleString()+'</span>';
     h+='</div>';
   });
-  // ── CONTRACT CLIFF ──
+  // ── CONTRACT CLIFF (heatmap cards) ──
   var cliffStart=curSeason;
   var cliffYears=Array.from({length:6},function(_,i){return cliffStart+i});
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4C9} Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contracted Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
-  h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text">How many contracted players each team retains through future years. Steeper drops = bigger rebuild windows coming.</div></div></div>';
-  h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>Team</th>';
-  cliffYears.forEach(function(y){h+='<th>'+y+'</th>'});
-  h+='</tr></thead><tbody>';
-  allC.slice().sort(function(a,b){return b.contracted.length-a.contracted.length}).forEach(function(tc){
-    h+='<tr><td style="font-weight:700">'+tc.name.substring(0,14)+'</td>';
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4C9} Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
+  h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0">';
+  filtC.slice().sort(function(a,b){return b.contracted.length-a.contracted.length}).forEach(function(tc){
+    h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:14px;text-align:center">';
+    h+='<div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:10px">'+av(tc.rid,20)+'<span style="font-family:var(--fd);font-size:12px;font-weight:700;color:var(--t1)">'+tc.name.substring(0,14)+'</span></div>';
+    h+='<div style="display:flex;gap:3px;justify-content:center">';
     cliffYears.forEach(function(yr,yi){
       var count=tc.contracted.filter(function(p){return(p.yrs||0)>yi}).length;
       var pct=tc.contracted.length>0?count/tc.contracted.length:0;
-      var col=pct>=0.7?'var(--a)':pct>=0.4?'var(--y)':'var(--red-t)';
-      h+='<td style="font-family:var(--fm);font-weight:700;color:'+col+'">'+count+'</td>';
+      var segRgb=pct>=0.7?'16,185,129':pct>=0.4?'245,158,11':'239,68,68';
+      h+='<div style="width:20px;height:28px;border-radius:4px;background:rgba('+segRgb+','+(0.15+pct*0.35)+');display:grid;place-items:center;font-family:var(--fm);font-size:9px;font-weight:700;color:rgba(255,255,255,.7)">'+count+'</div>';
     });
-    h+='</tr>';
-  });
-  h+='</tbody></table></div>';
-  // ── TOP DYNASTY ASSETS ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F48E} Top Assets</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Highest Value Contracted Players</span></div></div>';
-  var allPlayers=[];
-  allC.forEach(function(tc){tc.contracted.forEach(function(p){allPlayers.push({owner:tc.name,rid:tc.rid,...p})})});
-  allPlayers.sort(function(a,b){return b.ktc-a.ktc});
-  allPlayers.slice(0,25).forEach(function(p,i){
-    var yc=(p.yrs||0)>=4?'var(--a)':(p.yrs||0)>=2?'var(--y)':'var(--red-t)';
-    h+='<div class="h-row" style="gap:6px">';
-    h+='<span class="h-rk">'+(i+1)+'</span>';
-    h+=pimg(p.id,28);
-    h+='<span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span>';
-    h+='<span class="h-team" style="font-weight:700;flex:1">'+p.name+'</span>';
-    h+='<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">'+p.owner.substring(0,12)+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+yc+';min-width:28px;text-align:right">'+(p.yrs||0)+'yr</span>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:44px;text-align:right">'+(p.ktc?p.ktc.toLocaleString():'--')+'</span>';
     h+='</div>';
+    h+='<div style="display:flex;gap:3px;justify-content:center;margin-top:3px">';
+    cliffYears.forEach(function(yr){h+='<div style="width:20px;text-align:center;font-family:var(--fm);font-size:7px;color:var(--t4)">'+String(yr).substring(2)+'</div>';});
+    h+='</div></div>';
   });
-  // ── EXEMPTION ROI DASHBOARD ──
+  h+='</div>';
+  // ── TOP DYNASTY ASSETS (card strip) ──
+  var allPlayers=[];
+  filtC.forEach(function(tc){tc.contracted.forEach(function(p){allPlayers.push({owner:tc.name,rid:tc.rid,...p})})});
+  allPlayers.sort(function(a,b){return b.ktc-a.ktc});
+  if(allPlayers.length){
+    var topCards='';
+    allPlayers.slice(0,25).forEach(function(p,i){topCards+=conCard(p,{owner:p.owner,topLeft:'#'+(i+1)});});
+    h+=stripWrap('linear-gradient(180deg,rgba(204,0,0,.2),rgba(204,0,0,.05))','TOP',Math.min(25,allPlayers.length),'var(--a)','assets',topCards);
+  }
+  // ── EXEMPTION ROI ──
   var exmH2=D.exemption_history||{};
   var allExms=[];
   Object.entries(exmH2).forEach(function(entry){
     var yr=entry[0],exms=entry[1];
     exms.forEach(function(e){
+      if(selConTeam&&e.o!==selConTeam)return;
       var c=D.contracts&&D.contracts[e.p];
       allExms.push({player:e.p,pos:e.pos,owner:e.o,year:yr,ktc:c?c.ktc:0,yrs:c?(c.yrs||0):0,new_yrs:e.new_yrs,note:e.note,isTraded:e.from&&e.from!==e.o,from:e.from});
     });
   });
   allExms.sort(function(a,b){return b.ktc-a.ktc});
-  var totalExmKtc=allExms.reduce(function(s,e){return s+e.ktc},0);
-  var avgExmKtc=allExms.length?Math.round(totalExmKtc/allExms.length):0;
   if(allExms.length){
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Value of Every Exemption Used \u2022 Ranked by KTC</span></div></div>';
-    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text"><b>'+allExms.length+'</b> exemptions used across all years. Average KTC value: <b>'+avgExmKtc.toLocaleString()+'</b>. Total exemption portfolio: <b>'+totalExmKtc.toLocaleString()+'</b> KTC.</div></div></div>';
-    var best=allExms[0];
-    var worst=allExms[allExms.length-1];
+    var totalExmKtc=allExms.reduce(function(s,e){return s+e.ktc},0);
+    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">\u{1F4B0} Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allExms.length+' Exemptions \u2022 '+totalExmKtc.toLocaleString()+' Total KTC</span></div></div>';
+    var best=allExms[0],worst=allExms[allExms.length-1];
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
-    h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px">';
-    h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">BEST EXEMPTION</div>';
-    h+='<div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+best.player+'</div>';
-    h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+best.owner+' \u2022 '+best.year+'</div>';
-    h+='<div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--a);margin-top:6px">'+best.ktc.toLocaleString()+' KTC</div>';
+    h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">BEST EXEMPTION</div><div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+best.player+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+best.owner+' \u2022 '+best.year+'</div><div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--a);margin-top:6px">'+best.ktc.toLocaleString()+' KTC</div></div>';
+    h+='<div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--red-t);margin-bottom:6px">LOWEST VALUE</div><div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+worst.player+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+worst.owner+' \u2022 '+worst.year+'</div><div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--red-t);margin-top:6px">'+worst.ktc.toLocaleString()+' KTC</div></div>';
     h+='</div>';
-    h+='<div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px">';
-    h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--red-t);margin-bottom:6px">LOWEST VALUE</div>';
-    h+='<div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+worst.player+'</div>';
-    h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+worst.owner+' \u2022 '+worst.year+'</div>';
-    h+='<div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--red-t);margin-top:6px">'+worst.ktc.toLocaleString()+' KTC</div>';
-    h+='</div></div>';
     allExms.forEach(function(e,i){
       var yrC=e.yrs>=4?'var(--a)':e.yrs>=2?'var(--y)':'var(--red-t)';
-      h+='<div class="h-row" style="gap:6px">';
-      h+='<span class="h-rk">'+(i+1)+'</span>';
-      h+='<span class="pl-pos pos-'+(e.pos||'WR')+'">'+e.pos+'</span>';
-      h+='<span style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--t1);flex:1">'+e.player+'</span>';
-      h+='<span style="font-family:var(--fd);font-size:10px;color:var(--t4)">'+e.owner.substring(0,12)+' \u2022 '+e.year+'</span>';
-      h+='<span style="font-family:var(--fm);font-size:11px;font-weight:700;color:'+yrC+';min-width:28px;text-align:right">'+e.yrs+'yr</span>';
-      h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+e.ktc.toLocaleString()+'</span>';
-      if(e.isTraded)h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;background:rgba(59,130,246,.12);color:var(--blu)">TRADED</span>';
-      h+='</div>';
+      h+='<div class="h-row" style="gap:6px"><span class="h-rk">'+(i+1)+'</span><span class="pl-pos pos-'+(e.pos||'WR')+'">'+e.pos+'</span><span style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--t1);flex:1">'+e.player+'</span><span style="font-family:var(--fd);font-size:10px;color:var(--t4)">'+e.owner.substring(0,12)+' \u2022 '+e.year+'</span><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:'+yrC+';min-width:28px;text-align:right">'+e.yrs+'yr</span><span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+e.ktc.toLocaleString()+'</span>'+(e.isTraded?cbadge('TRADED','blu'):'')+'</div>';
     });
   }
   document.getElementById('tab-contracts').innerHTML=h;
