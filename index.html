@@ -2858,6 +2858,134 @@ function renderTrades(){
   }
   function gradeLabel(net){return net>3000?'A+':net>1500?'A':net>500?'B':net>-500?'C':net>-1500?'D':'F';}
   function gradeCls(net){return net>500?'a':net>-500?'b':net>-1500?'c':'d';}
+  function gradeClass(net){return net>500?'tc-ga':net>-500?'tc-gb':net>-1500?'tc-gc':net>-3000?'tc-gd':'tc-gf';}
+  function posColor(pos){return pos==='QB'?'rgb(239,68,68)':pos==='RB'?'rgb(16,185,129)':pos==='WR'?'rgb(59,130,246)':pos==='TE'?'rgb(245,158,11)':'rgb(139,92,246)';}
+  function posBg(pos){return pos==='QB'?'rgba(239,68,68,.3)':pos==='RB'?'rgba(16,185,129,.3)':pos==='WR'?'rgba(59,130,246,.3)':pos==='TE'?'rgba(245,158,11,.3)':'rgba(139,92,246,.3)';}
+
+  function heroSide(player, gradeLbl, gradeClsName, teamName, isLeft){
+    var pm=playerMap[player.id];
+    var pos=pm?pm.pos||'':'';
+    var team=pm?pm.team||'FA':'FA';
+    var imgSrc=isDEF(player.id)?TL(team):PI(player.id);
+    var imgFit=isDEF(player.id)?'object-fit:contain;padding:6px':'object-fit:cover;object-position:top';
+    var fadeDir=isLeft?'tc-hero-fr':'tc-hero-fl';
+    var gpPos=isLeft?'top:10px;left:10px':'top:10px;right:10px';
+    var h='<div class="tc-hero" style="flex:1">';
+    h+='<img src="'+imgSrc+'" style="'+imgFit+'" onerror="this.style.display=\'none\'">';
+    h+='<div class="'+fadeDir+'"></div><div class="tc-hero-fv"></div>';
+    h+='<div style="position:absolute;'+gpPos+';z-index:3"><div class="tc-gp '+gradeClsName+'"><span class="tc-gp-l">'+gradeLbl+'</span><span class="tc-gp-n">'+teamName.substring(0,6).toUpperCase()+'</span></div></div>';
+    h+='<div style="position:absolute;bottom:14px;left:14px;z-index:2">';
+    h+='<div class="tc-hero-nm">'+player.nm+'</div>';
+    h+='<div class="tc-hero-meta"><span class="tc-hero-pos" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span><span class="tc-hero-tm">'+(pm&&pm.team?pm.team:'FA')+'</span></div>';
+    h+='</div></div>';
+    return h;
+  }
+
+  function gridSide(players, picks, exemption, gradeLbl, gradeClsName, teamName, flexRatio){
+    var h='<div style="flex:'+flexRatio+';background:#0e0c0a;padding:12px;display:flex;flex-direction:column;justify-content:center;position:relative">';
+    h+='<div style="position:absolute;top:10px;right:10px;z-index:3"><div class="tc-gp '+gradeClsName+'"><span class="tc-gp-l">'+gradeLbl+'</span><span class="tc-gp-n">'+teamName.substring(0,6).toUpperCase()+'</span></div></div>';
+    h+='<div class="tc-sl" style="margin-bottom:8px">'+teamName.toUpperCase()+'</div>';
+    var rows=[];
+    for(var i=0;i<players.length;i+=3){rows.push(players.slice(i,i+3));}
+    rows.forEach(function(row,ri){
+      h+='<div class="tc-grid" style="'+(ri>0?'margin-top:3px':'')+'">';
+      row.forEach(function(p){
+        var pm=playerMap[p.id];var pos=pm?pm.pos||'':'';var team=pm?pm.team||'FA':'FA';
+        var imgSrc=isDEF(p.id)?TL(team):PI(p.id);
+        var imgFit=isDEF(p.id)?'object-fit:contain;padding:6px;background:#1a1a2a':'object-fit:cover;object-position:top';
+        h+='<div class="tc-gi"><div class="tc-gi-photo"><img src="'+imgSrc+'" style="'+imgFit+'" onerror="this.style.display=\'none\'"></div>';
+        h+='<div class="tc-gi-ov"><div class="tc-gi-nm">'+p.nm+'</div><span class="tc-gi-pos" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span></div></div>';
+      });
+      if(row.length<3&&rows.length>1){for(var j=row.length;j<3;j++)h+='<div style="flex:1"></div>';}
+      h+='</div>';
+    });
+    if(picks.length||exemption){
+      h+='<div style="display:flex;gap:4px">';
+      picks.forEach(function(pk){
+        var rd=pk.match(/(\d)\w{2}\s/)||pk.match(/Rd(\d)/);
+        var round=rd?parseInt(rd[1]):3;
+        var pbCls=round===1?'tc-pb-1':round===2?'tc-pb-2':'tc-pb-3';
+        var opacity=round===1?1:round===2?.55:.3;
+        var yearMatch=pk.match(/(20\d{2})/);
+        var year=yearMatch?yearMatch[1]:'';
+        var ordinal=round===1?'1st':round===2?'2nd':round===3?'3rd':round+'th';
+        h+='<div class="tc-pb '+pbCls+'"><div class="tc-pb-r" style="color:rgba(255,204,0,'+opacity+')">'+ordinal+'</div><div class="tc-pb-y" style="color:rgba(255,204,0,'+(opacity*.45)+')">'+year+'</div></div>';
+      });
+      if(exemption){
+        h+='<div class="tc-exb"><div class="tc-exb-r">EXEMPT</div><div class="tc-exb-y">'+exemption.year+'</div></div>';
+      }
+      h+='</div>';
+    }
+    h+='</div>';
+    return h;
+  }
+
+  function picksOnlySide(picks, exemption, gradeLbl, gradeClsName, teamName){
+    var h='<div style="flex:1;background:#0e0c0a;padding:16px;display:flex;flex-direction:column;justify-content:center;position:relative">';
+    h+='<div style="position:absolute;top:10px;right:10px;z-index:3"><div class="tc-gp '+gradeClsName+'"><span class="tc-gp-l">'+gradeLbl+'</span><span class="tc-gp-n">'+teamName.substring(0,6).toUpperCase()+'</span></div></div>';
+    h+='<div class="tc-sl" style="margin-bottom:14px">'+teamName.toUpperCase()+'</div>';
+    h+='<div style="display:flex;flex-direction:column;gap:6px">';
+    picks.forEach(function(pk){
+      var rd=pk.match(/(\d)\w{2}\s/)||pk.match(/Rd(\d)/);var round=rd?parseInt(rd[1]):3;
+      var opacity=round===1?1:round===2?.55:.3;
+      h+='<span style="font-family:var(--fd);font-size:15px;font-weight:900;color:rgba(255,204,0,'+opacity+')">'+pk+'</span>';
+    });
+    if(exemption){
+      h+='<span style="font-family:var(--fd);font-size:13px;font-weight:900;color:rgb(239,68,68)">'+exemption.year+' Exemption</span>';
+    }
+    h+='</div></div>';
+    return h;
+  }
+
+  function tradeBack(t, aGrade, bGrade, aGradeCls, bGradeCls, aKtc, bKtc, aNet){
+    var a=t.sides[0],b=t.sides[1];
+    var h='<div class="tc-back" style="background:#0a0a0e">';
+    h+='<div class="tc-rh"><span class="tc-rh-t">BREAKDOWN</span><span class="tc-rh-d">WEEK '+t.wk+' \u00B7 '+t.yr+'</span></div>';
+    h+='<div style="padding:14px 18px 10px;display:flex;justify-content:space-between;align-items:center">';
+    h+='<div style="display:flex;align-items:center;gap:6px"><div class="tc-gp-s '+aGradeCls+'"><span class="tc-gp-sl">'+aGrade+'</span></div><span style="font-family:var(--fd);font-size:11px;font-weight:900;color:#fff;letter-spacing:1px">'+a.name.substring(0,10).toUpperCase()+'</span><span style="font-family:var(--fd);font-size:18px;font-weight:900;color:'+(aNet>=0?'#22c55e':'#f97316')+'">'+aKtc.toLocaleString()+'</span></div>';
+    h+='<div style="display:flex;align-items:center;gap:6px"><span style="font-family:var(--fd);font-size:18px;font-weight:900;color:'+(aNet>=0?'#f97316':'#22c55e')+'">'+bKtc.toLocaleString()+'</span><span style="font-family:var(--fd);font-size:11px;font-weight:900;color:#fff;letter-spacing:1px">'+b.name.substring(0,10).toUpperCase()+'</span><div class="tc-gp-s '+bGradeCls+'"><span class="tc-gp-sl">'+bGrade+'</span></div></div>';
+    h+='</div>';
+    var winnerName=aNet>=0?a.name:b.name;
+    var netAbs=Math.abs(aNet);
+    h+='<div style="padding:0 18px 12px"><div style="display:flex;border-radius:3px;overflow:hidden;height:6px"><div style="flex:'+(aKtc||1)+';background:linear-gradient(90deg,'+(aNet>=0?'#22c55e,#15803d':'#f97316,#ea580c')+')"></div><div style="width:2px;background:#0a0a0e;flex-shrink:0"></div><div style="flex:'+(bKtc||1)+';background:linear-gradient(90deg,'+(aNet>=0?'#f97316,#ea580c':'#22c55e,#15803d')+')"></div></div>';
+    h+='<div style="text-align:center;margin-top:4px"><span style="font-family:var(--fd);font-size:10px;font-weight:800;color:#22c55e">+'+netAbs.toLocaleString()+' \u2192 '+winnerName+'</span></div></div>';
+    h+='<div style="display:flex;border-top:1px solid rgba(255,255,255,.04);padding:12px 18px 16px;gap:18px">';
+    h+='<div style="flex:1">';
+    a.players.forEach(function(p){h+=backRow(p, aNet>=0?'#22c55e':'#fff');});
+    a.picks.forEach(function(pk){h+=backPickRow(pk);});
+    h+='</div><div style="width:1px;background:rgba(255,255,255,.03);flex-shrink:0"></div>';
+    h+='<div style="flex:1.3">';
+    b.players.forEach(function(p){h+=backRow(p, aNet>=0?'#fff':'#22c55e');});
+    b.picks.forEach(function(pk){h+=backPickRow(pk);});
+    h+='</div></div>';
+    h+='<div class="tc-bb" style="background:linear-gradient(90deg,'+(aNet>=0?'#22c55e':'#f97316')+' 50%,'+(aNet>=0?'#f97316':'#22c55e')+')"></div>';
+    h+='<div class="tc-flip">\u21BB</div></div>';
+    return h;
+  }
+
+  function backRow(player, valColor){
+    var pm=playerMap[player.id];var pos=pm?pm.pos||'':'';var team=pm?pm.team||'FA':'FA';
+    var imgSrc=isDEF(player.id)?TL(team):PI(player.id);
+    var c=D.contracts&&D.contracts[player.nm];
+    var ktc=c&&c.ktc?c.ktc:0;
+    var h='<div class="tc-brow"><div class="tc-brow-img"><img src="'+imgSrc+'" onerror="this.style.display=\'none\'"></div>';
+    h+='<div style="flex:1;min-width:0"><div class="tc-brow-nm">'+player.nm+'</div><span style="font-size:6px;font-weight:700;color:'+posColor(pos)+';padding:1px 3px;border-radius:2px;background:'+posBg(pos).replace('.3','.12')+'">'+pos+'</span></div>';
+    h+='<div class="tc-brow-val" style="color:'+valColor+'">'+ktc.toLocaleString()+'</div></div>';
+    return h;
+  }
+
+  function backPickRow(pk){
+    var rd=pk.match(/(\d)\w{2}\s/)||pk.match(/Rd(\d)/);var round=rd?parseInt(rd[1]):3;
+    var val=round===1?5000:round===2?2000:500;
+    var opacity=round===1?1:round===2?.55:.35;
+    var ordinal=round===1?'1st':round===2?'2nd':'3rd';
+    var h='<div class="tc-brow">';
+    h+='<div style="width:36px;height:36px;border-radius:8px;background:rgba(255,204,0,.05);border:1px solid rgba(255,204,0,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="font-family:var(--fd);font-size:13px;font-weight:900;color:rgba(255,204,0,'+opacity+')">'+ordinal+'</span></div>';
+    h+='<div style="flex:1"><div style="font-family:var(--fd);font-size:12px;font-weight:900;color:rgba(255,204,0,'+opacity+');line-height:1">'+pk+'</div></div>';
+    h+='<div class="tc-brow-val" style="color:rgba(255,204,0,'+opacity+')">'+val.toLocaleString()+'</div></div>';
+    return h;
+  }
+
   // KTC record per manager
   var ktcRecord={};
   trades.forEach(function(t){
