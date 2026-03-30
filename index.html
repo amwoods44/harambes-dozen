@@ -2842,8 +2842,40 @@ function renderTrades(){
     h+='<div class="nar-item"><div class="nar-icon">\u{1F4CA}</div><div class="nar-text">Draft retention: '+retText+'.</div></div>';
   }
   h+='</div>';
+  // Trade highlight callouts
+  if(trades.length>=2){
+    var bestTrade=null,worstTrade=null,bestNet=-Infinity;
+    var traderCounts={};
+    trades.forEach(function(t,ti){
+      if(t.sides.length<2)return;
+      var a=t.sides[0],b=t.sides[1];
+      var aK=ktcVal(a.players,a.picks),bK=ktcVal(b.players,b.picks);
+      var net=Math.abs(aK-bK);
+      if(aK>bK&&aK-bK>bestNet){bestNet=aK-bK;bestTrade={idx:ti,winner:a.name,loser:b.name,net:aK-bK};}
+      if(bK>aK&&bK-aK>bestNet){bestNet=bK-aK;bestTrade={idx:ti,winner:b.name,loser:a.name,net:bK-aK};}
+      [a.name,b.name].forEach(function(nm){traderCounts[nm]=(traderCounts[nm]||0)+1;});
+    });
+    var topTrader=Object.entries(traderCounts).sort(function(a,b){return b[1]-a[1]})[0];
+    h+='<div style="display:flex;gap:12px;margin:16px 0;flex-wrap:wrap">';
+    if(bestTrade){
+      h+='<div style="flex:1;min-width:200px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:12px;padding:14px">';
+      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">\u{1F3C6} BEST TRADE</div>';
+      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1)">'+bestTrade.winner+'</div>';
+      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">+'+bestTrade.net.toLocaleString()+' KTC vs '+bestTrade.loser+'</div>';
+      h+='</div>';
+    }
+    if(topTrader){
+      h+='<div style="flex:1;min-width:200px;background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.15);border-radius:12px;padding:14px">';
+      h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">\u{1F525} MOST ACTIVE</div>';
+      h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1)">'+topTrader[0]+'</div>';
+      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+topTrader[1]+' trades</div>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
   // Trade grade helpers
   function ktcVal(players,picks){
+
     var total=0;
     players.forEach(function(p){
       var c=D.contracts&&D.contracts[p.nm];
