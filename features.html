@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harambe's Dozen — Feature Checklist</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
+:root{--a:#10B981;--y:#F59E0B;--r:#ef4444;--b:#3b82f6;--p:#8b5cf6;--g1:#0a0a0f;--g2:#111118;--g3:#191922;--g4:#24242e;--t1:#fff;--t2:#d4d4dc;--t3:#9999aa;--t4:#666678}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--g1);color:var(--t2);min-height:100vh;padding:0 0 60px}
+.hero{background:linear-gradient(180deg,#151520 0%,var(--g1) 100%);border-bottom:3px solid var(--a);padding:48px 24px 36px;text-align:center}
+.hero h1{font-family:'Oswald',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:-1px}
+.hero h1 span{color:var(--y)}
+.hero p{font-family:'Inter',sans-serif;font-size:14px;color:var(--t3);margin-top:8px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero .stats{display:flex;gap:24px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.hero .stat{text-align:center}
+.hero .stat-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:800;color:var(--a)}
+.hero .stat-lbl{font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-top:2px}
+.nav-links{display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.nav-links a{font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);text-decoration:none;padding:6px 14px;border:1px solid var(--g4);border-radius:4px;transition:all .2s}
+.nav-links a:hover{color:var(--a);border-color:var(--a)}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.section{margin-top:40px}
+.section-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--g4)}
+.section-hdr h2{font-family:'Oswald',sans-serif;font-size:22px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:1px}
+.section-hdr .badge{font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:3px}
+.badge-live{background:rgba(16,185,129,.12);color:var(--a)}
+.badge-future{background:rgba(139,92,246,.12);color:var(--p)}
+.badge-data{background:rgba(245,158,11,.12);color:var(--y)}
+.badge-api{background:rgba(59,130,246,.12);color:var(--b)}
+.badge-polish{background:rgba(102,102,120,.15);color:var(--t4)}
+.desc{font-size:13px;color:var(--t3);margin-bottom:16px;line-height:1.5}
+table{width:100%;border-collapse:collapse;margin-bottom:8px;font-size:13px}
+th{font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t4);text-align:left;padding:10px 12px;border-bottom:2px solid var(--g4);position:sticky;top:0;background:var(--g1)}
+td{padding:10px 12px;border-bottom:1px solid var(--g3);vertical-align:top}
+tr:hover{background:var(--g2)}
+.feat-name{font-weight:700;color:var(--t1);white-space:nowrap}
+.tab-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--g3);color:var(--a);white-space:nowrap}
+.use-text{color:var(--t3);font-size:12px;line-height:1.4}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.dot-live{background:var(--a);box-shadow:0 0 6px rgba(16,185,129,.4)}
+.dot-future{background:var(--p)}
+.dot-data{background:var(--y)}
+.group-label{font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--a);padding:16px 12px 6px;border-left:3px solid var(--a);margin:4px 0}
+.numbers{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:16px 0}
+.num-card{background:var(--g2);border:1px solid var(--g4);border-radius:8px;padding:16px;text-align:center}
+.num-card .nv{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--a)}
+.num-card .nl{font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-top:4px}
+.open-app{display:inline-flex;align-items:center;gap:8px;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#000;background:var(--a);padding:10px 24px;border-radius:6px;text-decoration:none;transition:all .2s;margin-top:16px}
+.open-app:hover{background:#059669;transform:translateY(-1px)}
+@media(max-width:600px){
+  table{font-size:11px}
+  th,td{padding:8px 6px}
+  .hero{padding:32px 16px 24px}
+  .hero .stats{gap:16px}
+  .hero .stat-val{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Harambe's Dozen <span>Feature Status</span></h1>
+  <p>Dynasty HQ Dashboard for a 12-team PPR dynasty league. Single-file app powered by embedded Sleeper API data.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">13</div><div class="stat-lbl">Tabs</div></div>
+    <div class="stat"><div class="stat-val">40+</div><div class="stat-lbl">Features</div></div>
+    <div class="stat"><div class="stat-val">88%</div><div class="stat-lbl">Data Used</div></div>
+    <div class="stat"><div class="stat-val">1,830</div><div class="stat-lbl">Lines</div></div>
+    <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Dependencies</div></div>
+  </div>
+  <a class="open-app" href="index.html">Open the App &rarr;</a>
+  <div class="nav-links">
+    <a href="#installed">Installed</a>
+    <a href="#new-tabs">New Tabs</a>
+    <a href="#enhancements">Enhancements</a>
+    <a href="#infra">Infrastructure</a>
+    <a href="#future">Future</a>
+    <a href="#numbers">By the Numbers</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══ INSTALLED CORE TABS ═══ -->
+<div class="section" id="installed">
+  <div class="section-hdr"><h2>Core Tabs</h2><span class="badge badge-live">8 Tabs &bull; Live</span></div>
+  <p class="desc">The original 8 tabs — all fully functional.</p>
+  <table>
+    <thead><tr><th>Feature</th><th>Tab</th><th>What It Does</th><th>League Use</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Power Rankings</td><td><span class="tab-tag">Rankings</span></td><td>Composite score (40% record, 30% points, 20% youth, 10% capital) with tier groupings and expandable roster cards</td><td class="use-text">See who's actually the best dynasty, not just this year's record</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Roster Browser</td><td><span class="tab-tag">Rosters</span></td><td>Full roster for every team, grouped by position, with starter headshots and age coloring</td><td class="use-text">Scout opponents, plan trades, evaluate roster depth</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Manager Badges</td><td><span class="tab-tag">Rosters</span></td><td>Auto-computed personality tags (Wheeler-Dealer, Ghost, Dynasty Builder, Win Now, Champion, etc.)</td><td class="use-text">Instantly know each manager's style and tendencies</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Championship History</td><td><span class="tab-tag">Trophies</span></td><td>Banner cards for every champion (2023-2025), records for highest score, closest game, biggest blowout</td><td class="use-text">Bragging rights, rivalry fuel</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Franchise Rankings</td><td><span class="tab-tag">Trophies</span></td><td>All-time W-L, total points, win %, and championship count across 3 seasons</td><td class="use-text">Who's the GOAT franchise in your league</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Luck Rating</td><td><span class="tab-tag">Trophies</span></td><td>Schedule-adjusted wins showing who got lucky vs unlucky schedules</td><td class="use-text">Settle the "I would've won with your schedule" argument</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Playoff Bracket</td><td><span class="tab-tag">Trophies</span></td><td>Visual bracket per year: quarterfinals, semis, championship with runner-up</td><td class="use-text">Relive the playoff drama, see the path to the title</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Trade History</td><td><span class="tab-tag">Trades</span></td><td>Full trade cards with both sides, assets, and week/year markers</td><td class="use-text">Revisit trades, evaluate who won them in hindsight</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Capital Grid</td><td><span class="tab-tag">Trades</span></td><td>Table showing exactly who owns which future picks (OWN / via Team / TRADED)</td><td class="use-text">Know the full pick landscape before proposing trades</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Trade Partners</td><td><span class="tab-tag">Trades</span></td><td>Bar chart showing which managers trade with each other most</td><td class="use-text">Expose trade alliances and preferred partners</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Matchup Cards</td><td><span class="tab-tag">Matchups</span></td><td>Week-by-week browser with owner avatars, crowns, thriller/blowout tags</td><td class="use-text">Broadcast-style weekly matchup review</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Draft Board Grid</td><td><span class="tab-tag">Draft</span></td><td>Visual grid (rounds &times; picks) with position-colored cells and hit/bust borders</td><td class="use-text">See draft strategy at a glance — who went RB-heavy, who reached</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Age Map</td><td><span class="tab-tag">Age Map</span></td><td>Stacked bar of young/prime/vet split per team + championship window labels</td><td class="use-text">Dynasty window analysis — who's building vs mortgaging</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Scoring Heat Map</td><td><span class="tab-tag">Scoring</span></td><td>12&times;17 color grid showing every team's score every week</td><td class="use-text">Visual pattern recognition — streaks, consistency, collapses</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Scoring Sparklines</td><td><span class="tab-tag">Scoring</span></td><td>Mini bar charts per team with high/low/avg/&sigma;</td><td class="use-text">Quick performance profiles at a glance</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ NEW TABS ═══ -->
+<div class="section" id="new-tabs">
+  <div class="section-hdr"><h2>New Tabs</h2><span class="badge badge-live">5 Tabs &bull; Just Added</span></div>
+  <p class="desc">Five brand new tabs using data that was previously sitting unused.</p>
+  <table>
+    <thead><tr><th>Feature</th><th>Tab</th><th>What It Does</th><th>League Use</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Awards (12 categories)</td><td><span class="tab-tag">Awards</span></td><td>Auto-computed superlatives: Champion, MVP, Point Machine, Mr. Consistent, Boom or Bust, Luckiest, Snake Bitten, Dynasty Builder, Wheeler-Dealer, Ghost, Single Week Record, Draft Guru</td><td class="use-text">End-of-season awards without voting — the numbers decide</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>H2H Matrix</td><td><span class="tab-tag">Analytics</span></td><td>12&times;12 heatmap showing every team's head-to-head record vs every other</td><td class="use-text">See your nemesis at a glance, identify favorable matchups</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>All-Play Record</td><td><span class="tab-tag">Analytics</span></td><td>If you played every team every week — what's your record? Removes schedule luck entirely</td><td class="use-text">The truest ranking of team strength — no schedule noise</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Consistency Scatter</td><td><span class="tab-tag">Analytics</span></td><td>Canvas chart: avg points vs standard deviation per team</td><td class="use-text">Identify boom/bust vs steady performers visually</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Pythagorean Wins</td><td><span class="tab-tag">Analytics</span></td><td>Expected wins based on PF/PA using Pythagorean expectation</td><td class="use-text">Are you overperforming or underperforming your point differential?</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Strength of Schedule</td><td><span class="tab-tag">Analytics</span></td><td>Opponent win % — how tough was your schedule</td><td class="use-text">Know who had an easy ride vs who earned every win</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Waiver Wire Feed</td><td><span class="tab-tag">Moves</span></td><td>Full transaction history: waivers, FA pickups, commissioner moves, grouped by week</td><td class="use-text">See who's working the wire — the hidden skill gap in dynasty</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>GM Dashboard</td><td><span class="tab-tag">GM</span></td><td>Select any team &rarr; full profile: scoring stats, roster, activity, H2H vs all, weekly sparkline, trade history</td><td class="use-text">Your franchise command center — everything about YOUR team</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Rivalry Tracker</td><td><span class="tab-tag">Rivals</span></td><td>All 20 rivalry matchups ranked by total games with dominance bars</td><td class="use-text">Know who owns who, fuel the trash talk</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ ENHANCEMENTS ═══ -->
+<div class="section" id="enhancements">
+  <div class="section-hdr"><h2>Enhancements</h2><span class="badge badge-live">Added to Existing Tabs</span></div>
+  <table>
+    <thead><tr><th>Feature</th><th>Tab</th><th>What It Does</th><th>League Use</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Power Race Chart</td><td><span class="tab-tag">Rankings</span></td><td>Canvas horizontal bar race showing top 6 teams by power score</td><td class="use-text">Visual spectacle of who's on top</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>H2H Comparison Tool</td><td><span class="tab-tag">Rankings</span></td><td>Dropdown: pick any two teams, compare power/wins/points/age/H2H</td><td class="use-text">Side-by-side before proposing a trade or talking trash</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Manager Badges</td><td><span class="tab-tag">Rosters</span></td><td>Auto-computed tags: Wheeler-Dealer, Ghost, Dynasty Builder, Champion, etc.</td><td class="use-text">Instantly see each manager's personality from the data</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Playoff Bracket</td><td><span class="tab-tag">Trophies</span></td><td>Visual bracket per year: QF, semis, championship</td><td class="use-text">Relive the postseason path</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Capital Inventory Grid</td><td><span class="tab-tag">Trades</span></td><td>Full grid: who owns what pick, via which team</td><td class="use-text">Complete pick landscape before any trade talks</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Trade Partner Matrix</td><td><span class="tab-tag">Trades</span></td><td>Who trades with who, ranked by frequency</td><td class="use-text">Expose alliances</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Matchup Avatars + Tags</td><td><span class="tab-tag">Matchups</span></td><td>Owner photos, crowns, week stats, thriller/blowout labels</td><td class="use-text">Broadcast-quality matchup presentation</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-live"></span>Draft Board Grid</td><td><span class="tab-tag">Draft</span></td><td>Visual rounds &times; picks grid with position colors and hit/bust borders</td><td class="use-text">See draft strategy visually</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ INFRASTRUCTURE ═══ -->
+<div class="section" id="infra">
+  <div class="section-hdr"><h2>Infrastructure</h2><span class="badge badge-live">Always On</span></div>
+  <table>
+    <thead><tr><th>Feature</th><th>Status</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name">13 Navigable Tabs</td><td style="color:var(--a)">Working</td><td>Full tab system with active states</td></tr>
+      <tr><td class="feat-name">Owner Avatars</td><td style="color:var(--a)">Working</td><td>Sleeper CDN, fallback to gorilla emoji</td></tr>
+      <tr><td class="feat-name">Player Headshots</td><td style="color:var(--a)">Working</td><td>Sleeper CDN thumbnails</td></tr>
+      <tr><td class="feat-name">Responsive Design</td><td style="color:var(--a)">Working</td><td>4 breakpoints: 768, 600, 480, 380px</td></tr>
+      <tr><td class="feat-name">PWA Support</td><td style="color:var(--a)">Working</td><td>Service worker, manifest, installable</td></tr>
+      <tr><td class="feat-name">Loading Screen</td><td style="color:var(--a)">Working</td><td>Animated gorilla + spinner</td></tr>
+      <tr><td class="feat-name">NFL Countdown</td><td style="color:var(--a)">Working</td><td>Days/hours/minutes to kickoff</td></tr>
+      <tr><td class="feat-name">Dark Theme</td><td style="color:var(--a)">Working</td><td>Full dark mode — the identity</td></tr>
+      <tr><td class="feat-name">Bottom Ticker</td><td style="color:var(--a)">Working</td><td>Scrolling league facts</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ FUTURE ═══ -->
+<div class="section" id="future">
+  <div class="section-hdr"><h2>Future Capabilities</h2><span class="badge badge-future">Roadmap</span></div>
+  <p class="desc">Features that would make the app truly elite. Grouped by what's blocking them.</p>
+
+  <div class="group-label">Needs More Data from Sleeper</div>
+  <table>
+    <thead><tr><th>Feature</th><th>What It Would Do</th><th>What's Missing</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-data"></span>Contracts Display</td><td>Contract years, salary, tag status on every player row</td><td>Contract data not in current JSON</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-data"></span>Contract Cliff Chart</td><td>Stacked area showing when contracted talent expires per team</td><td>Contract data</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-data"></span>Points Left on Bench</td><td>Best possible lineup each week vs what was started</td><td>Per-player weekly scoring (only have team totals)</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-data"></span>Player Trade Chains</td><td>"Player X: Team A &rarr; B &rarr; C" with dates</td><td>Trade-level player mapping</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-data"></span>Post-Game Recap Cards</td><td>Auto-generated narratives per week</td><td>Per-player weekly scoring</td></tr>
+    </tbody>
+  </table>
+
+  <div class="group-label">Needs External APIs</div>
+  <table>
+    <thead><tr><th>Feature</th><th>What It Would Do</th><th>What's Needed</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Live Scoreboard</td><td>Full-screen game-day view updating in real time</td><td>Sleeper API polling or websocket</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Player News</td><td>Injury reports, depth chart changes for rostered players</td><td>News API</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Trade Simulator</td><td>Drag-and-drop trade builder recalculating rankings</td><td>Complex state management</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Playoff Simulator</td><td>10K Monte Carlo simulations for championship odds</td><td>Computational engine</td></tr>
+    </tbody>
+  </table>
+
+  <div class="group-label">Polish &amp; Delight</div>
+  <table>
+    <thead><tr><th>Feature</th><th>What It Would Do</th><th>Complexity</th></tr></thead>
+    <tbody>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Dynasty Value Market</td><td>Composite player values tracked over time, portfolio per team</td><td>Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Radar Charts</td><td>Spider chart per team (QB/RB/WR/TE/Youth)</td><td>Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Standings Race</td><td>Animated bar chart race of standings evolving week by week</td><td>Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Trade Network Graph</td><td>Force-directed graph — thicker lines = more trades</td><td>Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Scoring Violin Plots</td><td>Distribution shapes per team</td><td>Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>This Week in History</td><td>"On this week in 2023, Team X scored 206.72"</td><td>Low</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Achievements</td><td>Badge system: Century Club, Iron Man, Draft Guru</td><td>Low</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Export/Share</td><td>html2canvas screenshots with league watermark</td><td>Low-Medium</td></tr>
+      <tr><td class="feat-name"><span class="status-dot dot-future"></span>Commissioner Panel</td><td>Password-protected data management</td><td>High — needs backend</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ NUMBERS ═══ -->
+<div class="section" id="numbers">
+  <div class="section-hdr"><h2>By the Numbers</h2></div>
+  <div class="numbers">
+    <div class="num-card"><div class="nv">13</div><div class="nl">Total Tabs</div></div>
+    <div class="num-card"><div class="nv">40+</div><div class="nl">Features</div></div>
+    <div class="num-card"><div class="nv">15</div><div class="nl">Render Functions</div></div>
+    <div class="num-card"><div class="nv">88%</div><div class="nl">Data Used</div></div>
+    <div class="num-card"><div class="nv">~1,830</div><div class="nl">Lines of Code</div></div>
+    <div class="num-card"><div class="nv">0</div><div class="nl">Dependencies</div></div>
+    <div class="num-card"><div class="nv">1</div><div class="nl">File (index.html)</div></div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:48px;padding:24px;border-top:1px solid var(--g4)">
+  <a class="open-app" href="index.html">Open the App &rarr;</a>
+  <p style="font-size:11px;color:var(--t4);margin-top:12px">Last updated: March 27, 2026</p>
+</div>
+
+</div>
+</body>
+</html>
