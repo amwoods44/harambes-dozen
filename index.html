@@ -931,6 +931,20 @@ body{padding-bottom:48px}
 /* ═══ MANAGER BADGES ═══ */
 .badge-row{display:flex;gap:var(--sp-1);flex-wrap:wrap;margin-top:var(--sp-1)}
 .mgr-badge{font-family:var(--fd);font-size:var(--text-xs);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:var(--sp-1) var(--sp-3);border-radius:var(--radius-sm);white-space:nowrap}
+/* ═══ BADGE CASE & HOF ═══ */
+.badge-case{margin-top:12px;padding:12px 0 4px}
+.badge-case-hdr{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-bottom:10px}
+.badge-case-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;width:56px;cursor:default}
+.badge-item-label{font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);text-align:center;line-height:1.2}
+.badge-item:hover .badge-item-label{color:var(--t1)}
+.hof-section{margin-top:8px}
+.hof-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--g4)}
+.hof-row:last-child{border-bottom:none}
+.hof-rank{font-family:var(--fd);font-size:11px;font-weight:700;color:var(--t4);width:20px;text-align:right;flex-shrink:0}
+.hof-rank.gold{color:var(--y)}
+.hof-badges{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.hof-count{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t2);flex-shrink:0}
 /* ═══ NEW TAB RESPONSIVE ═══ */
 @media(max-width:768px){
   .award-grid{grid-template-columns:1fr}
@@ -5063,6 +5077,94 @@ function renderContracts(){
     });
   }
   document.getElementById('tab-contracts').innerHTML=h;
+}
+// ═══ LIFETIME BADGES ═══
+function badgeSvg(iconName,teamColor){
+  var tc=teamColor||'#cc0000';
+  var gid='bg'+Math.random().toString(36).substr(2,5);
+  var iconHtml=typeof icon==='function'?icon(iconName,20,'#2a1a00'):'';
+  return '<div style="display:inline-flex;position:relative;width:48px;height:48px">'
+    +'<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><radialGradient id="'+gid+'" cx="35%" cy="30%">'
+    +'<stop offset="0%" stop-color="#f5e070"/>'
+    +'<stop offset="40%" stop-color="#d4a843"/>'
+    +'<stop offset="100%" stop-color="#8a6420"/>'
+    +'</radialGradient></defs>'
+    +'<circle cx="24" cy="24" r="22" fill="url(#'+gid+')" stroke="'+tc+'" stroke-width="2" stroke-opacity=".4"/>'
+    +'<circle cx="24" cy="24" r="19" fill="none" stroke="#e8c65a" stroke-width=".5" stroke-opacity=".3"/>'
+    +'</svg>'
+    +'<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">'+iconHtml+'</div>'
+    +'</div>';
+}
+function computeLifetimeBadges(rosterIdOrName){
+  var rid=typeof rosterIdOrName==='number'?rosterIdOrName:null;
+  var teamName=typeof rosterIdOrName==='string'?rosterIdOrName:(D.rid_to_name?D.rid_to_name[rid]||'':'');
+  if(!teamName)return[];
+  if(!rid){var t=D.teams.find(function(x){return x.team_name===teamName;});rid=t?t.roster_id:null;}
+  var badges=[];
+  var tc=(TC&&TC[rid])?TC[rid].p:'#cc0000';
+
+  // Champion — won at least one championship
+  if(D.champions&&D.champions.some(function(c){return c.champion===teamName;})){
+    var titles=D.champions.filter(function(c){return c.champion===teamName;}).length;
+    badges.push({id:'champion',label:'Dynasty Champ',desc:titles+'x Champion',icon:'trophy',tc:tc});
+  }
+
+  // Century Club — scored 200+ in any week across all seasons
+  var allScores=[];
+  SEASON_YEARS.forEach(function(yr){
+    var key=yr===CURRENT_YEAR?'weekly_scores':'weekly_scores_'+yr;
+    var sc=D[key];
+    if(sc&&rid&&sc[rid])allScores=allScores.concat(sc[rid]);
+  });
+  if(allScores.some(function(p){return p>=200;})){
+    badges.push({id:'century',label:'Century Club',desc:'Scored 200+ in a week',icon:'fire',tc:tc});
+  }
+
+  // Wheeler-Dealer — 5+ lifetime trades
+  var act=(D.activity||{})[teamName]||{};
+  if((act.trades||0)>=5){
+    badges.push({id:'dealer',label:'Wheeler-Dealer',desc:(act.trades||0)+' lifetime trades',icon:'trade',tc:tc});
+  }
+
+  // Ghost — fewest total moves among all managers
+  var allAct=D.activity||{};
+  var allTotals=Object.values(allAct).map(function(a){return(a.trades||0)+(a.moves||0);}).sort(function(a,b){return a-b;});
+  var myTotal=(act.trades||0)+(act.moves||0);
+  if(allTotals.length&&myTotal<=allTotals[Math.min(1,allTotals.length-1)]){
+    badges.push({id:'ghost',label:'The Ghost',desc:'Fewest lifetime moves',icon:'ghost',tc:tc});
+  }
+
+  // Point Machine — franchise all-time points leader or within 3%
+  var fr=(D.franchise||[]).find(function(f){return f.name===teamName;});
+  if(fr){
+    var topPts=Math.max.apply(null,(D.franchise||[]).map(function(f){return f.total_pts||0;}));
+    if(topPts>0&&fr.total_pts>=topPts*0.97){
+      badges.push({id:'machine',label:'Point Machine',desc:'All-time points leader',icon:'bolt',tc:tc});
+    }
+  }
+
+  // Dynasty Builder — youngest current roster (avg age <= 24.5)
+  var team=D.teams.find(function(x){return x.team_name===teamName;});
+  if(team){
+    var ages=team.players.filter(function(p){return p.age&&p.pos!=='DEF';}).map(function(p){return p.age;});
+    var avgAge=ages.length?ages.reduce(function(a,b){return a+b;},0)/ages.length:28;
+    if(avgAge<=24.5){badges.push({id:'builder',label:'Dynasty Builder',desc:'Avg age '+avgAge.toFixed(1),icon:'seedling',tc:tc});}
+  }
+
+  // Draft Guru — 3+ draft picks became starters
+  if(D.draft_hits){
+    var hits=Object.values(D.draft_hits).flat().filter(function(h){return h.status==='starter'&&h.drafter===teamName;});
+    if(hits.length>=3){badges.push({id:'guru',label:'Draft Guru',desc:hits.length+' picks became starters',icon:'draft',tc:tc});}
+  }
+
+  // Iron Man — most total transactions
+  var allActArr=Object.entries(D.activity||{}).map(function(e){return{name:e[0],total:(e[1].trades||0)+(e[1].moves||0)+(e[1].draft_picks||0)};}).sort(function(a,b){return b.total-a.total;});
+  if(allActArr.length&&allActArr[0].name===teamName){
+    badges.push({id:'ironman',label:'Iron Man',desc:'Most active manager',icon:'target',tc:tc});
+  }
+
+  return badges;
 }
 // ═══ COUNTUP LOADER ═══
 function loadCountUp(cb){
