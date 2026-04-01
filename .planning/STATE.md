@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03.2-01-PLAN.md
-last_updated: "2026-04-01T18:57:13.695Z"
+stopped_at: Completed 03.2-02-PLAN.md
+last_updated: "2026-04-01T19:02:28.771Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 9
   completed_phases: 4
   total_plans: 21
-  completed_plans: 16
+  completed_plans: 17
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 03.2 (broadcast-polish) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -69,6 +69,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03.1-offseason-hardening P02 | 4min | 2 tasks | 1 files |
 | Phase 03.1-offseason-hardening P03 | 12min | 2 tasks | 1 files |
 | Phase 03.2-broadcast-polish P01 | 1 | 2 tasks | 1 files |
+| Phase 03.2-broadcast-polish P02 | 3min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,8 @@ Recent decisions affecting current work:
 - [Phase 03.1-offseason-hardening]: Chronicle week display: null-safe conditional append 'Season'+(week?' Wk '+week:'') — Season alone is valid, 'Wk null' is not
 - [Phase 03.2-broadcast-polish]: Added Phase 03.2 CSS block at end of <style> to override earlier ad-hoc hardcoded values with token-based values (--sp-N)
 - [Phase 03.2-broadcast-polish]: Used CSS mask-image (not ::after) for scroll strip fades — avoids conflict with cast strip's existing ::before/::after gradients
+- [Phase 03.2-broadcast-polish]: Replaced wipeIn clip-path with fadeTabIn on .panel.wipe-in so tab transition actually fires (cascade override fix)
+- [Phase 03.2-broadcast-polish]: CSS-first stub pattern: define animation/utility classes in CSS before JS wires them, so later plans only need JS changes
 
 ### Roadmap Evolution
 
@@ -141,6 +144,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T18:57:13.692Z
-Stopped at: Completed 03.2-01-PLAN.md
+Last session: 2026-04-01T19:02:28.768Z
+Stopped at: Completed 03.2-02-PLAN.md
 Resume file: None
