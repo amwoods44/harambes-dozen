@@ -1,5 +1,5 @@
-const CACHE_NAME = 'harambes-dozen-v3';
-const ASSETS = ['./', 'manifest.json'];
+const CACHE_NAME = 'harambes-dozen-v5';
+const ASSETS = ['./', 'manifest.json', 'harambe-logo.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -27,10 +27,10 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // HTML: network first, fall back to cache
-  if (req.headers.get('accept')?.includes('text/html')) {
+  // HTML: network first (bypass HTTP cache), fall back to SW cache
+  if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     e.respondWith(
-      fetch(req).then(res => {
+      fetch(req, { cache: 'no-store' }).then(res => {
         const clone = res.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
         return res;
