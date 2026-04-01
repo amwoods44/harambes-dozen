@@ -2273,8 +2273,8 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
     }
   });
 
-  // ── Set lastSeason: most recent historical season with matchup data ──
-  var completedYears=historicalSeasons.filter(function(hs){return Object.keys(hs.matchups||{}).some(function(wk){return(hs.matchups[wk]||[]).length>0;});}).map(function(hs){return String(hs.season);}).sort();
+  // ── Set lastSeason: most recent season with matchup data (scan ALL loaded, not just this batch) ──
+  var completedYears=Object.keys(d).filter(function(k){return k.startsWith('matchup_weeks_')&&Object.keys(d[k]||{}).length>0;}).map(function(k){return k.replace('matchup_weeks_','');}).sort();
   d.lastSeason=completedYears.length?completedYears[completedYears.length-1]:null;
   // If current season has games, it IS the last season
   if(!d.isOffseason)d.lastSeason=String(d.league&&d.league.season?d.league.season:CURRENT_YEAR);
@@ -3204,7 +3204,7 @@ function renderRosters(){
           var bw=Math.max(8,con.yrs/7*100);
           ct='<span style="display:inline-flex;align-items:center;gap:3px;margin-left:auto;flex-shrink:0">';
           if(con.tag)ct+='<span style="font-family:var(--fd);font-size:8px;font-weight:700;color:var(--y);letter-spacing:1px">TAG</span>';
-          ct+='<span style="font-family:var(--fm);font-size:10px;font-weight:700;color:'+yc+';min-width:24px;text-align:right">'+(con.yrs===0?'EXP':con.yrs+'yr')+'</span>';
+          ct+='<span style="font-family:var(--fm);font-size:10px;font-weight:700;color:'+yc+';min-width:24px;text-align:right">'+(con.yrs===0?'EXP':con.yrs!=null?con.yrs+'yr':'--')+'</span>';
           ct+='<span style="width:28px;height:5px;background:var(--g4);border-radius:3px;display:inline-block;overflow:hidden"><span style="display:block;height:100%;width:'+bw+'%;background:'+yc+';border-radius:3px"></span></span></span>';
         }
         const rktc=D.contracts&&D.contracts[p.name]?D.contracts[p.name].ktc:0;
@@ -5843,7 +5843,7 @@ function renderPulse(){
     var yr=entry[0],exms=entry[1];
     exms.slice(0,3).forEach(function(e){
       var isTraded=e.from&&e.from!==e.o;
-      cards.push({type:'exemption',priority:5,icon:icon('tag',16,'var(--pur)'),tag:'EXEMPTION',headline:esc(e.o)+' uses '+(isTraded?'traded ':'')+'exemption on '+esc(e.p),body:esc(e.o)+' restructures '+esc(e.p)+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+esc(e.from)+'.':'')+(e.note?' '+esc(e.note)+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
+      cards.push({type:'exemption',priority:5,icon:icon('tag',16,'var(--pur)'),tag:'EXEMPTION',headline:esc(e.o)+' uses '+(isTraded?'traded ':'')+'exemption on '+esc(e.p),body:esc(e.o)+' restructures '+esc(e.p)+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+(e.new_yrs!=null?e.new_yrs+'yr':'new')+' deal.'+(isTraded?' Exemption acquired via trade from '+esc(e.from)+'.':'')+(e.note?' '+esc(e.note)+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
     });
   });
   // Draft highlights
@@ -5909,7 +5909,7 @@ function renderChronicle(){
   var exmH=D.exemption_history||{};
   Object.entries(exmH).forEach(function(entry){
     var yr=parseInt(entry[0]),exms=entry[1];
-    exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:icon('tag',16,'var(--pur)'),title:esc(e.o)+' extends '+esc(e.p),body:'New deal: '+e.new_yrs+'yr. '+(e.note?esc(e.note):''),date:yr+' Offseason'});});
+    exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:icon('tag',16,'var(--pur)'),title:esc(e.o)+' extends '+esc(e.p),body:'New deal: '+(e.new_yrs!=null?e.new_yrs+'yr':'restructured')+'. '+(e.note?esc(e.note):''),date:yr+' Offseason'});});
   });
   // Trades
   (D.unified_trades||[]).forEach(function(t){
@@ -6253,7 +6253,7 @@ function openPP(playerId) {
           return `<div class="pp-acq-row" style="flex-wrap:wrap;gap:8px">
             <span style="font-family:var(--fd);font-size:13px;font-weight:800;color:var(--pur);min-width:36px">${e.year}</span>
             <span style="font-family:var(--fb);font-size:13px;color:var(--t2);flex:1">${esc(e.o)} used exemption${isTraded ? ' <span class="u-c-blu">(traded from ' + esc(e.from) + ')</span>' : ''}</span>
-            <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a)">${e.had !== null ? e.had + 'yr' : '\u2014'} \u2192 ${e.new_yrs}yr</span>
+            <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a)">${e.had !== null ? e.had + 'yr' : '\u2014'} \u2192 ${e.new_yrs != null ? e.new_yrs + 'yr' : '--'}</span>
             ${e.note ? '<div style="width:100%;font-family:var(--fb);font-size:11px;color:var(--t4);font-style:italic;padding-left:44px">' + esc(e.note) + '</div>' : ''}
           </div>`;
         }).join('')}
