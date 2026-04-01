@@ -54,7 +54,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 - [x] **NARR-01**: "This Week in League History" — surface a historically significant fact matching the current week
 - [x] **NARR-02**: Achievements & Milestones badge system — auto-computed league-lifetime badges (Century Club, Iron Man, Dynasty Builder, etc.)
-- [ ] **NARR-03**: Animated Season Standings Race — week-by-week bar chart race showing standings evolve
+- [x] **NARR-03**: Animated Season Standings Race — week-by-week bar chart race showing standings evolve
 - [x] **NARR-04**: Season Narrative / Power Moves Feed — auto-generated text summaries of biggest weekly storylines
 - [x] **NARR-05**: Number counter animations on stat strips (animate up on page load / tab switch)
 - [ ] **NARR-06**: Leaguemate Comparison Tool (Full) — broadcast-style two-team showdown across all dimensions including roster value and contract status
@@ -150,7 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAY-05 | Phase 5 | Pending |
 | NARR-01 | Phase 2 | Complete |
 | NARR-02 | Phase 2 | Complete |
-| NARR-03 | Phase 2 | Pending |
+| NARR-03 | Phase 2 | Complete |
 | NARR-04 | Phase 2 | Complete |
 | NARR-05 | Phase 2 | Complete |
 | NARR-06 | Phase 5 | Pending |

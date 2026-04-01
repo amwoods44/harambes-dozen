@@ -57,7 +57,7 @@ Plans:
 - [x] 02-02-PLAN.md — "This Week in League History" callout card: week-matched vintage ESPN hero card (NARR-01)
 - [x] 02-03-PLAN.md — Achievements & Badges: computeLifetimeBadges, badgeSvg, GM badge case, Awards Hall of Fame (NARR-02)
 - [x] 02-04-PLAN.md — Power Moves Feed: buildPowerMoves, Season Story section in Trophies tab (NARR-04)
-- [ ] 02-05-PLAN.md — Standings Race: computeWeeklyStandings, animateStandingsRace canvas, year selector + play button (NARR-03)
+- [x] 02-05-PLAN.md — Standings Race: computeWeeklyStandings, animateStandingsRace canvas, year selector + play button (NARR-03)
 
 ### Phase 3: Contracts Complete
 **Goal**: The contracts system is fully functional — data flows reliably from Google Sheets, pills appear across all relevant tabs, the cliff chart visualizes expiration risk, and the Contracts tab is the definitive keeper-league reference
