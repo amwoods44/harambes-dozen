@@ -1148,6 +1148,15 @@ body{padding-bottom:48px}
 .cpill-23{background:rgba(245,158,11,.12);color:#ffcc00}
 .cpill-1{background:rgba(239,68,68,.12);color:#ff4444}
 .cpill-0{background:rgba(239,68,68,.20);color:#ff4444;animation:pulse 1.4s infinite}
+/* -- Keeper sheet table -- */
+.keeper-tbl{width:100%;border-collapse:collapse;font-family:var(--fb);font-size:13px}
+.keeper-tbl thead{position:sticky;top:0;z-index:2}
+.keeper-tbl th{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--a);text-align:left;padding:10px 8px;background:var(--g1);border-bottom:2px solid var(--a);cursor:pointer;user-select:none;white-space:nowrap}
+.keeper-tbl th:hover{color:var(--t1);background:var(--g3)}
+.keeper-tbl td{padding:8px;border-bottom:1px solid var(--g3);color:var(--t2);vertical-align:middle}
+.keeper-even td{background:rgba(255,255,255,.015)}
+.keeper-name{font-weight:600;color:var(--t1);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.keeper-team{font-size:11px;color:var(--t3)}
 /* Item 18: Dynasty scatter */
 .dynasty-scatter{width:100%;height:320px;border-radius:12px;border:1px solid var(--g4);background:var(--g2);display:block;margin:16px 0}
 /* Item 19: Manager cards */
@@ -2565,6 +2574,7 @@ function relBadge(nm){if(!D.contracts)return'';var c=D.contracts[nm];if(!c||!c.c
 var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
 var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
 let selConTeam=null;
+let conSortCol='ktc',conSortDir=-1;
 function yrsColor(yrs){return(yrs||0)>=3?'16,185,129':(yrs||0)>=2?'245,158,11':'239,68,68';}
 function yrsHex(yrs){return(yrs||0)>=3?'#10b981':(yrs||0)>=2?'#f59e0b':'#ef4444';}
 function cbadge(text,color){var m={'y':'245,158,11','blu':'59,130,246','pur':'139,92,246','red':'239,68,68','gray':'102,102,120'};var rgb=m[color]||'102,102,120';var cc=color==='y'?'var(--y)':color==='blu'?'var(--blu)':color==='pur'?'var(--pur)':color==='red'?'var(--red-t)':'var(--t4)';return'<span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:3px;background:rgba('+rgb+',.12);color:'+cc+'">'+text+'</span>';}
@@ -5226,7 +5236,67 @@ function renderContracts(){
       h+='<div class="h-row" style="gap:6px"><span class="h-rk">'+(i+1)+'</span><span class="pl-pos pos-'+(e.pos||'WR')+'">'+e.pos+'</span><span style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--t1);flex:1">'+esc(e.player)+'</span><span class="u-label" style="font-weight:400">'+esc(e.owner).substring(0,12)+' \u2022 '+e.year+'</span><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:'+yrC+';min-width:28px;text-align:right">'+e.yrs+'yr</span><span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+e.ktc.toLocaleString()+'</span>'+(e.isTraded?cbadge('TRADED','blu'):'')+'</div>';
     });
   }
+  // ── SORTABLE KEEPER SHEET (CONT-10) ──
+  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Keeper Sheet</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Master Contract Reference \u2022 Click Headers to Sort</span></div></div>';
+  h+='<div id="con-table-wrap" style="overflow-x:auto;margin-bottom:20px"></div>';
   document.getElementById('tab-contracts').innerHTML=h;
+  renderKeeperTable();
+}
+function sortKeeperSheet(col){
+  conSortDir=conSortCol===col?-conSortDir:-1;
+  conSortCol=col;
+  renderKeeperTable();
+}
+function renderKeeperTable(){
+  var wrap=document.getElementById('con-table-wrap');
+  if(!wrap)return;
+  var filtC=selConTeam?D.teams.filter(function(t){return t.team_name===selConTeam}):D.teams;
+  var allP=[];
+  filtC.forEach(function(t){
+    t.players.forEach(function(p){
+      var c=D.contracts&&(D.contracts[p.name]||D.contracts['_id_'+p.id]);
+      if(!c)return;
+      allP.push({name:p.name,id:p.id,team:t.team_name,rid:t.roster_id,pos:p.pos||'',yrs:c.yrs,contracted:c.contracted,tag:c.tag,exm:c.exm,ktc:c.ktc||0,rnk:c.rnk||9999,age:p.age||0});
+    });
+  });
+  var col=conSortCol,dir=conSortDir;
+  allP.sort(function(a,b){
+    var av=a[col],bv=b[col];
+    if(typeof av==='string'&&typeof bv==='string')return dir*av.localeCompare(bv);
+    if(av===null||av===undefined)av=col==='ktc'?0:col==='yrs'?-1:'';
+    if(bv===null||bv===undefined)bv=col==='ktc'?0:col==='yrs'?-1:'';
+    return dir*(av>bv?1:av<bv?-1:0);
+  });
+  function si(c){return c===col?(dir===-1?' \u25BC':' \u25B2'):'';}
+  var h='<table class="keeper-tbl">';
+  h+='<thead><tr>';
+  h+='<th onclick="sortKeeperSheet(\'name\')">PLAYER'+si('name')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'team\')">TEAM'+si('team')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'pos\')">POS'+si('pos')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'yrs\')">YRS'+si('yrs')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'tag\')">TAG'+si('tag')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'exm\')">EXEMPT'+si('exm')+'</th>';
+  h+='<th onclick="sortKeeperSheet(\'ktc\')">KTC'+si('ktc')+'</th>';
+  h+='</tr></thead>';
+  h+='<tbody>';
+  allP.forEach(function(p,i){
+    var yrCol=p.yrs>=4?'var(--a)':p.yrs>=2?'var(--y)':p.yrs===1?'var(--red-t)':'var(--t4)';
+    var yrText=p.contracted?(p.yrs<=0?'EXP':p.yrs+'yr'):'--';
+    var tagText=p.tag?esc(typeof p.tag==='string'?p.tag:'TAG'):'';
+    var exmText=p.exm?esc(p.exm):'';
+    h+='<tr class="'+(i%2===0?'keeper-even':'')+'">';
+    h+='<td class="keeper-name"><span class="pp-trigger" data-pid="'+p.id+'">'+esc(p.name)+'</span>'+cpill(p.name)+(p.yrs===1?cbadge('RELEASABLE','red'):'')+'</td>';
+    h+='<td>'+av(p.rid,16)+' <span class="keeper-team">'+esc(p.team).substring(0,14)+'</span></td>';
+    h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
+    h+='<td style="color:'+yrCol+';font-weight:700">'+yrText+'</td>';
+    h+='<td>'+(tagText?cbadge(tagText,'y'):'')+'</td>';
+    h+='<td>'+(exmText?cbadge(exmText,'pur'):'')+'</td>';
+    h+='<td style="font-family:var(--fm);font-weight:700;color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td>';
+    h+='</tr>';
+  });
+  h+='</tbody></table>';
+  h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t4);margin-top:8px;text-align:right">'+allP.length+' players \u2022 Sorted by '+conSortCol.toUpperCase()+(conSortDir===-1?' (desc)':' (asc)')+'</div>';
+  wrap.innerHTML=h;
 }
 // ═══ LIFETIME BADGES ═══
 function badgeSvg(iconName,teamColor){
