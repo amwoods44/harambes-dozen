@@ -2482,7 +2482,8 @@ const ICONS={
   arrowUp:'<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
   arrowDown:'<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>',
   equal:'<line x1="5" x2="19" y1="9" y2="9"/><line x1="5" x2="19" y1="15" y2="15"/>',
-  building:'<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>'
+  building:'<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
+  play:'<polygon points="6,3 20,12 6,21" fill="currentColor" stroke="none"/>'
 };
 function icon(name,sz,color){const s=sz||16;const c=color||'currentColor';const p=ICONS[name];if(!p)return'';return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;display:inline-block;vertical-align:middle">'+p+'</svg>';}
 // Team identity colors keyed by roster_id
@@ -5299,6 +5300,105 @@ function buildPowerMoves(year){
     perWeek[s.wk]=(perWeek[s.wk]||0)+1;
     return perWeek[s.wk]<=2;
   }).slice(0,12);
+}
+// ═══ STANDINGS RACE ═══
+function computeWeeklyStandings(year){
+  var mwKey=year===CURRENT_YEAR?'matchup_weeks':'matchup_weeks_'+year;
+  var mw=D[mwKey]||{};
+  var weeks=Object.keys(mw).map(Number).sort(function(a,b){return a-b;});
+  var cumulative={};
+  var snapshots=[];
+  weeks.forEach(function(wk){
+    var games=mw[wk]||[];
+    games.forEach(function(g){
+      var a=g.team_a.roster_id,b=g.team_b.roster_id;
+      if(!cumulative[a])cumulative[a]={roster_id:a,name:g.team_a.name,wins:0,losses:0,fpts:0};
+      if(!cumulative[b])cumulative[b]={roster_id:b,name:g.team_b.name,wins:0,losses:0,fpts:0};
+      cumulative[a].fpts+=g.team_a.points;
+      cumulative[b].fpts+=g.team_b.points;
+      if(g.winner.roster_id===a){cumulative[a].wins++;cumulative[b].losses++;}
+      else{cumulative[b].wins++;cumulative[a].losses++;}
+    });
+    if(Object.keys(cumulative).length>0){
+      snapshots.push(Object.values(cumulative).map(function(x){return Object.assign({},x);})
+        .sort(function(a,b){return b.wins-a.wins||b.fpts-a.fpts;}));
+    }
+  });
+  return snapshots;
+}
+var _raceCancel=null;
+function animateStandingsRace(canvasId,weeklyStandings){
+  if(_raceCancel){_raceCancel();_raceCancel=null;}
+  var cvs=document.getElementById(canvasId);
+  if(!cvs||!weeklyStandings||!weeklyStandings.length)return;
+  var ctx=cvs.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  var w=cvs.offsetWidth||cvs.parentElement.offsetWidth||600;
+  var ht=Math.max(320,(weeklyStandings[0].length*40)+60);
+  cvs.width=w*dpr;cvs.height=ht*dpr;
+  cvs.style.height=ht+'px';
+  ctx.scale(dpr,dpr);
+
+  var frame=0;
+  var FRAMES_PER_WEEK=20;
+  var rafId=null;
+
+  function easeOut(t){return 1-Math.pow(1-t,3);}
+
+  function drawFrame(){
+    var wkIdx=Math.floor(frame/FRAMES_PER_WEEK);
+    if(wkIdx>=weeklyStandings.length){_raceCancel=null;return;}
+    var t=easeOut((frame%FRAMES_PER_WEEK)/FRAMES_PER_WEEK);
+    var cur=weeklyStandings[wkIdx];
+    var prev=wkIdx>0?weeklyStandings[wkIdx-1]:cur;
+
+    var maxWins=Math.max.apply(null,cur.map(function(x){return x.wins;}))||1;
+
+    ctx.clearRect(0,0,w,ht);
+    // Week label background
+    ctx.fillStyle='rgba(255,255,255,.04)';
+    ctx.fillRect(0,ht-28,w,28);
+    ctx.fillStyle='rgba(255,255,255,.18)';
+    ctx.font='700 13px Oswald';ctx.textAlign='right';
+    ctx.fillText('WEEK '+(wkIdx+1),w-10,ht-10);
+
+    var LABEL_W=130,BAR_AREA=w-LABEL_W-60,ROW_H=36,BAR_H=22,TOP_PAD=8;
+
+    cur.forEach(function(team,i){
+      var tc=TC[team.roster_id]||{p:'#cc0000',s:'#fff'};
+
+      var prevTeam=prev.find(function(x){return x.roster_id===team.roster_id;})||team;
+      var prevMax=Math.max.apply(null,prev.map(function(x){return x.wins;}))||1;
+      var prevFrac=prevTeam.wins/prevMax;
+      var curFrac=team.wins/maxWins;
+      var frac=prevFrac+(curFrac-prevFrac)*t;
+      var barW=Math.max(2,frac*BAR_AREA);
+
+      var y=TOP_PAD+i*ROW_H;
+
+      // Team label
+      ctx.fillStyle=i===0?'#e8e8f0':'rgba(232,232,240,.7)';
+      ctx.font=(i===0?'700':'500')+' 11px Oswald';ctx.textAlign='right';
+      ctx.fillText((team.name||'').substring(0,16),LABEL_W-6,y+BAR_H-5);
+
+      // Bar
+      ctx.fillStyle=tc.p;
+      ctx.globalAlpha=i===0?1:0.75;
+      ctx.fillRect(LABEL_W,y,barW,BAR_H);
+      ctx.globalAlpha=1;
+
+      // Win-loss record
+      ctx.fillStyle=tc.p;
+      ctx.font='700 11px JetBrains Mono';ctx.textAlign='left';
+      ctx.fillText(team.wins+'-'+team.losses,LABEL_W+barW+6,y+BAR_H-5);
+    });
+
+    frame++;
+    rafId=requestAnimationFrame(drawFrame);
+  }
+
+  rafId=requestAnimationFrame(drawFrame);
+  _raceCancel=function(){cancelAnimationFrame(rafId);};
 }
 // ═══ COUNTUP LOADER ═══
 function loadCountUp(cb){
