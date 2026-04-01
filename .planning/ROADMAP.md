@@ -118,7 +118,7 @@ Plans:
 - [x] 03.2-01-PLAN.md — Spacing rhythm + card consistency + scroll strip fades (D-01, D-02, D-03, D-18, D-19, D-20) — CSS only, Wave 1
 - [x] 03.2-02-PLAN.md — Transitions + hover states + loading state upgrades (D-09 through D-17, D-25, D-26, D-42, D-53 CSS) — CSS only, Wave 1
 - [x] 03.2-03-PLAN.md — Hero + countdown + stat strip + mobile foundation (D-05, D-08, D-21 through D-33) — Wave 2
-- [ ] 03.2-04-PLAN.md — Tab polish A: Power, Rosters, Matchups, Draft, Trades, Scoring (D-34 through D-43) — Wave 2
+- [x] 03.2-04-PLAN.md — Tab polish A: Power, Rosters, Matchups, Draft, Trades, Scoring (D-34 through D-43) — Wave 2
 - [ ] 03.2-05-PLAN.md — Tab polish B: Age, Awards, Analytics, GM, Rivals, Contracts, Trophies, War Room, Pulse, Chronicle (D-44 through D-57) — Wave 2
 - [ ] 03.2-06-PLAN.md — Cross-tab audit + human visual verification checkpoint — Wave 3
 
