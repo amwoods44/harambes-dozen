@@ -17,3 +17,6 @@ Thumbs.db
 
 # Git worktrees
 .worktrees/
+
+# Documentation screenshots (not app assets)
+docs/screenshots/
