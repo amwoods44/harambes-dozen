@@ -2838,6 +2838,7 @@ function safeRender(tabId,tabName,renderFn){
 
 // ═══ POWER RANKINGS ═══
 function renderPower(){
+  if(!D.teams)return;
   const teams=D.teams.map(t=>{
     const s25=CUR_STANDINGS.find(s=>s.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
@@ -3008,6 +3009,7 @@ function calcBadges(teamName){
   return badges;
 }
 function renderRosters(){
+  if(!D.teams)return;
   let h='<div class="bh"><h2 class="bh-tag">Rosters</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+D.teams.reduce((s,t)=>s+t.num_players,0)+' Players Rostered</span></div></div>';
   h+='<div class="stagger">';
   D.teams.forEach(t=>{
@@ -3056,6 +3058,7 @@ function renderRosters(){
 }
 // ═══ THE RAFTERS ═══
 function renderTrophies(){
+  if(!D.champions)return;
   let h='<div class="bh"><h2 class="bh-tag">The Rafters</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Championships \u2022 Est. '+FIRST_YEAR+'</span></div></div>';
   // ── Iron Mount Cloth Banners ──
   const champs=[...D.champions].reverse();
@@ -3711,6 +3714,7 @@ function toggleSection(hdr){
 }
 // ═══ MATCHUPS ═══
 function renderMatchups(){
+  if(!D.matchup_weeks)return;
   const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
   let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Week '+selWk+'</span></div></div>';
   h+='<div class="wk-sel">';
@@ -4100,6 +4104,7 @@ function renderDraft(){
 }
 // ═══ AGE MAP ═══
 function renderAge(){
+  if(!D.teams)return;
   let h='<div class="bh"><h2 class="bh-tag">Age Map</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Window Analysis</span></div></div>';
   h+='<div style="display:flex;gap:10px;margin:12px 0"><span class="dbadge up">\u226424 Young</span><span class="dbadge" style="background:rgba(245,158,11,.12);color:var(--y)">25-28 Prime</span><span class="dbadge dn">29+ Vet</span></div>';
   const ageData=D.teams.map(t=>{
@@ -4179,6 +4184,7 @@ function renderAge(){
 }
 // ═══ SCORING ═══
 function renderScoring(){
+  if(!D.weekly_scores)return;
   const sd=CUR_STANDINGS.map(function(s){
     const wk=D.weekly_scores[s.roster_id]||[];
     const avg=wk.length?(wk.reduce(function(a,b){return a+b},0)/wk.length).toFixed(1):0;
@@ -4266,6 +4272,7 @@ function renderScoring(){
 }
 // ═══ AWARDS ═══
 function renderAwards(){
+  if(!D.teams||!D.champions)return;
   const sd=CUR_STANDINGS.slice().sort((a,b)=>b.fpts-a.fpts);
   const luckArr=D.luck?Object.values(D.luck).sort((a,b)=>b.luck-a.luck):[];
   const actArr=Object.entries(D.activity||{}).map(([n,a])=>({name:n,...a,total:a.trades+a.moves+a.draft_picks})).sort((a,b)=>b.total-a.total);
@@ -4332,6 +4339,7 @@ function renderAwards(){
 // ═══ ANALYTICS ═══
 function toAbbr(n){var w=n.replace(/[^a-zA-Z0-9\s]/g,' ').trim().split(/\s+/).filter(function(s){return s.length>0;});if(!w.length)return n.substring(0,4).toUpperCase();if(w.length===1)return w[0].substring(0,4).toUpperCase();if(w.length===2)return(w[0].substring(0,2)+w[1].substring(0,2)).toUpperCase();return w.slice(0,3).map(function(x){return x[0].toUpperCase();}).join('');}
 function renderAnalytics(){
+  if(!D.rid_to_name||!D.h2h)return;
   let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 2025 Season</span></div></div>';
   // ── H2H MATRIX ──
   h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Record \u2022 All Matchups</span></div></div>';
@@ -4536,6 +4544,7 @@ function renderMoves(){
 }
 // ═══ GM DASHBOARD ═══
 function renderGM(){
+  if(!D.teams)return;
   let h='<div class="bh"><h2 class="bh-tag">GM Mode</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Your Franchise Command Center</span></div></div>';
   // ── MANAGER OVERVIEW GRID ──
   h+='<div class="mgr-grid">';
@@ -5053,6 +5062,7 @@ function renderConstitution(){
 }
 // ═══ WAR ROOM ═══
 function renderWarRoom(){
+  if(!D.league)return;
   var now=new Date();
   var h='<div class="bh"><h2 class="bh-tag">War Room</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Offseason Command Center \u2022 2026</span></div></div>';
   // Countdown timers
@@ -5157,6 +5167,7 @@ function renderWarRoom(){
 }
 // ═══ PULSE FEED ═══
 function renderPulse(){
+  if(!D.champions)return;
   var cards=[];
   // Championship recaps
   D.champions.forEach(function(c){
@@ -5243,6 +5254,7 @@ function chrToggle(yr){
   var el=document.getElementById('chr-'+yr);if(el)el.classList.toggle('collapsed');
 }
 function renderChronicle(){
+  if(!D.champions)return;
   var events=[];
   // Championships
   D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
