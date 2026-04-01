@@ -50,8 +50,14 @@ Plans:
   3. The Standings Race plays back a week-by-week animated bar chart showing how the season unfolded
   4. A Power Moves Feed displays auto-generated text summaries of the biggest weekly storylines
   5. Stat strip numbers count up from zero on page load and tab activation — no instant static numbers
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 5 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Pipeline fix + CountUp.js counter animations: mergeHistoricalData persistence + animateCounters upgrade (NARR-05)
+- [ ] 02-02-PLAN.md — "This Week in League History" callout card: week-matched vintage ESPN hero card (NARR-01)
+- [ ] 02-03-PLAN.md — Achievements & Badges: computeLifetimeBadges, badgeSvg, GM badge case, Awards Hall of Fame (NARR-02)
+- [ ] 02-04-PLAN.md — Power Moves Feed: buildPowerMoves, Season Story section in Trophies tab (NARR-04)
+- [ ] 02-05-PLAN.md — Standings Race: computeWeeklyStandings, animateStandingsRace canvas, year selector + play button (NARR-03)
 
 ### Phase 3: Contracts Complete
 **Goal**: The contracts system is fully functional — data flows reliably from Google Sheets, pills appear across all relevant tabs, the cliff chart visualizes expiration risk, and the Contracts tab is the definitive keeper-league reference
@@ -124,7 +130,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure Hardening | 0/TBD | Not started | - |
-| 2. Narrative & Delight | 0/TBD | Not started | - |
+| 2. Narrative & Delight | 0/5 | Not started | - |
 | 3. Contracts Complete | 0/TBD | Not started | - |
 | 4. Roster Intelligence | 0/TBD | Not started | - |
 | 5. Player Depth | 0/TBD | Not started | - |
