@@ -54,22 +54,22 @@ Every screen looks like it belongs on a broadcast — not a developer's side pro
 - [ ] Player Journey / Trade Chains (timeline: Player X → Team A → Team B → Team C)
 - [ ] Roster Composition Radar Chart (spider chart per team)
 - [ ] Dynasty Value Stock Market (composite player value tracked over time)
-- [ ] Achievements & Milestones badge system
-- [ ] This Week in League History
-- [ ] Animated Season Standings Race
-- [ ] Number counter animations on stat strips
+- [x] Achievements & Milestones badge system — Validated in Phase 2: Narrative & Delight
+- [x] This Week in League History — Validated in Phase 2: Narrative & Delight
+- [x] Animated Season Standings Race — Validated in Phase 2: Narrative & Delight
+- [x] Number counter animations on stat strips — Validated in Phase 2: Narrative & Delight
 - [ ] Constitution tab polished and complete
 - [ ] Rafters tab polished and complete
 - [ ] Share card / screenshot export functionality
 
 **Infrastructure & Quality**
-- [ ] PWA paths fixed for GitHub Pages subdirectory (`/harambes-dozen/`)
-- [ ] .gitignore added (exclude Excel files, backups, unnecessary PNGs)
-- [ ] XSS prevention: all dynamic text escaped via `esc()` across all render functions
-- [ ] Loading screen uses Harambe logo instead of ESPN base64 image
-- [ ] NFL kickoff date moved to CFG and documented for annual update
-- [ ] Service worker cache strategy validated for GitHub Pages
-- [ ] Render state preservation (scroll position, open/collapsed state survive re-renders)
+- [x] PWA paths fixed for GitHub Pages subdirectory (`/harambes-dozen/`) — Validated in Phase 1: Infrastructure Hardening
+- [x] .gitignore added (exclude Excel files, backups, unnecessary PNGs) — Validated in Phase 1: Infrastructure Hardening
+- [x] XSS prevention: all dynamic text escaped via `esc()` across all render functions — Validated in Phase 1: Infrastructure Hardening
+- [x] Loading screen uses Harambe logo instead of ESPN base64 image — Validated in Phase 1: Infrastructure Hardening
+- [x] NFL kickoff date moved to CFG and documented for annual update — Validated in Phase 1: Infrastructure Hardening
+- [x] Service worker cache strategy validated for GitHub Pages — Validated in Phase 1: Infrastructure Hardening
+- [x] Render state preservation (scroll position, open/collapsed state survive re-renders) — Validated in Phase 1: Infrastructure Hardening
 
 **Templatability (Future)**
 - [ ] Configuration-driven: any Sleeper league can plug in their user ID and league name
@@ -92,7 +92,7 @@ Every screen looks like it belongs on a broadcast — not a developer's side pro
 - **Audience:** 12 leaguemates in the Harambe's Dozen dynasty league, potentially public-facing if quality is high enough, eventually templatable for other leagues
 - **Data source:** Sleeper API (public, no auth) for all league data; FantasyCalc API for dynasty trade values; Google Sheets CSV for contract data
 - **Contract rules:** Players drafted get 1-7 year contracts (owner's choice). Players on contract stay on your team for that duration. Releasable at 1 year remaining. 1 annual exemption per team to restructure any contract. Waiver pickups auto-assigned 1-year contracts, released to draft pool after season.
-- **Existing app:** ~5,600 lines in index.html, 18 render functions, 40+ working features, 13 tabs. Heavily polished broadcast aesthetic with Oswald/Inter/JetBrains Mono font stack.
+- **Existing app:** ~5,800+ lines in index.html, 18 render functions, 40+ working features, 13 tabs. Heavily polished broadcast aesthetic with Oswald/Inter/JetBrains Mono font stack. Phase 1 (Infrastructure) and Phase 2 (Narrative & Delight) complete.
 - **Design identity:** ESPN broadcast parody. Dark warm theme (#120e0c base, #cc0000 accent red, #ffcc00 gold). Angled clip-path headers, team-colored accents, gradient circles. Font weights 600-900 on headings are intentional.
 - **Known tech debt:** Global mutable `D` object (load-bearing, not refactorable), mixed var/let/const, innerHTML destructive rendering, hardcoded kickoff date, XSS surface from unescaped API data.
 
@@ -134,4 +134,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-31 after initialization*
+*Last updated: 2026-04-01 after Phase 2 (Narrative & Delight) completion*
