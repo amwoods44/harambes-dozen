@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-infrastructure-hardening 01-02-PLAN.md
-last_updated: "2026-04-01T03:18:42.075Z"
+stopped_at: Completed 01-infrastructure-hardening/01-01-PLAN.md
+last_updated: "2026-04-01T03:20:50.165Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 01 (infrastructure-hardening) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-infrastructure-hardening P02 | 2 | 2 tasks | 2 files |
+| Phase 01-infrastructure-hardening P01 | 3min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - Roadmap: Chart.js added to Phase 4 scope for Radar chart; CountUp.js to Phase 2 for counter animations
 - Roadmap: Share cards last — canvas taint CORS question on sleepercdn.com must be resolved first
 - [Phase 01-infrastructure-hardening]: Kept reg.update() in SW registration — triggers update checks on every load without destroying existing SW state
+- [Phase 01-infrastructure-hardening]: CFG.nflKickoff: hardcoded NFL kickoff date centralized to single config property — one edit point for annual season update
+- [Phase 01-infrastructure-hardening]: cache._prune throttle: 60-second gate added to prevent tight-loop grinding under localStorage quota pressure
+- [Phase 01-infrastructure-hardening]: docs/screenshots/ excluded via .gitignore (not *.png glob) to preserve app asset PNGs
 
 ### Pending Todos
 
@@ -82,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T03:18:42.073Z
-Stopped at: Completed 01-infrastructure-hardening 01-02-PLAN.md
+Last session: 2026-04-01T03:20:50.163Z
+Stopped at: Completed 01-infrastructure-hardening/01-01-PLAN.md
 Resume file: None

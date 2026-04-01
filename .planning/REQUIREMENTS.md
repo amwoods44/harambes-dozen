@@ -10,15 +10,15 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Infrastructure
 
 - [x] **INFRA-01**: Service worker and manifest paths resolve correctly on GitHub Pages subdirectory (`/harambes-dozen/`)
-- [ ] **INFRA-02**: .gitignore excludes Excel files, backups, and unnecessary PNGs from tracking
+- [x] **INFRA-02**: .gitignore excludes Excel files, backups, and unnecessary PNGs from tracking
 - [ ] **INFRA-03**: All dynamic text from APIs escaped via `esc()` across all render functions (XSS prevention)
-- [ ] **INFRA-04**: Loading screen displays Harambe logo instead of ESPN base64 image
-- [ ] **INFRA-05**: NFL kickoff date moved to CFG object with comment requiring annual update
+- [x] **INFRA-04**: Loading screen displays Harambe logo instead of ESPN base64 image
+- [x] **INFRA-05**: NFL kickoff date moved to CFG object with comment requiring annual update
 - [x] **INFRA-06**: Service worker uses `skipWaiting()` and versioned cache names to prevent stale caches
 - [ ] **INFRA-07**: Render state preservation — scroll position and open/collapsed state survive re-renders on dirty flag flushes
 - [ ] **INFRA-08**: Guard clauses at top of render functions verify required `D` keys are populated before rendering
 - [ ] **INFRA-09**: Google Sheets CSV fetch includes explicit error handling with visible warning banner on failure
-- [ ] **INFRA-10**: localStorage cache pruning throttled to run at most once per minute
+- [x] **INFRA-10**: localStorage cache pruning throttled to run at most once per minute
 
 ### Contracts
 
@@ -118,15 +118,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFRA-01 | Phase 1 | Complete |
-| INFRA-02 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Complete |
 | INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| INFRA-05 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Complete |
+| INFRA-05 | Phase 1 | Complete |
 | INFRA-06 | Phase 1 | Complete |
 | INFRA-07 | Phase 1 | Pending |
 | INFRA-08 | Phase 1 | Pending |
 | INFRA-09 | Phase 1 | Pending |
-| INFRA-10 | Phase 1 | Pending |
+| INFRA-10 | Phase 1 | Complete |
 | CONT-01 | Phase 3 | Pending |
 | CONT-02 | Phase 3 | Pending |
 | CONT-03 | Phase 3 | Pending |

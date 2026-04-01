@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 4 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Config fixes: CFG.nflKickoff, _prune throttle, .gitignore cleanup, logo verification (INFRA-02, INFRA-04, INFRA-05, INFRA-10)
+- [x] 01-01-PLAN.md — Config fixes: CFG.nflKickoff, _prune throttle, .gitignore cleanup, logo verification (INFRA-02, INFRA-04, INFRA-05, INFRA-10)
 - [x] 01-02-PLAN.md — Service worker: remove unregister-all pattern, bump cache to v6 (INFRA-01, INFRA-06)
 - [ ] 01-03-PLAN.md — Render safety: guard clauses in all 18 render functions + esc() XSS coverage (INFRA-03, INFRA-08)
 - [ ] 01-04-PLAN.md — New patterns: Trades scroll preservation + Contracts CSV warning banner (INFRA-07, INFRA-09)
