@@ -3495,7 +3495,7 @@ function renderTrades(){
     h+='<div class="'+fadeDir+'"></div><div class="tc-hero-fv"></div>';
     if(gradeClsName)h+='<div style="position:absolute;'+gpPos+';z-index:3"><div class="tc-gp '+gradeClsName+'"><span class="tc-gp-l">'+gradeLbl+'</span><span class="tc-gp-n">'+teamName.substring(0,6).toUpperCase()+'</span></div></div>';
     h+='<div style="position:absolute;bottom:10px;left:10px;z-index:2">';
-    h+='<div class="tc-hero-nm">'+player.nm+'</div>';
+    h+='<div class="tc-hero-nm">'+player.nm+cpill(player.nm)+relBadge(player.nm)+'</div>';
     h+='<div class="tc-hero-meta"><span class="tc-hero-pos" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span><span class="tc-hero-tm">'+esc(team)+'</span></div>';
     h+='</div>';
     if(picks&&picks.length){
@@ -3525,7 +3525,7 @@ function renderTrades(){
       var imgSrc=isDEF(p.id)?TL(team):PI(p.id);
       var imgFit=isDEF(p.id)?'object-fit:contain;padding:4px;background:#1a1a2a':'object-fit:cover;object-position:top';
       h+='<div class="tc-lr"><div class="tc-li"><img src="'+imgSrc+'" style="'+imgFit+'" onerror="this.style.display=\'none\'"></div>';
-      h+='<div><div class="tc-ln">'+p.nm+'</div>';
+      h+='<div><div class="tc-ln">'+p.nm+cpill(p.nm)+'</div>';
       h+='<div style="display:flex;gap:3px;align-items:center;margin-top:2px"><span class="tc-lp" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span><span class="tc-lt">'+esc(team)+'</span></div>';
       h+='</div></div>';
     });
@@ -3564,7 +3564,7 @@ function renderTrades(){
         var imgSrc=isDEF(p.id)?TL(team):PI(p.id);
         var imgFit=isDEF(p.id)?'object-fit:contain;padding:6px;background:#1a1a2a':'object-fit:cover;object-position:top';
         h+='<div class="tc-gi"><div class="tc-gi-photo"><img src="'+imgSrc+'" style="'+imgFit+'" onerror="this.style.display=\'none\'"></div>';
-        h+='<div class="tc-gi-ov"><div class="tc-gi-nm">'+p.nm+'</div><span class="tc-gi-pos" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span></div></div>';
+        h+='<div class="tc-gi-ov"><div class="tc-gi-nm">'+p.nm+cpill(p.nm)+'</div><span class="tc-gi-pos" style="color:'+posColor(pos)+';background:'+posBg(pos)+'">'+pos+'</span></div></div>';
       });
       if(row.length<3&&rows.length>1){for(var j=row.length;j<3;j++)h+='<div style="flex:1"></div>';}
       h+='</div>';
@@ -4918,7 +4918,8 @@ function renderGM(){
       h+='<div style="font-family:var(--fm);font-size:10px;color:var(--t4);margin-bottom:4px">'+tr.yr+' Wk'+tr.wk+'</div>';
       tr.sides.forEach(s=>{
         const isMe=s.team===t.team_name;
-        h+='<div style="font-family:var(--fd);font-size:12px;font-weight:'+(isMe?'800':'500')+';color:'+(isMe?'var(--a)':'var(--t3)')+';margin:2px 0">'+s.team+': '+s.assets.join(', ')+'</div>';
+        var assetHtml=s.assets.map(function(a){return a+cpill(a)}).join(', ');
+        h+='<div style="font-family:var(--fd);font-size:12px;font-weight:'+(isMe?'800':'500')+';color:'+(isMe?'var(--a)':'var(--t3)')+';margin:2px 0">'+s.team+': '+assetHtml+'</div>';
       });
       h+='</div>';
     });
