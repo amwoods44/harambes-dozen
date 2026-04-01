@@ -97,6 +97,26 @@ Plans:
 - [x] 03.1-02-PLAN.md — Game-data tabs: renderPower NaN guard, renderScoring/renderAnalytics/renderMatchups historical fallback, renderTrades ALL default (OFF-01, OFF-02, OFF-04)
 - [x] 03.1-03-PLAN.md — Content tabs: renderDraft last-season default, renderMoves/renderRivals messaging, renderAwards/renderGM historical data, renderChronicle zero-value suppression (OFF-03, OFF-06)
 
+### Phase 03.2: Broadcast Polish (INSERTED)
+
+**Goal**: Every screen looks like it belongs on a live broadcast — obsessive attention to spacing, typography hierarchy, transitions, hover states, information density, and visual rhythm so that the app makes people say "one person built this?"
+**Depends on**: Phase 3.1
+**Requirements**: POLI-01, POLI-02, POLI-03, POLI-04, POLI-05
+**Success Criteria** (what must be TRUE):
+  1. Every tab has consistent spacing rhythm — sections breathe with the same visual cadence
+  2. Tab transitions and content reveals have smooth CSS animations — nothing "appears," everything "arrives"
+  3. Every interactive element has a hover state that invites the click (color shift, subtle lift, highlight)
+  4. Typography hierarchy is clear on every tab — one dominant number/stat, everything else serves it
+  5. Loading and empty states feel intentional and broadcast-quality (skeletons, subtle animations), not bare text
+  6. The hero section and first 3 seconds of page load create an undeniable "wow" impression
+  7. Mobile (375px) feels designed, not shrunk — touch targets, readable text, no horizontal scroll
+  8. Card and section styling uses one consistent visual language across all 18 tabs
+**Plans**: TBD
+**UI hint**: yes
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 03.2 to break down)
+
 ### Phase 4: Roster Intelligence
 **Goal**: FantasyCalc dynasty values are integrated for all rostered players, enabling roster value rankings, positional breakdown, and retroactive trade fairness grades
 **Depends on**: Phase 1
