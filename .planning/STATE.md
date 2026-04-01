@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-04-01T14:40:52.446Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-04-01T14:44:51.561Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 12
-  completed_plans: 10
+  completed_plans: 11
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 03 (contracts-complete) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -62,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-narrative-delight P04 | 14min | 1 tasks | 1 files |
 | Phase 02-narrative-delight P05 | 3min | 2 tasks | 1 files |
 | Phase 03-contracts-complete P01 | 2min | 2 tasks | 1 files |
+| Phase 03-contracts-complete P02 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 03-contracts-complete]: Exemption had/added fields set to null -- CSV lacks before/after data, timeline UI handles nulls with '--' display
 - [Phase 03-contracts-complete]: Waiver auto-assignment placed AFTER acquisition tracking (option b) for correct data ordering
 - [Phase 03-contracts-complete]: Fantasy Team column detection uses combined check: header matching + positional fallback at index 3
+- [Phase 03-contracts-complete]: relBadge placed before cbadge in source -- safe due to function hoisting
+- [Phase 03-contracts-complete]: No relBadge in compact trade card views (listSide/gridSide) -- pill alone suffices
+- [Phase 03-contracts-complete]: GM trade assets mapped through cpill without restructuring s.assets -- cpill returns '' for non-player strings
 
 ### Pending Todos
 
@@ -111,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T14:40:52.444Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-04-01T14:44:51.558Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
