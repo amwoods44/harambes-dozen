@@ -38,15 +38,15 @@ Every screen looks like it belongs on a broadcast — not a developer's side pro
 ### Active
 
 **Contracts Integration**
-- [ ] Contract data flows from Google Sheets CSV into the app reliably
-- [ ] Contract years (1-7) visible on player cards across all relevant views (Rosters, GM, Trades)
-- [ ] Contract pill styling matches broadcast aesthetic
-- [ ] Contract expiration tracking (years remaining per player per team)
-- [ ] Release eligibility indicator (1 year remaining = releasable)
-- [ ] Annual exemption tracking (1 per team, restructure any contract)
-- [ ] Waiver pickup auto-display as 1-year contract
-- [ ] Contract Cliff Chart (stacked area showing when talent expires per team)
-- [ ] Contracts tab fully functional with keeper/contract sheet view
+- [x] Contract data flows from Google Sheets CSV into the app reliably — Validated in Phase 3: Contracts Complete
+- [x] Contract years (1-7) visible on player cards across all relevant views (Rosters, GM, Trades) — Validated in Phase 3: Contracts Complete
+- [x] Contract pill styling matches broadcast aesthetic — Validated in Phase 3: Contracts Complete
+- [x] Contract expiration tracking (years remaining per player per team) — Validated in Phase 3: Contracts Complete
+- [x] Release eligibility indicator (1 year remaining = releasable) — Validated in Phase 3: Contracts Complete
+- [x] Annual exemption tracking (1 per team, restructure any contract) — Validated in Phase 3: Contracts Complete
+- [x] Waiver pickup auto-display as 1-year contract — Validated in Phase 3: Contracts Complete
+- [x] Contract Cliff Chart (stacked area showing when talent expires per team) — Validated in Phase 3: Contracts Complete
+- [x] Contracts tab fully functional with keeper/contract sheet view — Validated in Phase 3: Contracts Complete
 
 **Page Polish & New Features**
 - [ ] Every existing tab polished to broadcast-quality standard
@@ -134,4 +134,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-01 after Phase 2 (Narrative & Delight) completion*
+*Last updated: 2026-04-01 after Phase 3 (Contracts Complete) completion*
