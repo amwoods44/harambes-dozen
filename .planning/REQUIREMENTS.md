@@ -72,10 +72,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Polish
 
-- [ ] **POLI-01**: Every existing tab reviewed and polished to broadcast-quality standard
+- [x] **POLI-01**: Every existing tab reviewed and polished to broadcast-quality standard
 - [ ] **POLI-02**: Constitution tab polished and complete
 - [ ] **POLI-03**: Rafters tab polished and complete
-- [ ] **POLI-04**: Consistent hover states on all interactive elements across all tabs
+- [x] **POLI-04**: Consistent hover states on all interactive elements across all tabs
 - [ ] **POLI-05**: Loading, error, and empty states handled gracefully on every tab
 
 ### Share & Social
@@ -173,10 +173,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NARR-04 | Phase 2 | Complete |
 | NARR-05 | Phase 2 | Complete |
 | NARR-06 | Phase 5 | Pending |
-| POLI-01 | Phase 6 | Pending |
+| POLI-01 | Phase 6 | Complete |
 | POLI-02 | Phase 6 | Pending |
 | POLI-03 | Phase 6 | Pending |
-| POLI-04 | Phase 6 | Pending |
+| POLI-04 | Phase 6 | Complete |
 | POLI-05 | Phase 6 | Pending |
 | SHAR-01 | Phase 7 | Pending |
 | SHAR-02 | Phase 7 | Pending |
