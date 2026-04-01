@@ -2111,6 +2111,8 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       });
       if(games.length)hsMatchupWeeks[wk]=games;
     });
+    d['matchup_weeks_'+season]=hsMatchupWeeks;
+    d['weekly_scores_'+season]=hsWeeklyScores;
 
     // H2H — regular season only (pre-playoff weeks)
     const pStart=playoffStart||15;
