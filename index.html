@@ -1556,6 +1556,40 @@ span.player-link:hover,a.player-link:hover{color:var(--a)}
 .keeper-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px;border:1px solid var(--g4)}
 .keeper-tbl-wrap .keeper-tbl{min-width:600px}
 
+/* ═══ PHASE 03.2 PLAN 04 — TAB-SPECIFIC POLISH ═══ */
+
+/* D-34: Tier label as broadcast chyron */
+.tier-chyron{display:flex;align-items:center;gap:var(--sp-3);margin:var(--sp-7) 0 var(--sp-4);padding:var(--sp-2) var(--sp-5) var(--sp-2) 0}
+.tier-chyron .tier-tag{font-family:var(--fd);font-size:var(--text-xs);font-weight:800;letter-spacing:4px;text-transform:uppercase;padding:var(--sp-2) var(--sp-5);clip-path:polygon(0 0,calc(100% - 8px) 0,100% 100%,0 100%)}
+.tier-chyron .tier-line{flex:1;height:1px}
+.tier-chyron.elite .tier-tag{background:var(--y);color:#1a1410}
+.tier-chyron.elite .tier-line{background:linear-gradient(90deg,rgba(255,204,0,.3),transparent)}
+.tier-chyron.solid .tier-tag{background:var(--t2);color:var(--g1)}
+.tier-chyron.solid .tier-line{background:linear-gradient(90deg,rgba(212,207,200,.3),transparent)}
+.tier-chyron.fringe .tier-tag{background:var(--y);color:#1a1410}
+.tier-chyron.fringe .tier-line{background:linear-gradient(90deg,rgba(255,204,0,.2),transparent)}
+.tier-chyron.rebuild .tier-tag{background:var(--red-t);color:#fff}
+.tier-chyron.rebuild .tier-line{background:linear-gradient(90deg,rgba(239,68,68,.3),transparent)}
+
+/* D-36: Roster badge pills — subtle personality tags */
+.mgr-badge{font-size:9px!important;letter-spacing:.5px!important;padding:1px 6px!important;opacity:.75}
+.mgr-badge:hover{opacity:1}
+
+/* D-38: Week selector spacing */
+.wk-sel{gap:var(--sp-2);padding:var(--sp-3) 0}
+
+/* D-41: Trade grade circles — scale up on hover */
+.tc-gp{transform:scale(1);transition:transform var(--transition-fast)}
+.tc-wrap:hover .tc-gp{transform:scale(1.05)}
+
+/* D-42: Trade section collapsible headers hover enhancement */
+.trade-collapse-hdr{cursor:pointer;user-select:none}
+.trade-collapse-hdr:hover .bh-tag{background:rgba(204,0,0,.85)}
+
+/* D-43: Heat map legend — above grid, left-aligned with data columns */
+.hm-legend{margin:0 0 8px 0;justify-content:flex-start;gap:20px;padding-left:185px}
+@media(max-width:600px){.hm-legend{padding-left:80px}}
+
 </style>
 </head>
 <body>
@@ -3183,6 +3217,8 @@ function renderPower(){
   }).sort((a,b)=>b.pw-a.pw);
   const mx=Math.max(...teams.map(t=>t.pw));
   const tierN={1:'CONTENDERS',2:'PLAYOFF CONTENDERS',3:'BUBBLE TEAMS',4:'REBUILD MODE'};
+  const tierChyron={1:'elite',2:'solid',3:'fringe',4:'rebuild'};
+  const tierLabel={1:'ELITE TIER',2:'SOLID CORE',3:'FRINGE PLAYOFF',4:'REBUILD MODE'};
   let cT=0,h='';
   var pwShareRows=teams.slice(0,5).map(function(t,i){return'<div style="font-family:var(--fd);font-size:13px;padding:4px 0;border-bottom:1px solid #24242e">'+(i+1)+'. '+t.team_name+' \u2014 '+t.pw+' power</div>';}).join('');
   h+='<div class="bh"><h2 class="bh-tag">Power Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Composite Score \u2022 2026 Offseason</span></div><button class="share-btn" style="margin-left:12px;flex-shrink:0" id="pw-share-btn">SHARE</button></div>';
@@ -3203,13 +3239,13 @@ function renderPower(){
     +'</div>';
   h+='<div class="plist stagger">';
   teams.forEach((t,i)=>{
-    if(t.tier!==cT){cT=t.tier;h+='<div class="tier tier-'+cT+'">'+tierN[cT]+'</div>';}
+    if(t.tier!==cT){cT=t.tier;h+='<div class="tier-chyron '+tierChyron[t.tier]+'"><div class="tier-tag">'+tierLabel[t.tier]+'</div><div class="tier-line"></div></div>';}
     const barC=t.tier===1?'var(--a)':t.tier===2?'var(--blu)':t.tier===3?'var(--y)':'var(--red-t)';
     const champBadge=t.isChamp?' \u2605':'';
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF').slice(0,5);
     const rankClass=i>=9?' rank-low':'';
     h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+'" onclick="this.classList.toggle(\'open\')">';
-    h+='<div class="prk'+rankClass+'"><div class="prk-n">'+(i+1)+'</div></div>';
+    h+='<div class="prk'+(i>=9?' rank-low':'')+' pulse-once"><div class="prk-n">'+(i+1)+'</div></div>';
     h+='<div class="pcbar" style="background:'+barC+'"></div>';
     h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
     const pwPct=Math.round(t.pw/mx*100)+'%';
@@ -3358,7 +3394,7 @@ function renderRosters(){
     // Headshot row for starters
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--g4)">';
-    starters.forEach(p=>{const logo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" alt="'+esc(p.team)+'" loading="lazy" style="width:14px;height:14px;object-fit:contain;display:block;margin:2px auto 0" onerror="this.remove()">':'';h+='<div style="text-align:center;width:68px">'+pimg(p.id,60)+'<div style="font-family:var(--fd);font-size:10px;font-weight:700;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px">'+p.name.split(' ').pop()+'</div>'+logo+'</div>';});
+    starters.forEach(p=>{const logo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" alt="'+esc(p.team)+'" loading="lazy" style="width:14px;height:14px;object-fit:contain;display:block;margin:2px auto 0" onerror="this.remove()">':'';h+='<div style="text-align:center;max-width:44px;flex-shrink:0">'+pimg(p.id,40)+'<div style="font-family:var(--fd);font-size:8px;font-weight:700;color:var(--t4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.5px">'+(p.name||'').split(' ').pop().slice(0,7).toUpperCase()+'</div>'+logo+'</div>';});
     h+='</div>';
     ['QB','RB','WR','TE','DEF'].forEach(pos=>{
       const ps=t.players.filter(p=>p.pos===pos);
