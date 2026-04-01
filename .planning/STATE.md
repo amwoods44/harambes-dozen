@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 03.1-02-PLAN.md
-last_updated: "2026-04-01T18:01:34.922Z"
+stopped_at: Completed 03.1-03-PLAN.md
+last_updated: "2026-04-01T18:06:02.848Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 8
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
   percent: 0
 ---
 
@@ -67,6 +67,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03.1-offseason-hardening P01 | 15min | 2 tasks | 1 files |
 | Phase 03.1-offseason-hardening P02 | 4min | 3 tasks | 1 files |
 | Phase 03.1-offseason-hardening P02 | 4min | 2 tasks | 1 files |
+| Phase 03.1-offseason-hardening P03 | 12min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,9 @@ Recent decisions affecting current work:
 - [Phase 03.1-offseason-hardening]: scoringLabel/analyticsLabel declared as local vars so they reset correctly on each re-render
 - [Phase 03.1-offseason-hardening]: renderMatchups shows loading placeholder when D.isOffseason but D.lastSeason is null (historical still loading)
 - [Phase 03.1-offseason-hardening]: scoring and matchups added to dirty tabs set after mergeHistoricalData so offseason fallbacks fire when D.lastSeason becomes available
+- [Phase 03.1-offseason-hardening]: awardsStandings/gmStandings local vars follow exact same pattern as scoringStandings from plan 02 — consistent offseason fallback pattern across all CUR_STANDINGS consumers
+- [Phase 03.1-offseason-hardening]: defaultDraft uses Array.find on draftYears descending — first year with picks.length>0 is the most recent completed draft; skips upcoming empty season
+- [Phase 03.1-offseason-hardening]: Chronicle week display: null-safe conditional append 'Season'+(week?' Wk '+week:'') — Season alone is valid, 'Wk null' is not
 
 ### Roadmap Evolution
 
@@ -134,6 +138,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T18:01:34.920Z
-Stopped at: Completed 03.1-02-PLAN.md
+Last session: 2026-04-01T18:06:02.846Z
+Stopped at: Completed 03.1-03-PLAN.md
 Resume file: None
