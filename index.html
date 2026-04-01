@@ -1363,6 +1363,14 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 .draft-timeline-sep{width:1px;height:16px;background:rgba(255,255,255,.1);margin:0 4px;flex-shrink:0}
 /* ═══ DRAFT PICK HISTORY TOOLTIP ═══ */
 .draft-hist-tip{display:none;position:fixed;z-index:9999;background:rgba(12,12,20,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-width:170px;max-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.8);pointer-events:none}
+/* ═══ SEASON STORY / POWER MOVES ═══ */
+.season-story{padding:4px 0 8px}
+.pm-item{display:flex;align-items:baseline;gap:10px;padding:9px 12px;border-bottom:1px solid var(--g4)}
+.pm-item:last-child{border-bottom:none}
+.pm-icon{flex-shrink:0;margin-top:1px}
+.pm-week{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--t4);flex-shrink:0;width:28px}
+.pm-text{font-family:var(--fb);font-size:14px;color:var(--t2);line-height:1.4}
+.pm-text strong{color:var(--t1);font-weight:600}
 
 </style>
 </head>
@@ -3331,6 +3339,28 @@ function renderTrophies(){
       h+='<div class="fr-row"><span class="fr-rk">'+(i+1)+'</span><span class="fr-name" style="color:'+col+'">'+esc(f.name)+'</span><span class="fr-stat">'+f.w+'-'+f.l+'</span><span class="fr-stat fr-pct" style="color:'+col+'"><span class="count-up" data-target="'+(f.pct*100).toFixed(1)+'" data-decimals="1">0</span>%</span><span class="fr-stat"><span class="count-up" data-target="'+f.pf+'">0</span></span><span style="font-family:var(--fb);font-size:11px;color:var(--t4)">'+esc(f.mgr)+'</span></div>';
     });
   }
+  // ── Season Story / Power Moves ──
+  var powerMoves=buildPowerMoves(CURRENT_YEAR);
+  if(powerMoves.length){
+    var typeConfig={
+      explosion:{icon:'fire',color:'var(--a)'},
+      heartbreak:{icon:'bolt',color:'var(--red-t)'},
+      blowout:{icon:'bolt',color:'#8b5cf6'},
+      highweek:{icon:'arrowUp',color:'var(--y)'},
+      trade:{icon:'trade',color:'#10B981'}
+    };
+    h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">The Season Story</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Biggest Moments</span></div></div>';
+    h+='<div class="season-story">';
+    powerMoves.forEach(function(story,i){
+      var cfg=typeConfig[story.type]||{icon:'fire',color:'var(--a)'};
+      h+='<div class="pm-item">';
+      h+='<div class="pm-icon">'+icon(cfg.icon,16,cfg.color)+'</div>';
+      h+='<div class="pm-week">WK '+story.wk+'</div>';
+      h+='<div class="pm-text">'+story.headline+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
   document.getElementById('tab-trophies').innerHTML=h;
 }
 // ═══ TRADES ═══
@@ -5198,6 +5228,77 @@ function computeLifetimeBadges(rosterIdOrName){
   }
 
   return badges;
+}
+// ═══ SEASON STORY — POWER MOVES ═══
+function buildPowerMoves(year){
+  var mwKey=year===CURRENT_YEAR?'matchup_weeks':'matchup_weeks_'+year;
+  var mw=D[mwKey]||{};
+  var weeks=Object.keys(mw).map(Number).sort(function(a,b){return a-b;});
+  var stories=[];
+
+  weeks.forEach(function(wk){
+    var games=mw[wk]||[];
+    if(!games.length)return;
+
+    // Total points this week
+    var totalPts=games.reduce(function(s,g){return s+g.team_a.points+g.team_b.points;},0);
+
+    // Highest single score this week
+    var topGame=games.slice().sort(function(a,b){
+      return Math.max(b.team_a.points,b.team_b.points)-Math.max(a.team_a.points,a.team_b.points);
+    })[0];
+    if(topGame){
+      var high=Math.max(topGame.team_a.points,topGame.team_b.points);
+      var highTeam=topGame.team_a.points>=topGame.team_b.points?topGame.team_a.name:topGame.team_b.name;
+      if(high>=180){
+        stories.push({wk:wk,type:'explosion',pts:high,
+          headline:esc(highTeam)+' dropped <strong>'+high+'</strong> in Week '+wk+'. Nobody saw it coming.'});
+      }
+    }
+
+    // Closest game (heartbreak) — derive loser name from team_a/team_b
+    var closest=games.slice().sort(function(a,b){return a.diff-b.diff;})[0];
+    if(closest&&closest.diff<=2){
+      var loserName=closest.team_a.points<closest.team_b.points?closest.team_a.name:closest.team_b.name;
+      stories.push({wk:wk,type:'heartbreak',pts:closest.diff,
+        headline:'Week '+wk+': <strong>'+esc(loserName)+'</strong> lost by <strong>'+closest.diff.toFixed(2)+'</strong>. That\'s a bad beat.'});
+    }
+
+    // Biggest blowout (only if > 40 pts margin) — derive names from team_a/team_b
+    var biggestBlowout=games.slice().sort(function(a,b){return b.diff-a.diff;})[0];
+    if(biggestBlowout&&biggestBlowout.diff>=40){
+      var winName=biggestBlowout.team_a.points>=biggestBlowout.team_b.points?biggestBlowout.team_a.name:biggestBlowout.team_b.name;
+      var loseName=biggestBlowout.team_a.points<biggestBlowout.team_b.points?biggestBlowout.team_a.name:biggestBlowout.team_b.name;
+      stories.push({wk:wk,type:'blowout',pts:biggestBlowout.diff,
+        headline:'<strong>'+esc(winName)+'</strong> steamrolled <strong>'+esc(loseName)+'</strong> by '+biggestBlowout.diff.toFixed(1)+' in Week '+wk+'. Not close.'});
+    }
+
+    // High-scoring week (total > 1800 for 12-team league)
+    if(totalPts>=1800){
+      stories.push({wk:wk,type:'highweek',pts:totalPts,
+        headline:'The week the league woke up. <strong>'+Math.round(totalPts)+'</strong> total points scored in Week '+wk+'.'});
+    }
+  });
+
+  // Trades from D.unified_trades for this season
+  var yearNum=parseInt(year);
+  (D.unified_trades||[]).filter(function(t){return parseInt(t.yr)===yearNum||parseInt(t.s)===yearNum;}).forEach(function(tr){
+    var sA=tr.sides&&tr.sides[0],sB=tr.sides&&tr.sides[1];
+    if(sA&&sB&&(sA.players.length+sB.players.length)>=3){
+      stories.push({wk:tr.wk||0,type:'trade',pts:0,
+        headline:'Week '+(tr.wk||'?')+': <strong>'+esc(sA.name)+'</strong> and <strong>'+esc(sB.name)+'</strong> struck a deal. The jury is still out.'});
+    }
+  });
+
+  // Sort by week, then by pts descending (most dramatic first within week)
+  stories.sort(function(a,b){return a.wk-b.wk||b.pts-a.pts;});
+
+  // Cap: max 2 stories per week, top 12 total
+  var perWeek={};
+  return stories.filter(function(s){
+    perWeek[s.wk]=(perWeek[s.wk]||0)+1;
+    return perWeek[s.wk]<=2;
+  }).slice(0,12);
 }
 // ═══ COUNTUP LOADER ═══
 function loadCountUp(cb){
