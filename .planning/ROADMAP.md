@@ -69,8 +69,12 @@ Plans:
   3. Waiver pickups automatically display as 1-year contracts
   4. The Contract Cliff Chart shows when each team's contracted talent expires in a multi-team stacked visualization
   5. The Contracts tab shows a fully sortable keeper/contract sheet with exemption tracking per team
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Pipeline fixes: exemption aggregation in parseContractCSV, waiver auto-assignment, POS/Fantasy Team column parsing (CONT-01, CONT-02, CONT-08)
+- [ ] 03-02-PLAN.md — cpill distribution: contract pills across Rosters bench, Trade History, GM Dashboard + RELEASABLE badge (CONT-03, CONT-04, CONT-05, CONT-06)
+- [ ] 03-03-PLAN.md — Sortable keeper sheet + exemption timeline/cliff chart data verification (CONT-07, CONT-09, CONT-10)
 
 ### Phase 4: Roster Intelligence
 **Goal**: FantasyCalc dynasty values are integrated for all rostered players, enabling roster value rankings, positional breakdown, and retroactive trade fairness grades
@@ -131,7 +135,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Infrastructure Hardening | 0/TBD | Not started | - |
 | 2. Narrative & Delight | 2/5 | In Progress|  |
-| 3. Contracts Complete | 0/TBD | Not started | - |
+| 3. Contracts Complete | 0/3 | Not started | - |
 | 4. Roster Intelligence | 0/TBD | Not started | - |
 | 5. Player Depth | 0/TBD | Not started | - |
 | 6. Polish | 0/TBD | Not started | - |
