@@ -2082,6 +2082,20 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
     });
   });
 
+  // ── Auto-assign 1-year contracts to waiver/FA pickups (CONT-08) ──
+  d.teams.forEach(t=>t.players.forEach(p=>{
+    if((p.acq==='waiver'||p.acq==='free_agent')
+        &&d.contracts[p.name]
+        &&!d.contracts[p.name].contracted){
+      d.contracts[p.name].yrs=1;
+      d.contracts[p.name].contracted=true;
+      if(d.contracts['_id_'+p.id]){
+        d.contracts['_id_'+p.id].yrs=1;
+        d.contracts['_id_'+p.id].contracted=true;
+      }
+    }
+  }));
+
   // ── Cross-season fields (empty until mergeHistoricalData) ──
   d.champions=[];
   // Populate current season champion from winners_bracket if available
