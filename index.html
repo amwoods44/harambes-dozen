@@ -4404,6 +4404,25 @@ function renderAwards(){
   // Draft Guru
   if(draftGuru){h+='<div class="award-card"><div class="award-emoji">'+icon('draft',28)+'</div><div class="award-title">Draft Guru</div><div class="award-winner">'+esc(draftGuru[0])+'</div><div class="award-stat">'+draftGuru[1]+' draft picks became starters</div><div class="award-desc">Best eye for talent on draft day</div></div>';}
   h+='</div>';
+  // ── Hall of Fame ──
+  h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">Hall of Fame</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Lifetime Achievement Rankings</span></div></div>';
+  h+='<div class="hof-section">';
+  var hofData=D.teams.map(function(t){
+    return{name:t.team_name,rid:t.roster_id,badges:computeLifetimeBadges(t.roster_id)};
+  }).sort(function(a,b){return b.badges.length-a.badges.length;});
+  hofData.forEach(function(row,i){
+    var rankColor=i===0?'gold':'';
+    h+='<div class="hof-row">';
+    h+='<div class="hof-rank '+rankColor+'">'+(i+1)+'</div>';
+    h+=av(row.rid,32);
+    h+='<div style="flex:1;min-width:0;overflow:hidden"><div style="font-family:var(--fd);font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(row.name)+'</div></div>';
+    h+='<div class="hof-badges">';
+    row.badges.forEach(function(b){h+=badgeSvg(b.icon,b.tc);});
+    h+='</div>';
+    h+='<div class="hof-count">'+row.badges.length+' badge'+(row.badges.length!==1?'s':'')+'</div>';
+    h+='</div>';
+  });
+  h+='</div>';
   document.getElementById('tab-awards').innerHTML=h;
 }
 // ═══ ANALYTICS ═══
@@ -4675,6 +4694,20 @@ function renderGM(){
     if(avgAgeN<=24.5)h+='<span class="mgr-badge" style="background:#6366f122;color:#6366f1;border:1px solid #6366f144">YOUTH</span>';
     if(picksM>=4)h+='<span class="mgr-badge" style="background:#8b5cf622;color:#8b5cf6;border:1px solid #8b5cf644">PICK RICH</span>';
     h+='</div>';
+    // Badge case — lifetime achievements
+    var lifeBadges=computeLifetimeBadges(tm.roster_id);
+    if(lifeBadges.length){
+      h+='<div class="badge-case">';
+      h+='<div class="badge-case-hdr">Lifetime Achievements</div>';
+      h+='<div class="badge-case-row">';
+      lifeBadges.forEach(function(b){
+        h+='<div class="badge-item" title="'+esc(b.desc)+'">';
+        h+=badgeSvg(b.icon,b.tc);
+        h+='<div class="badge-item-label">'+esc(b.label)+'</div>';
+        h+='</div>';
+      });
+      h+='</div></div>';
+    }
     h+='</div>';
   });
   h+='</div>';
