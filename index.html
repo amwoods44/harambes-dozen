@@ -5316,10 +5316,6 @@ window.addEventListener('DOMContentLoaded',init);
 
 // ═══ SERVICE WORKER REGISTRATION ═══
 if ('serviceWorker' in navigator) {
-  // On first load, unregister stale SW to pick up code changes, then re-register
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(r => r.unregister());
-  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
       .then(reg => { console.log('SW registered'); reg.update(); })
