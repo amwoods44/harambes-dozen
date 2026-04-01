@@ -3880,10 +3880,13 @@ function renderTrades(){
       wrap.classList.toggle('flipped');
     });
   });
-  // Default: show current year only
-  filterTradeYear(currentYr);
-  var yrBtn=document.querySelector('.wk-sel .wk-btn:not(:first-child)');
-  if(yrBtn){document.querySelectorAll('.wk-sel .wk-btn').forEach(function(b){b.classList.remove('active')});yrBtn.classList.add('active');}
+  // Default: ALL during offseason (no current-year trades), else current year
+  var defaultYr=D.isOffseason?'all':currentYr;
+  filterTradeYear(defaultYr);
+  if(!D.isOffseason){
+    var yrBtn=document.querySelector('.wk-sel .wk-btn:not(:first-child)');
+    if(yrBtn){document.querySelectorAll('.wk-sel .wk-btn').forEach(function(b){b.classList.remove('active')});yrBtn.classList.add('active');}
+  }
 }
 var _tradeShowAll=false;
 function fixTradeCardHeights(){
@@ -3931,12 +3934,25 @@ function toggleSection(hdr){
 // ═══ MATCHUPS ═══
 function renderMatchups(){
   if(!D.matchup_weeks)return;
-  const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
-  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Week '+selWk+'</span></div></div>';
+  // Offseason fallback: use last-season matchups
+  var matchupsData=D.matchup_weeks;
+  var matchupsLabel=CURRENT_YEAR;
+  var matchupsStandings=CUR_STANDINGS;
+  if(D.isOffseason&&D.lastSeason){
+    matchupsData=D['matchup_weeks_'+D.lastSeason]||{};
+    matchupsLabel=D.lastSeason;
+    matchupsStandings=D['standings_'+D.lastSeason]||CUR_STANDINGS;
+  }else if(D.isOffseason){
+    // lastSeason not yet loaded (historical still loading)
+    document.getElementById('tab-matchups').innerHTML='<div class="u-empty">Loading historical matchups...</div>';
+    return;
+  }
+  const wks=Object.keys(matchupsData).map(Number).sort((a,b)=>a-b);
+  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+matchupsLabel+' \u2022 Week '+selWk+'</span></div></div>';
   h+='<div class="wk-sel">';
   wks.forEach(w=>{h+='<button class="wk-btn'+(w===selWk?' active':'')+'" onclick="selWk='+w+';renderMatchups()">'+w+'</button>'});
   h+='</div>';
-  const wkGames=D.matchup_weeks[selWk]||[];
+  const wkGames=matchupsData[selWk]||[];
   const wkPts=wkGames.flatMap(g=>[g.team_a.points,g.team_b.points]);
   // Week summary stats bar
   if(wkPts.length){
@@ -3959,8 +3975,8 @@ function renderMatchups(){
     const gpA=gcA?gcA.p:'#444',gpB=gcB?gcB.p:'#444';
     const gTotal=gA.points+gB.points;
     const gtugA=gTotal>0?Math.round(gA.points/gTotal*100):50;
-    const recA=CUR_STANDINGS.find(s=>s.roster_id===gA.roster_id)||{wins:0,losses:0};
-    const recB=CUR_STANDINGS.find(s=>s.roster_id===gB.roster_id)||{wins:0,losses:0};
+    const recA=matchupsStandings.find(s=>s.roster_id===gA.roster_id)||{wins:0,losses:0};
+    const recB=matchupsStandings.find(s=>s.roster_id===gB.roster_id)||{wins:0,losses:0};
     h+='<div class="mu-gotw">';
     h+='<div style="display:flex;justify-content:space-between;align-items:center"><div class="mu-gotw-banner">\u2605 GAME OF THE WEEK</div><div style="padding:var(--sp-2) var(--sp-4);font:600 var(--text-2xs)/1 var(--fm);color:var(--t4);letter-spacing:1px">'+(gA.points+gB.points).toFixed(2)+' COMBINED</div></div>';
     h+='<div class="mu-gotw-body">';
@@ -4587,7 +4603,18 @@ function renderAwards(){
 function toAbbr(n){var w=n.replace(/[^a-zA-Z0-9\s]/g,' ').trim().split(/\s+/).filter(function(s){return s.length>0;});if(!w.length)return n.substring(0,4).toUpperCase();if(w.length===1)return w[0].substring(0,4).toUpperCase();if(w.length===2)return(w[0].substring(0,2)+w[1].substring(0,2)).toUpperCase();return w.slice(0,3).map(function(x){return x[0].toUpperCase();}).join('');}
 function renderAnalytics(){
   if(!D.rid_to_name||!D.h2h)return;
-  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 2025 Season</span></div></div>';
+  // Offseason fallback: use last-season matchup data
+  var analyticsMatchupWeeks=D.matchup_weeks;
+  var analyticsStandings=CUR_STANDINGS;
+  var analyticsWeeklyScores=D.weekly_scores||{};
+  var analyticsLabel='2025 Season';
+  if(D.isOffseason&&D.lastSeason){
+    analyticsMatchupWeeks=D['matchup_weeks_'+D.lastSeason]||{};
+    analyticsStandings=D['standings_'+D.lastSeason]||CUR_STANDINGS;
+    analyticsWeeklyScores=D['weekly_scores_'+D.lastSeason]||D.weekly_scores||{};
+    analyticsLabel=D.lastSeason+' Season';
+  }
+  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 '+analyticsLabel+'</span></div></div>';
   // ── H2H MATRIX ──
   h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Record \u2022 All Matchups</span></div></div>';
   const rids=Object.keys(D.rid_to_name).map(Number).sort((a,b)=>a-b);
@@ -4611,19 +4638,19 @@ function renderAnalytics(){
   h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">All-Play</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">How Many Teams You\'d Beat Each Week</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">All-play record: for each week, count how many of the other 11 teams your score would have beaten. This removes schedule luck entirely.</div></div></div>';
   const allPlay=rids.map(rid=>{
-    const wk=D.weekly_scores[rid]||[];
+    const wk=analyticsWeeklyScores[rid]||[];
     let apW=0,apL=0;
     wk.forEach((pts,wi)=>{
       rids.forEach(opp=>{
         if(opp===rid)return;
-        const oppWk=D.weekly_scores[opp]||[];
+        const oppWk=analyticsWeeklyScores[opp]||[];
         if(wi<oppWk.length){
           if(pts>oppWk[wi])apW++;
           else if(pts<oppWk[wi])apL++;
         }
       });
     });
-    const s=CUR_STANDINGS.find(x=>x.roster_id===rid)||{wins:0,losses:0};
+    const s=analyticsStandings.find(x=>x.roster_id===rid)||{wins:0,losses:0};
     const apPct=apW+apL>0?(apW/(apW+apL)*100).toFixed(1):'0';
     const luckDiff=s.wins-Math.round(apW/(apW+apL)*(s.wins+s.losses));
     return{rid,name:D.rid_to_name[rid],apW,apL,apPct:parseFloat(apPct),actW:s.wins,actL:s.losses,luckDiff};
@@ -4644,14 +4671,14 @@ function renderAnalytics(){
   // Calc PA per team from matchups
   const paMap={};
   rids.forEach(r=>{paMap[r]=0});
-  Object.values(D.matchup_weeks).forEach(wk=>{
+  Object.values(analyticsMatchupWeeks).forEach(wk=>{
     wk.forEach(g=>{
       paMap[g.team_a.roster_id]=(paMap[g.team_a.roster_id]||0)+g.team_b.points;
       paMap[g.team_b.roster_id]=(paMap[g.team_b.roster_id]||0)+g.team_a.points;
     });
   });
   const pythData=rids.map(rid=>{
-    const s=CUR_STANDINGS.find(x=>x.roster_id===rid)||{wins:0,losses:0,fpts:0};
+    const s=analyticsStandings.find(x=>x.roster_id===rid)||{wins:0,losses:0,fpts:0};
     const pa=paMap[rid]||1;
     const games=s.wins+s.losses||1;
     const exp=2.37;
@@ -4670,13 +4697,13 @@ function renderAnalytics(){
   h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">SOS</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Strength of Schedule \u2022 Opponent Win %</span></div></div>';
   const sosData=rids.map(rid=>{
     let oppWins=0,oppGames=0;
-    Object.values(D.matchup_weeks).forEach(wk=>{
+    Object.values(analyticsMatchupWeeks).forEach(wk=>{
       wk.forEach(g=>{
         let opp=null;
         if(g.team_a.roster_id===rid)opp=g.team_b.roster_id;
         else if(g.team_b.roster_id===rid)opp=g.team_a.roster_id;
         if(opp){
-          const os=CUR_STANDINGS.find(x=>x.roster_id===opp);
+          const os=analyticsStandings.find(x=>x.roster_id===opp);
           if(os){oppWins+=os.wins;oppGames+=os.wins+os.losses;}
         }
       });
@@ -4702,7 +4729,7 @@ function renderAnalytics(){
     ctx.scale(dpr,dpr);
     const pad={t:20,r:20,b:40,l:50};
     const pts=rids.map(rid=>{
-      const wk=D.weekly_scores[rid]||[];
+      const wk=analyticsWeeklyScores[rid]||[];
       const avg=wk.length?wk.reduce((a,b)=>a+b,0)/wk.length:0;
       const std=wk.length?Math.sqrt(wk.reduce((s,p)=>s+Math.pow(p-avg,2),0)/wk.length):0;
       return{name:D.rid_to_name[rid],avg,std};
