@@ -4350,7 +4350,7 @@ function renderDraft(){
   draftYears.forEach(yr=>{h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+'</button>';});
   h+='</div>';
   var picks=D.draft_picks[selDraft]||[];
-  if(!picks.length){h+='<div class="u-empty">No draft data</div>';document.getElementById('tab-draft').innerHTML=h;return;}
+  if(!picks.length){h+=`<div class="draft-empty"><div class="draft-empty-watermark" style="font-family:var(--fd);font-size:100px;font-weight:900;color:var(--t1);opacity:.04;letter-spacing:-4px">HD</div><div class="draft-empty-text">ROOKIE DRAFT NOT YET COMPLETED FOR ${selDraft||CURRENT_YEAR}</div><div class="draft-empty-sub">Check back after the rookie draft concludes</div></div>`;document.getElementById('tab-draft').innerHTML=h;return;}
   var maxRd=Math.max.apply(null,picks.map(function(p){return p.rd}));
   var hits=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft]:[];
   var hitMap={};hits.forEach(function(h2){hitMap[h2.pid]=h2;});
@@ -5327,10 +5327,10 @@ function renderContracts(){
   var totalTag=allC.reduce(function(s,t){return s+t.tagged},0);
   // ── TEAM FILTER PILLS ──
   var filtC=selConTeam?allC.filter(function(tc){return tc.name===selConTeam}):allC;
-  h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px">';
+  h+='<div class="con-team-filters">';
   h+='<button class="tab-sub-btn'+(selConTeam===null?' active':'')+'" onclick="selConTeam=null;renderContracts()">ALL</button>';
   allC.forEach(function(tc){
-    h+='<button class="tab-sub-btn'+(selConTeam===tc.name?' active':'')+'" onclick="selConTeam=\''+tc.name.replace(/'/g,"\\'")+'\';renderContracts()" style="display:flex;align-items:center;gap:5px">'+av(tc.rid,18)+tc.name.substring(0,12)+'</button>';
+    h+='<button class="tab-sub-btn'+(selConTeam===tc.name?' active':'')+'" onclick="selConTeam=\''+tc.name.replace(/'/g,"\\'")+'\';renderContracts()" style="display:flex;align-items:center;gap:5px;flex-shrink:0">'+av(tc.rid,18)+tc.name.substring(0,12)+'</button>';
   });
   h+='</div>';
   // Recompute stats for filtered view
@@ -5525,7 +5525,7 @@ function renderKeeperTable(){
     return dir*(av>bv?1:av<bv?-1:0);
   });
   function si(c){return c===col?(dir===-1?' \u25BC':' \u25B2'):'';}
-  var h='<table class="keeper-tbl">';
+  var h='<div class="keeper-tbl-wrap"><table class="keeper-tbl">';
   h+='<thead><tr>';
   h+='<th onclick="sortKeeperSheet(\'name\')">PLAYER'+si('name')+'</th>';
   h+='<th onclick="sortKeeperSheet(\'team\')">TEAM'+si('team')+'</th>';
@@ -5551,7 +5551,7 @@ function renderKeeperTable(){
     h+='<td style="font-family:var(--fm);font-weight:700;color:var(--a)">'+(p.ktc?p.ktc.toLocaleString():'--')+'</td>';
     h+='</tr>';
   });
-  h+='</tbody></table>';
+  h+='</tbody></table></div>';
   h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t4);margin-top:8px;text-align:right">'+allP.length+' players \u2022 Sorted by '+conSortCol.toUpperCase()+(conSortDir===-1?' (desc)':' (asc)')+'</div>';
   wrap.innerHTML=h;
 }
