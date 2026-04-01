@@ -1679,6 +1679,9 @@ function parseContractCSV(csv,ktcMap){
   const tagIdx=hdr.findIndex(h=>h.includes('tag'));
   const exIdx=hdr.findIndex(h=>h.includes('exemp'));
   const noteIdx=hdr.findIndex(h=>h.includes('note'));
+  const posIdx=hdr.findIndex(h=>h.includes('pos'));
+  const teamIdx=hdr.findIndex(h=>h.includes('fantasy')&&h.includes('team'));
+  const fTeamIdx=teamIdx>=0?teamIdx:(hdr[3]&&hdr[3].includes('team')?3:-1);
   const contracts={};
   for(let i=1;i<rows.length;i++){
     const r=rows[i];
@@ -1702,14 +1705,39 @@ function parseContractCSV(csv,ktcMap){
       tag,
       exm,
       note:esc(r[noteIdx]||''),
+      pos:posIdx>=0?(r[posIdx]||'').trim():'',
+      fantasy_team:fTeamIdx>=0?esc((r[fTeamIdx]||'').trim()):'',
       ktc:ktcEntry.val||0,
       rnk:ktcEntry.rnk||0,
       tier:ktcEntry.tier||0
     };
     if(sid)contracts['_id_'+sid]=contracts[name];
   }
-  cache.set('hd_contracts',{contracts,exemptions:{}},2*60*60*1000);
-  return{contracts,exemptions:{}};
+  const exemptions={};
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i];
+    if(!r[nameIdx])continue;
+    const name=esc(r[nameIdx]);
+    const rawExm=(r[exIdx]||'').trim().toLowerCase();
+    if(rawExm===''||rawExm==='none')continue;
+    const yr=r[exIdx].trim();
+    const owner=fTeamIdx>=0?esc((r[fTeamIdx]||'').trim()):'?';
+    const pos=posIdx>=0?(r[posIdx]||'').trim():'';
+    const cEntry=contracts[name];
+    if(!exemptions[yr])exemptions[yr]=[];
+    exemptions[yr].push({
+      p:name,
+      o:owner,
+      pos:pos,
+      had:null,
+      added:null,
+      new_yrs:cEntry?cEntry.yrs:null,
+      from:null,
+      note:cEntry&&cEntry.tag?'Tagged extension':null
+    });
+  }
+  cache.set('hd_contracts',{contracts,exemptions},2*60*60*1000);
+  return{contracts,exemptions};
 }
 
 // ═══ TIER 3: HISTORICAL SEASONS ═══
