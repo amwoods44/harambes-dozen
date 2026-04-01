@@ -4170,7 +4170,11 @@ function collegeLogoUrl(col){var id=COLLEGE_ESPN[col];return id?'https://a.espnc
 // ═══ DRAFT ═══
 function renderDraft(){
   var draftYears=Object.keys(D.draft_picks||{}).sort().reverse();
-  if(!selDraft&&draftYears.length)selDraft=draftYears[0];
+  if(!selDraft&&draftYears.length){
+    // Offseason: default to last year with actual picks, not the upcoming empty season
+    var defaultDraft=draftYears.find(function(yr){return(D.draft_picks[yr]||[]).length>0;})||draftYears[0];
+    selDraft=defaultDraft;
+  }
   // posRgb and posCls hoisted to module scope
   let h='<div class="bh"><h2 class="bh-tag">Draft</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Rookie Draft History</span></div></div>';
   h+='<div class="tab-sub" style="display:flex;gap:4px;margin-bottom:16px">';
@@ -4762,7 +4766,7 @@ var selMoveTeam=null;
 function renderMoves(){
   const moves=D.moves||[];
   let h='<div class="bh"><h2 class="bh-tag">Moves</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+moves.length+' Waiver & FA Transactions</span></div></div>';
-  if(!moves.length){h+='<div class="u-empty">No moves data</div>';document.getElementById('tab-moves').innerHTML=h;return;}
+  if(!moves.length){h+='<div class="u-empty">Loading transaction history...</div>';document.getElementById('tab-moves').innerHTML=h;return;}
   // Counts
   const waivers=moves.filter(m=>m.tp==='waiver').length;
   const fas=moves.filter(m=>m.tp==='free_agent').length;
@@ -5065,7 +5069,12 @@ function renderGM(){
 function renderRivals(){
   const rivals=D.rivalries||[];
   let h='<div class="bh"><h2 class="bh-tag">Rivals</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+rivals.length+' Rivalry Matchups \u2022 Dominance Tracker</span></div></div>';
-  if(!rivals.length){h+='<div class="u-empty">No rivalry data</div>';document.getElementById('tab-rivals').innerHTML=h;return;}
+  if(!rivals.length){
+    var rivalMsg=D.isOffseason?'Loading historical rivalry data...':'No rivalry data';
+    h+='<div class="u-empty">'+rivalMsg+'</div>';
+    document.getElementById('tab-rivals').innerHTML=h;
+    return;
+  }
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Rivalries ranked by total games played. The dominance bar shows who owns the series. Rivalries are born in the regular season.</div></div></div>';
   // Sort by total games then dominance
   const sorted=rivals.slice().sort((a,b)=>b.total-a.total||(b.dominance||0)-(a.dominance||0));
