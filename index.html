@@ -2921,8 +2921,8 @@ function buildHeroHist(){
   var facts=[
     D.champions[0]?'\u2605 '+D.champions[0].champion+' \u2014 '+D.champions[0].year+' Champion':'',
     D.records.highest_score?'All-time high: '+D.records.highest_score.pts+' pts by '+tn(D.records.highest_score.roster_id):'',
-    D.records.closest_game?'Closest ever: '+D.records.closest_game.diff+' pts \u2022 Wk '+D.records.closest_game.week:'',
-    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts \u2022 Wk '+D.records.biggest_blowout.week:'',
+    D.records.closest_game?'Closest ever: '+D.records.closest_game.diff+' pts'+(D.records.closest_game.week?' \u2022 Wk '+D.records.closest_game.week:''):'',
+    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts'+(D.records.biggest_blowout.week?' \u2022 Wk '+D.records.biggest_blowout.week:''):'',
     D.trades.length+' total trades \u2022 All Seasons',
     D.champions[1]?'\u2605 '+D.champions[1].champion+' \u2014 '+D.champions[1].year+' Champion over '+D.champions[1].runner_up:'',
   ].filter(Boolean);
@@ -2962,7 +2962,7 @@ function buildTicker(){
   let tk='';
   D.champions.forEach(c=>{tk+='<div class="tki">\u2605 <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
   CUR_STANDINGS.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
-  tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
+  tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span>'+(D.records.biggest_blowout.week?' Wk'+D.records.biggest_blowout.week:'')+'</div><div class="tks">\u25C6</div>';
   tk+='<div class="tki">'+D.trades.length+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
   if(D._loaded)tk+='<div class="tki" class="u-c-t4">Data as of '+D._loaded+'</div><div class="tks">\u25C6</div>';
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
@@ -3297,8 +3297,8 @@ function renderTrophies(){
   h+='</div>';
   h+='<canvas id="standings-race-canvas" class="race-canvas"></canvas>';
   // Records
-  h+='<div class="rec-grid"><div class="rec"><div class="rec-emoji">'+icon('bolt',24,'var(--a)')+'</div><div class="rec-lbl">Biggest Win</div><div class="rec-val">'+D.records.biggest_blowout.diff+'</div><div class="rec-sub">Wk'+D.records.biggest_blowout.week+' \u2022 '+tn(D.records.biggest_blowout.winner.roster_id)+'</div></div>';
-  h+='<div class="rec"><div class="rec-emoji">'+icon('equal',24,'var(--y)')+'</div><div class="rec-lbl">Closest</div><div class="rec-val">'+D.records.closest_game.diff+'</div><div class="rec-sub">Wk'+D.records.closest_game.week+'</div></div>';
+  h+='<div class="rec-grid"><div class="rec"><div class="rec-emoji">'+icon('bolt',24,'var(--a)')+'</div><div class="rec-lbl">Biggest Win</div><div class="rec-val">'+D.records.biggest_blowout.diff+'</div><div class="rec-sub">'+(D.records.biggest_blowout.week?'Wk'+D.records.biggest_blowout.week+' \u2022 ':'')+tn(D.records.biggest_blowout.winner.roster_id)+'</div></div>';
+  h+='<div class="rec"><div class="rec-emoji">'+icon('equal',24,'var(--y)')+'</div><div class="rec-lbl">Closest</div><div class="rec-val">'+D.records.closest_game.diff+'</div><div class="rec-sub">'+(D.records.closest_game.week?'Wk'+D.records.closest_game.week:'')+'</div></div>';
   h+='<div class="rec"><div class="rec-emoji">'+icon('arrowUp',24,'var(--grn)')+'</div><div class="rec-lbl">High Score</div><div class="rec-val">'+D.records.highest_score.pts+'</div><div class="rec-sub">'+tn(D.records.highest_score.roster_id)+'</div></div>';
   h+='<div class="rec"><div class="rec-emoji">'+icon('arrowDown',24,'var(--red-t)')+'</div><div class="rec-lbl">Low Score</div><div class="rec-val">'+D.records.lowest_score.pts+'</div><div class="rec-sub">'+tn(D.records.lowest_score.roster_id)+'</div></div></div>';
   // ═══ ALL-TIME FRANCHISE RANKINGS ═══
@@ -5818,13 +5818,13 @@ function renderPulse(){
   // Record alerts
   var rec=D.records;
   if(rec&&rec.highest_score){
-    cards.push({type:'record',priority:9,icon:icon('arrowUp',16,'var(--a)'),tag:'RECORD',headline:tn(rec.highest_score.roster_id)+' posts '+rec.highest_score.pts+' — highest single-week score',body:'Week '+rec.highest_score.week+'. A performance that set the all-time league standard.',meta:(rec.highest_score.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.highest_score.week});
+    cards.push({type:'record',priority:9,icon:icon('arrowUp',16,'var(--a)'),tag:'RECORD',headline:tn(rec.highest_score.roster_id)+' posts '+rec.highest_score.pts+' — highest single-week score',body:(rec.highest_score.week?'Week '+rec.highest_score.week+'. ':'')+'A performance that set the all-time league standard.',meta:(rec.highest_score.year||CURRENT_YEAR)+' SEASON'+(rec.highest_score.week?' \u2022 WK '+rec.highest_score.week:'')});
   }
   if(rec&&rec.biggest_blowout){
-    cards.push({type:'record',priority:8,icon:icon('bolt',16,'var(--a)'),tag:'RECORD',headline:'Biggest Blowout: '+tn(rec.biggest_blowout.winner.roster_id)+' wins by '+rec.biggest_blowout.diff,body:tn(rec.biggest_blowout.winner.roster_id)+' ('+rec.biggest_blowout.winner.points+') defeats '+tn(rec.biggest_blowout.loser.roster_id)+' ('+rec.biggest_blowout.loser.points+') in Week '+rec.biggest_blowout.week+'.',meta:(rec.biggest_blowout.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.biggest_blowout.week});
+    cards.push({type:'record',priority:8,icon:icon('bolt',16,'var(--a)'),tag:'RECORD',headline:'Biggest Blowout: '+tn(rec.biggest_blowout.winner.roster_id)+' wins by '+rec.biggest_blowout.diff,body:tn(rec.biggest_blowout.winner.roster_id)+' ('+rec.biggest_blowout.winner.points+') defeats '+tn(rec.biggest_blowout.loser.roster_id)+' ('+rec.biggest_blowout.loser.points+')'+(rec.biggest_blowout.week?' in Week '+rec.biggest_blowout.week:'')+'.',meta:(rec.biggest_blowout.year||CURRENT_YEAR)+' SEASON'+(rec.biggest_blowout.week?' \u2022 WK '+rec.biggest_blowout.week:'')});
   }
   // Power movement
-  var pw=D.teams.map(function(t){var s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,fpts:0};var wPct=s25.wins/(s25.wins+(s25.losses||0)||1);var maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}));var pPct=s25.fpts/maxP;return{name:t.team_name,pw:Math.round((wPct*40+pPct*60)*10)/10};}).sort(function(a,b){return b.pw-a.pw});
+  var pw=D.teams.map(function(t){var s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,fpts:0};var wPct=s25.wins/(s25.wins+(s25.losses||0)||1);var maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}))||1;var pPct=s25.fpts/maxP;return{name:t.team_name,pw:Math.round((wPct*40+pPct*60)*10)/10};}).sort(function(a,b){return b.pw-a.pw});
   if(pw.length>=2){
     cards.push({type:'power',priority:7,icon:icon('chart',16,'var(--blu)'),tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering 2026, ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:'2026 OFFSEASON POWER INDEX'});
   }
