@@ -28,10 +28,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **CONT-04**: Contract pills visible in GM Dashboard player listings
 - [x] **CONT-05**: Contract years visible in Trade History cards (what contract came with traded players)
 - [x] **CONT-06**: Release eligibility indicator on players with 1 year remaining
-- [ ] **CONT-07**: Annual exemption tracking — which team used their exemption, on which player, displayed in Contracts tab
+- [x] **CONT-07**: Annual exemption tracking — which team used their exemption, on which player, displayed in Contracts tab
 - [x] **CONT-08**: Waiver pickups display as 1-year auto-assigned contracts
-- [ ] **CONT-09**: Contract Cliff Chart — stacked area showing when each team's contracted talent expires
-- [ ] **CONT-10**: Contracts tab fully functional with sortable keeper/contract sheet view
+- [x] **CONT-09**: Contract Cliff Chart — stacked area showing when each team's contracted talent expires
+- [x] **CONT-10**: Contracts tab fully functional with sortable keeper/contract sheet view
 
 ### Roster Intelligence
 
@@ -133,10 +133,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-04 | Phase 3 | Complete |
 | CONT-05 | Phase 3 | Complete |
 | CONT-06 | Phase 3 | Complete |
-| CONT-07 | Phase 3 | Pending |
+| CONT-07 | Phase 3 | Complete |
 | CONT-08 | Phase 3 | Complete |
-| CONT-09 | Phase 3 | Pending |
-| CONT-10 | Phase 3 | Pending |
+| CONT-09 | Phase 3 | Complete |
+| CONT-10 | Phase 3 | Complete |
 | ROST-01 | Phase 4 | Pending |
 | ROST-02 | Phase 4 | Pending |
 | ROST-03 | Phase 4 | Pending |
