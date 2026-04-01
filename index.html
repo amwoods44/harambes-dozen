@@ -2560,6 +2560,7 @@ function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{con
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
 // Item 1: Contract pill helper
 function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||!c.contracted)return'';const y=c.yrs;const cls=y>=4?'cpill-4':y>=2?'cpill-23':y===1?'cpill-1':'cpill-0';const lbl=y<=0?'EXP':y+'yr';const tag=c.tag?'T':c.exm?'X':'';return'<span class="cpill '+cls+'">'+tag+lbl+'</span>';}
+function relBadge(nm){if(!D.contracts)return'';var c=D.contracts[nm];if(!c||!c.contracted||c.yrs!==1)return'';return cbadge('RELEASABLE','red');}
 // ═══ SHARED CARD INFRASTRUCTURE ═══
 var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
 var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
@@ -3026,7 +3027,7 @@ function renderPower(){
     t.players.filter(p=>p.is_starter).forEach(p=>{
       const ac=!p.age?'':p.age<=24?'age-y':p.age<=28?'age-p':'age-v';
       const pktc=D.contracts&&D.contracts[p.name]?D.contracts[p.name].ktc:0;
-      h+='<div class="pl-row pl-starter"><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span><span class="pl-name pp-trigger" data-pid="'+p.id+'">'+p.name+dtierTag(pktc)+cpill(p.name)+'</span><span class="pl-nfl">'+esc(p.team||'FA')+'</span><span class="pl-age '+ac+'">'+(p.age||'')+'</span></div>';
+      h+='<div class="pl-row pl-starter"><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span><span class="pl-name pp-trigger" data-pid="'+p.id+'">'+p.name+dtierTag(pktc)+cpill(p.name)+relBadge(p.name)+'</span><span class="pl-nfl">'+esc(p.team||'FA')+'</span><span class="pl-age '+ac+'">'+(p.age||'')+'</span></div>';
     });
     h+='</div></div></div>';
   });
@@ -3177,7 +3178,7 @@ function renderRosters(){
           ct+='<span style="width:28px;height:5px;background:var(--g4);border-radius:3px;display:inline-block;overflow:hidden"><span style="display:block;height:100%;width:'+bw+'%;background:'+yc+';border-radius:3px"></span></span></span>';
         }
         const rktc=D.contracts&&D.contracts[p.name]?D.contracts[p.name].ktc:0;
-        const nflLogo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" class="tl-img" onerror="this.style.display=\'none\'" alt="'+esc(p.team)+'">':'';const numTag=p.number?'<span style="font-family:var(--fm);font-size:10px;color:var(--t4);flex-shrink:0">#'+p.number+'</span>':'';h+='<div class="pl-row'+(p.is_starter?' pl-starter':'')+'">'+pimg(p.id,28)+'<span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span><span class="pl-name pp-trigger" data-pid="'+p.id+'">'+p.name+(p.is_starter?' \u2605':'')+(p.acq==='draft'?' <span class="u-mono-sm">DFT</span>':p.acq==='trade'?' <span class="u-mono-sm">TRD</span>':p.acq==='waiver'?' <span class="u-mono-sm">WVR</span>':p.acq==='free_agent'?' <span class="u-mono-sm">FA</span>':'')+dtierTag(rktc)+'</span>'+numTag+'<div class="pl-nfl-cell">'+nflLogo+'<span class="u-mono">'+esc(p.team||'FA')+'</span></div><span class="pl-age '+ac+'">'+(p.age||'')+'</span>'+ct+'</div>';
+        const nflLogo=p.team&&p.team!=='FA'?'<img src="'+TL(p.team)+'" class="tl-img" onerror="this.style.display=\'none\'" alt="'+esc(p.team)+'">':'';const numTag=p.number?'<span style="font-family:var(--fm);font-size:10px;color:var(--t4);flex-shrink:0">#'+p.number+'</span>':'';h+='<div class="pl-row'+(p.is_starter?' pl-starter':'')+'">'+pimg(p.id,28)+'<span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span><span class="pl-name pp-trigger" data-pid="'+p.id+'">'+p.name+(p.is_starter?' \u2605':'')+(p.acq==='draft'?' <span class="u-mono-sm">DFT</span>':p.acq==='trade'?' <span class="u-mono-sm">TRD</span>':p.acq==='waiver'?' <span class="u-mono-sm">WVR</span>':p.acq==='free_agent'?' <span class="u-mono-sm">FA</span>':'')+dtierTag(rktc)+cpill(p.name)+relBadge(p.name)+'</span>'+numTag+'<div class="pl-nfl-cell">'+nflLogo+'<span class="u-mono">'+esc(p.team||'FA')+'</span></div><span class="pl-age '+ac+'">'+(p.age||'')+'</span>'+ct+'</div>';
       });
     });
     h+='</div></div></div>';
