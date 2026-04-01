@@ -170,58 +170,56 @@ button{min-height:36px}
 .nfl-cd-tag{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4);margin-left:2px;line-height:1.2;text-align:center}
 .nfl-cd-tag span{display:block;color:#6ba3e8;font-size:12px;letter-spacing:1px}
 /* ═══ HERO ═══ */
-.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#1a0a0a,#0f0f0f 40%,var(--g1));padding:40px 28px 36px;text-align:center}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 250px at 50% 20%,rgba(204,0,0,.06),transparent);pointer-events:none}
-.hero::after{content:'';position:absolute;top:-50%;left:-10%;width:120%;height:200%;background:repeating-linear-gradient(-45deg,transparent,transparent 80px,rgba(204,0,0,.015) 80px,rgba(204,0,0,.015) 81px);pointer-events:none}
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#120a06,#0d0d0d 40%,var(--g1));padding:52px 28px 44px;text-align:center}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 800px 400px at 50% 15%,rgba(204,0,0,.08),transparent 70%),radial-gradient(ellipse 600px 300px at 50% 90%,rgba(245,158,11,.02),transparent);pointer-events:none;animation:heroGlow 10s ease-in-out infinite}
+.hero::after{content:'';position:absolute;top:-50%;left:-10%;width:120%;height:200%;background:repeating-linear-gradient(-45deg,transparent,transparent 80px,rgba(204,0,0,.018) 80px,rgba(204,0,0,.018) 81px);pointer-events:none}
+@keyframes heroGlow{0%,100%{opacity:.7}50%{opacity:1}}
 .hero-c{position:relative;z-index:1}
-.hero-ey{font-family:var(--fd);font-size:15px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:var(--a);margin-bottom:8px}
-.hero-h{font-family:var(--fd);font-size:clamp(52px,8vw,88px);font-weight:600;letter-spacing:-2px;line-height:.9;color:white;text-transform:uppercase}
-.hero-h .acc{color:var(--y)}
-.hero-tag{font-family:var(--fd);font-size:19px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:var(--t3);margin-top:14px}
-.hero-tag b{color:var(--t2);font-weight:600}
-.hero-bar{height:4px;background:linear-gradient(90deg,transparent 5%,var(--a) 20%,var(--a) 80%,transparent 95%);margin-top:28px}
+.hero-ey{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:8px;text-transform:uppercase;color:rgba(204,0,0,.5);margin-bottom:12px}
+.hero-h{font-family:var(--fd);font-size:clamp(52px,8vw,88px);font-weight:700;letter-spacing:-2px;line-height:.88;color:white;text-transform:uppercase;text-shadow:0 0 80px rgba(204,0,0,.12),0 2px 40px rgba(0,0,0,.5)}
+.hero-h .acc{color:var(--y);text-shadow:0 0 60px rgba(255,204,0,.1)}
+.hero-sub{font-family:var(--fd);font-size:14px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--t4);margin-top:16px}
+.hero-bar{height:3px;background:linear-gradient(90deg,transparent 5%,var(--a) 25%,var(--a) 75%,transparent 95%);margin-top:28px;opacity:.6}
+/* ── Hero Featured Callout ── */
+.hero-feat{padding:24px 20px 0;display:flex;justify-content:center;min-height:110px}
+.hero-feat-card{max-width:480px;width:100%;padding:22px 36px;background:rgba(255,255,255,.025);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.05);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04);position:relative;overflow:hidden;transition:opacity .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1)}
+.hero-feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--hero-feat-accent,var(--a)),transparent)}
+.hero-feat-card.fade-out{opacity:0;transform:translateY(-6px)}
+.hero-feat-lbl{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--hero-feat-accent,var(--a));margin-bottom:8px}
+.hero-feat-val{font-family:var(--fd);font-size:36px;font-weight:700;line-height:1.1;color:var(--t1);letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.hero-feat-val .hero-feat-unit{font-size:16px;font-weight:600;letter-spacing:1px;color:var(--t3);margin-left:6px}
+.hero-feat-ctx{font-family:var(--fd);font-size:13px;font-weight:400;color:var(--t4);margin-top:6px;letter-spacing:1px}
 /* ═══ CAST STRIP ═══ */
-.cast{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--g1),rgba(12,10,8,.95));padding:8px 0;max-width:1440px;margin:0 auto}
-.cast::before,.cast::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.cast{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--g1),rgba(10,8,6,.97));padding:14px 0 8px;max-width:1440px;margin:0 auto}
+.cast::before,.cast::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
 .cast::before{left:0;background:linear-gradient(90deg,var(--g1),transparent)}
 .cast::after{right:0;background:linear-gradient(270deg,var(--g1),transparent)}
-.cast-in{display:flex;align-items:center;justify-content:center;gap:0;padding:0 30px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cast-in{display:flex;align-items:flex-start;justify-content:center;gap:0;padding:0 40px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .cast-in::-webkit-scrollbar{display:none}
-.cast-fig{flex-shrink:0;position:relative;width:96px;height:96px;border-radius:50%;overflow:hidden;border:2px solid var(--g5);background:var(--g3);transition:all .3s cubic-bezier(.22,1,.36,1);cursor:pointer;margin:0 -8px;display:flex;align-items:center;justify-content:center}
-.cast-fig:hover{transform:scale(1.2);z-index:10;border-color:var(--a);box-shadow:0 0 28px rgba(204,0,0,.45)}
-.cast-fig img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.9)}
+.cast-fig{flex-shrink:0;position:relative;width:112px;height:112px;border-radius:50%;overflow:visible;border:3px solid rgba(255,255,255,.12);background:var(--g3);transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer;margin:0 -6px;display:flex;align-items:center;justify-content:center}
+.cast-fig:hover{transform:scale(1.12);z-index:10;border-color:var(--a);box-shadow:0 0 28px rgba(204,0,0,.35),0 8px 24px rgba(0,0,0,.4)}
+.cast-fig-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative}
+.cast-fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.85);transition:filter .3s}
 .cast-fig:hover img{filter:saturate(1.1)}
-.cast-fig .cast-init{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--t3)}
-.cast-fig::after{content:attr(data-label);position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-family:var(--fd);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
-.cast-fig:hover::after{opacity:1}
-.cast-line{height:1px;background:linear-gradient(90deg,transparent 10%,var(--g5) 30%,var(--g5) 70%,transparent 90%);margin-top:6px}
+.cast-fig .cast-init{font-family:var(--fd);font-size:28px;font-weight:700;color:rgba(255,255,255,.7)}
+.cast-abbr{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:var(--fd);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;transition:all .25s;pointer-events:none}
+.cast-fig:hover .cast-abbr{transform:translateX(-50%) scale(1.05);opacity:1}
+.cast-line{height:1px;background:linear-gradient(90deg,transparent 10%,var(--g4) 30%,var(--g4) 70%,transparent 90%);margin-top:24px}
 .tl-img{width:20px;height:20px;object-fit:contain;flex-shrink:0;vertical-align:middle;opacity:.9}
 .pl-nfl-cell{display:inline-flex;align-items:center;gap:4px;min-width:38px}
-.hero-hist{padding:16px 20px 0;text-align:center;min-height:32px}
-.hero-hist-inner{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--g5)}
-.hero-hist-lbl{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--a);flex-shrink:0}
-.hero-hist-txt{font-family:var(--fb);font-size:13px;color:var(--t2);transition:opacity .4s}
-.hero-hist-txt.fade{opacity:0}
-.hero-hist-vintage{display:inline-block;padding:10px 20px 12px;background:linear-gradient(135deg,rgba(20,16,12,.9),rgba(30,22,16,.85));border:1px solid rgba(204,0,0,.25);border-radius:4px;text-align:center;position:relative;overflow:hidden}
-.hero-hist-vintage::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
-.hero-hist-eyebrow{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(204,0,0,.6);margin-bottom:6px}
-.hero-hist-headline{font-family:var(--fd);font-size:clamp(14px,2vw,18px);line-height:1.2}
-.hero-hist-team{font-weight:700;color:var(--t1)}
-.hero-hist-verb{font-weight:400;color:var(--t3)}
-.hero-hist-pts{font-weight:700;color:var(--a);font-variant-numeric:tabular-nums}
+/* hero-hist styles removed — replaced by .hero-feat above */
 /* ═══ STAT STRIP ═══ */
-.sstrip{display:flex;background:var(--g2);border-top:1px solid var(--g5);border-bottom:1px solid var(--g5);max-width:100%;margin:0;padding:0}
-.ss{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 10px;border-right:1px solid var(--g5);gap:3px;min-width:0;position:relative;overflow:hidden}
+.sstrip{display:flex;background:var(--g2);border-top:1px solid var(--g4);border-bottom:1px solid var(--g4);max-width:100%;margin:0;padding:0;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.ss{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;border-right:1px solid var(--g4);gap:2px;min-width:0;position:relative;overflow:hidden}
 .ss:last-child{border-right:none}
 .ss-l{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t4)}
-.ss-v{font-family:var(--fd);font-size:clamp(18px,2.2vw,28px);font-weight:600;line-height:1;letter-spacing:-.5px;color:var(--t1);font-variant-numeric:tabular-nums}
-.ss.champ{background:rgba(245,158,11,.04)}
-.ss.champ::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#F59E0B,transparent)}
-.ss.champ .ss-l{color:rgba(251,191,36,.6)}
-.ss.champ .ss-v{color:#F59E0B;font-size:clamp(13px,1.6vw,18px);letter-spacing:0}
-.ss.feat .ss-v{color:var(--a)}
+.ss-v{font-family:var(--fd);font-size:clamp(18px,2.2vw,26px);font-weight:700;line-height:1;letter-spacing:-.5px;color:var(--t1);font-variant-numeric:tabular-nums}
+.ss.champ{background:rgba(245,158,11,.05)}
+.ss.champ::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 10%,#F59E0B 40%,#F59E0B 60%,transparent 90%)}
+.ss.champ .ss-l{color:rgba(251,191,36,.65)}
+.ss.champ .ss-v{color:#F59E0B;font-size:clamp(14px,1.6vw,18px);letter-spacing:.5px}
 @keyframes champReveal{0%{opacity:.5;filter:brightness(1.5) saturate(1.5)}100%{opacity:1;filter:brightness(1) saturate(1)}}
-.ss-sub{font-family:var(--fd);font-size:13px;font-weight:400;letter-spacing:1px;color:var(--t4);margin-top:8px}
+.ss-sub{font-family:var(--fd);font-size:12px;font-weight:400;letter-spacing:1px;color:var(--t4);margin-top:6px}
 /* ═══ BROADCAST HEADERS ═══ */
 .bh{display:flex;align-items:stretch;margin:var(--sp-7) 0 var(--sp-4)}
 .bh-tag{font-family:var(--fd);background:var(--a);color:white;padding:var(--sp-2) var(--sp-5);font-size:var(--text-md);font-weight:600;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 100%,0 100%)}
@@ -770,9 +768,9 @@ body{padding-bottom:48px}
 @keyframes heroAvatarIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 .hero-reveal .hero-ey{animation:heroSlideUp .5s cubic-bezier(.22,1,.36,1) 0s both}
 .hero-reveal .hero-h{animation:heroSlideUp .5s cubic-bezier(.22,1,.36,1) .15s both}
-.hero-reveal .hero-tag{animation:heroSlideUp .5s cubic-bezier(.22,1,.36,1) .3s both}
+.hero-reveal .hero-sub{animation:heroSlideUp .5s cubic-bezier(.22,1,.36,1) .3s both}
 .hero-reveal .hero-bar{transform-origin:center;animation:heroBarWipe .5s cubic-bezier(.22,1,.36,1) .45s both}
-.hero-reveal .hero-hist{animation:heroSlideUp .4s cubic-bezier(.22,1,.36,1) .6s both}
+.hero-reveal .hero-feat{animation:heroSlideUp .4s cubic-bezier(.22,1,.36,1) .6s both}
 .hero-reveal~.sstrip{animation:heroSlideUp .4s cubic-bezier(.22,1,.36,1) .75s both}
 .hero-reveal~.cast .cast-fig{animation:heroAvatarIn .35s cubic-bezier(.22,1,.36,1) both}
 .hero-reveal~.cast .cast-fig:nth-child(1){animation-delay:.9s}
@@ -1503,23 +1501,17 @@ span.player-link:hover,a.player-link:hover{color:var(--a)}
 
 /* ═══ PHASE 03.2 PLAN 03 — HERO, COUNTDOWN, STAT STRIP, CAST STRIP, MOBILE ═══ */
 
-/* D-21: Hero LEAGUE LORE card — wider, more commanding */
-.hero-hist{padding:20px 24px 0}
-.hero-hist-vintage{max-width:600px;width:100%;margin:0 auto}
-.hero-hist-inner{max-width:500px;padding:8px 20px}
+/* D-21: (removed — hero-hist replaced by hero-feat) */
 
 /* D-22: Countdown clock "UNTIL" prefix styling */
 .nfl-cd-tag{display:flex;flex-direction:column;align-items:center;gap:0}
 .nfl-cd-until{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t4);display:block;line-height:1;margin-bottom:1px}
 
-/* D-23: Stat strip ESPN ticker treatment */
-.sstrip{border-top:2px solid var(--g5);border-bottom:2px solid var(--g5);box-shadow:0 2px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.03)}
-.ss{border-right:1px solid var(--g5)}
-.ss:last-child{border-right:none}
+/* D-23: (stat strip styles consolidated into base rules above) */
 
 /* D-24: Cast strip separator after 4th and 8th team */
-.cast-fig.cast-sep{margin-right:16px}
-.cast-fig.cast-sep::before{content:'';position:absolute;right:-10px;top:10%;height:80%;width:1px;background:rgba(255,255,255,.08);pointer-events:none}
+.cast-fig.cast-sep{margin-right:18px}
+.cast-fig.cast-sep::before{content:'';position:absolute;right:-11px;top:15%;height:70%;width:1px;background:rgba(255,255,255,.06);pointer-events:none}
 
 /* D-05: Power score circle — 64px hero size */
 .prk{width:64px;height:64px;border-radius:10px}
@@ -1529,22 +1521,28 @@ span.player-link:hover,a.player-link:hover{color:var(--a)}
 .mgr-stat:first-child .mgr-sv{font-size:var(--text-2xl);color:var(--t1)}
 .mgr-stat:first-child .mgr-sl{font-size:var(--text-2xs);letter-spacing:2px}
 
-/* D-28: Hero tag mobile wrapping fix */
+/* D-28: Hero sub mobile wrapping fix */
 @media(max-width:480px){
-  .hero-tag{font-size:13px;letter-spacing:2px}
-  .hero-tag b{display:inline}
+  .hero-sub{font-size:12px;letter-spacing:2px}
+  .hero-feat-card{padding:16px 24px}
+  .hero-feat-val{font-size:28px}
 }
 
-/* D-29: Cast strip mobile scroll indication */
-@media(max-width:600px){
-  .cast::after{width:80px}
-}
+/* D-29: (cast strip fade width consolidated into base rules) */
 
-/* D-30: Stat strip mobile — horizontal scroll instead of truncate */
+/* D-30: Stat strip mobile — show all 4 via horizontal scroll */
 @media(max-width:600px){
   .sstrip{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
   .sstrip .ss:nth-child(n+4){display:flex}
   .ss{min-width:80px;flex-shrink:0}
+}
+/* Hero featured callout mobile */
+@media(max-width:600px){
+  .hero-feat{padding:20px 16px 0}
+  .hero-feat-card{padding:18px 24px}
+  .hero-feat-val{font-size:30px}
+  .cast-fig{width:88px;height:88px}
+  .cast-abbr{font-size:12px;bottom:-18px}
 }
 
 /* D-31: Contracts team filter mobile scroll */
@@ -1631,11 +1629,11 @@ span.player-link:hover,a.player-link:hover{color:var(--a)}
 </div></header>
 <div class="data-status ok" id="ds">DYNASTY DATA LOADED</div>
 <div class="hero"><div class="hero-c">
-  <div class="hero-ey">Est. 2023 · 12 Team PPR Dynasty</div>
+  <div class="hero-ey">EST. 2023</div>
   <h1 class="hero-h">HARAMBE'S <span class="acc">DOZEN</span></h1>
-  <div class="hero-tag"><b>15</b> Keepers &bull; <b>Pick Trading</b> &bull; <b>Bonus Scoring</b></div>
+  <div class="hero-sub">12 TEAM PPR &middot; 15 KEEPERS &middot; PICK TRADING &middot; BONUS SCORING</div>
   <div class="hero-bar"></div>
-<div class="hero-hist" id="hero-hist"></div>
+  <div class="hero-feat" id="hero-feat"></div>
 </div></div>
 <div class="cast" id="cast-strip"></div>
 <div class="sstrip" id="sstrip"></div>
@@ -2897,7 +2895,7 @@ async function init(){
 
     // ── RENDER ──
     injectEmptyStates();
-    buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
+    buildNav();buildCast();buildStats();buildHeroFeat();buildTicker();
     safeRender('power','Power Rankings',renderPower);
     safeRender('rosters','Rosters',renderRosters);
     safeRender('trophies','Trophies',renderTrophies);
@@ -2940,7 +2938,7 @@ async function init(){
       initSeasonConstants();
       rebuildPlayerMap();
       injectEmptyStates();
-      buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
+      buildNav();buildCast();buildStats();buildHeroFeat();buildTicker();
       safeRender('power','Power Rankings',renderPower);
       safeRender('rosters','Rosters',renderRosters);
       safeRender('trophies','Trophies',renderTrophies);
@@ -2987,7 +2985,7 @@ async function loadHistory(disc,playerDB){
     try{
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
-      buildStats();buildTicker();buildHeroHist();
+      buildStats();buildTicker();buildHeroFeat();
       ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft','awards','gm','scoring','matchups','moves'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
@@ -3086,12 +3084,14 @@ function buildCast(){
     const c=TC[t.roster_id],pc=c?c.p:'var(--g4)';
     const hasAvatar=t.avatar&&!isDefaultAvatar(t.avatar);
     const initials=(c?c.i:t.team_name.substring(0,2).toUpperCase());
-    // Always render initials as base; overlay avatar img on top
-    const initDiv='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:28px;font-weight:700;color:#fff;background:linear-gradient(135deg,'+pc+','+pc+'99)">'+initials+'</div>';
-    const imgEl=hasAvatar?'<img src="'+t.avatar+'" alt="'+t.team_name+' owner" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%" onerror="this.remove()">':'';
-    // Add separator class after every 4th team (index 3, 7) — D-24
+    const initDiv='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:28px;font-weight:700;color:rgba(255,255,255,.8);background:linear-gradient(135deg,'+pc+','+pc+'88)">'+initials+'</div>';
+    const imgEl=hasAvatar?'<img src="'+t.avatar+'" alt="'+esc(t.team_name)+' owner" loading="lazy" onerror="this.remove()">':'';
     const sepCls=(idx===3||idx===7)?' cast-sep':'';
-    return'<div class="cast-fig'+sepCls+'" data-label="'+t.team_name.substring(0,16)+'" style="position:relative;border-color:'+pc+'77;border-width:3px" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard">'+initDiv+imgEl+'</div>';
+    const abbr=c?c.i:t.team_name.substring(0,3).toUpperCase();
+    return'<div class="cast-fig'+sepCls+'" style="border-color:'+pc+'44" onclick="showGM('+t.roster_id+')" title="'+esc(t.team_name)+'">'+
+      '<div class="cast-fig-inner">'+initDiv+imgEl+'</div>'+
+      '<span class="cast-abbr" style="color:'+pc+'cc">'+abbr+'</span>'+
+    '</div>';
   }).join('');
   document.getElementById('cast-strip').innerHTML='<div class="cast-in">'+h+'</div><div class="cast-line"></div>';
 }
@@ -3108,82 +3108,92 @@ function getCurrentNFLWeek(){
   if(diff<0){kickoff=septKickoff(now.getFullYear()-1);diff=now-kickoff;}
   return Math.max(1,Math.min(18,Math.floor(diff/(7*24*60*60*1000))+1));
 }
-function buildHeroHist(){
-  var el=document.getElementById('hero-hist');if(!el)return;
+function buildHeroFeat(){
+  var el=document.getElementById('hero-feat');if(!el)return;
+  // Clear any previous rotation interval
+  if(window._heroFeatInterval){clearInterval(window._heroFeatInterval);window._heroFeatInterval=null;}
 
+  // Build callout items: [{label, value, ctx, accent}]
+  var items=[];
+  // 1. Reigning champion (gold)
+  var champ=D.champions&&D.champions[0];
+  if(champ){
+    items.push({label:'REIGNING CHAMPION',value:esc(champ.champion),ctx:champ.year+' Season',accent:'#F59E0B'});
+  }
+  // 2. NFL Kickoff countdown (blue)
+  var diff=new Date(CFG.nflKickoff+'T20:20:00')-new Date();
+  if(diff>0){
+    var days=Math.floor(diff/864e5);
+    items.push({label:'UNTIL NFL KICKOFF',value:days+'<span class="hero-feat-unit">DAYS</span>',ctx:CFG.nflKickoff.replace(/-/g,'/').replace(/^(\d{4})\/(\d{2})\/(\d{2})$/,function(_,y,m,d){var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return months[parseInt(m,10)-1]+' '+parseInt(d,10)+', '+y;}),accent:'#6ba3e8'});
+  }
+  // 3. This Week in History (red) — if historical data loaded
   var week=getCurrentNFLWeek();
-  var bestFact=null;
-  var bestScore=0;
-
+  var bestScore=0,bestFact=null;
   var histYears=SEASON_YEARS.filter(function(yr){return yr!==CURRENT_YEAR;});
   histYears.forEach(function(yr){
-    var mwKey='matchup_weeks_'+yr;
-    var mw=D[mwKey]||{};
+    var mw=D['matchup_weeks_'+yr]||{};
     var games=mw[week]||[];
     games.forEach(function(g){
-      var highScore=Math.max(g.team_a.points,g.team_b.points);
-      var highTeam=g.team_a.points>=g.team_b.points?g.team_a.name:g.team_b.name;
-      if(highScore>bestScore){
-        bestScore=highScore;
-        bestFact={yr:yr,wk:week,team:highTeam,pts:highScore.toFixed(2),type:'high'};
-      }
+      var hs=Math.max(g.team_a.points,g.team_b.points);
+      var ht=g.team_a.points>=g.team_b.points?g.team_a.name:g.team_b.name;
+      if(hs>bestScore){bestScore=hs;bestFact={yr:yr,wk:week,team:ht,pts:hs.toFixed(2)};}
     });
   });
-
   if(bestFact){
-    el.innerHTML=
-      '<div class="hero-hist-vintage">'+
-        '<div class="hero-hist-eyebrow">THIS WEEK IN LEAGUE HISTORY \u2022 WEEK '+bestFact.wk+'</div>'+
-        '<div class="hero-hist-headline">'+
-          '<span class="hero-hist-team">'+esc(bestFact.team)+'</span>'+
-          '<span class="hero-hist-verb"> dropped </span>'+
-          '<span class="hero-hist-pts">'+bestFact.pts+'</span>'+
-          '<span class="hero-hist-verb"> pts in '+bestFact.yr+'</span>'+
-        '</div>'+
-      '</div>';
-    return;
+    items.push({label:'THIS WEEK IN LEAGUE HISTORY \u00b7 WEEK '+bestFact.wk,value:bestFact.pts,ctx:esc(bestFact.team)+' \u00b7 '+bestFact.yr,accent:'var(--a)'});
+  }
+  // 4. All-time high score (red)
+  if(D.records&&D.records.highest_score){
+    var hs=D.records.highest_score;
+    items.push({label:'ALL-TIME HIGH SCORE',value:hs.pts,ctx:tn(hs.roster_id)+(hs.week?' \u00b7 Week '+hs.week:''),accent:'var(--a)'});
+  }
+  // 5. League activity (red)
+  var tradeCount=(D.unified_trades||D.trades||[]).length;
+  if(tradeCount>0){
+    items.push({label:'TOTAL TRADES',value:String(tradeCount),ctx:'Across '+SEASON_YEARS.length+' seasons',accent:'var(--a)'});
   }
 
-  // Fallback: rotating ticker
-  var facts=[
-    D.champions[0]?'\u2605 '+D.champions[0].champion+' \u2014 '+D.champions[0].year+' Champion':'',
-    D.records.highest_score?'All-time high: '+D.records.highest_score.pts+' pts by '+tn(D.records.highest_score.roster_id):'',
-    D.records.closest_game?'Closest ever: '+D.records.closest_game.diff+' pts'+(D.records.closest_game.week?' \u2022 Wk '+D.records.closest_game.week:''):'',
-    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts'+(D.records.biggest_blowout.week?' \u2022 Wk '+D.records.biggest_blowout.week:''):'',
-    D.trades.length+' total trades \u2022 All Seasons',
-    D.champions[1]?'\u2605 '+D.champions[1].champion+' \u2014 '+D.champions[1].year+' Champion over '+D.champions[1].runner_up:'',
-  ].filter(Boolean);
-  if(!facts.length)return;
-  var idx=0;
-  function show(){
-    var inner=el.querySelector('.hero-hist-txt');
-    if(!inner)return;
-    inner.classList.add('fade');
-    setTimeout(function(){inner.textContent=facts[idx%facts.length];inner.classList.remove('fade');idx++;},350);
+  if(!items.length)return;
+
+  // Render first item
+  function renderCard(item){
+    return '<div class="hero-feat-card" style="--hero-feat-accent:'+item.accent+'">'+
+      '<div class="hero-feat-lbl">'+item.label+'</div>'+
+      '<div class="hero-feat-val">'+item.value+'</div>'+
+      '<div class="hero-feat-ctx">'+item.ctx+'</div>'+
+    '</div>';
   }
-  el.innerHTML='<div class="hero-hist-inner"><span class="hero-hist-lbl">LEAGUE LORE</span><span class="hero-hist-txt">'+facts[0]+'</span></div>';
-  idx=1;
-  setInterval(show,4000);
+  el.innerHTML=renderCard(items[0]);
+
+  if(items.length<=1)return;
+
+  // Rotate through items
+  var idx=0;
+  window._heroFeatInterval=setInterval(function(){
+    var card=el.querySelector('.hero-feat-card');
+    if(!card)return;
+    card.classList.add('fade-out');
+    setTimeout(function(){
+      idx=(idx+1)%items.length;
+      el.innerHTML=renderCard(items[idx]);
+    },400);
+  },5000);
 }
 function buildStats(){
-  // Offseason: use last-season data for meaningful values
   var useOffseason=D.isOffseason&&D.lastSeason;
   var standings=useOffseason?(D['standings_'+D.lastSeason]||CUR_STANDINGS):CUR_STANDINGS;
   var draftKey=useOffseason?D.lastSeason:CURRENT_YEAR;
-  var seasonLabel=useOffseason?D.lastSeason+' Season':'2026 Season';
+  var seasonLabel=useOffseason?D.lastSeason:'2026';
   var champ=D.champions[D.champions.length-1];
-  var best=standings.length?standings.reduce(function(a,b){return a.fpts>b.fpts?a:b}):{fpts:0,team_name:'—'};
-  var tot=standings.reduce(function(s,t){return s+t.fpts},0);
-  var avgPF=standings.length?Math.round(tot/standings.length):0;
+  var best=standings.length?standings.reduce(function(a,b){return a.fpts>b.fpts?a:b}):{fpts:0,team_name:'\u2014'};
   var draftPicks=D.draft_picks[draftKey];
   var rookieCount=draftPicks?draftPicks.length:0;
   var tradeCount=(D.unified_trades||D.trades||[]).length;
   document.getElementById('sstrip').innerHTML=
-    '<div class="ss champ"><div class="ss-l">\u2605 '+(champ?champ.year:'')+' Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">3-peat eligible</div></div>'+
-    '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+' \u00b7 '+seasonLabel+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+tradeCount+'" data-decimals="0">0</span></div><div class="ss-sub">All seasons</div></div>'+
-    '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+avgPF+'" data-decimals="0">0</span></div><div class="ss-sub">Per team \u00b7 '+seasonLabel+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+rookieCount+'" data-decimals="0">0</span></div><div class="ss-sub">'+draftKey+' class</div></div>';
+    '<div class="ss champ"><div class="ss-l">\u2605 '+(champ?champ.year:'')+' CHAMP</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">3-peat eligible</div></div>'+
+    '<div class="ss"><div class="ss-l">MOST POINTS</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'\u2014').split(' ')[0]+' \u00b7 '+seasonLabel+'</div></div>'+
+    '<div class="ss"><div class="ss-l">TOTAL TRADES</div><div class="ss-v"><span class="count-up" data-target="'+tradeCount+'" data-decimals="0">0</span></div><div class="ss-sub">All seasons</div></div>'+
+    '<div class="ss"><div class="ss-l">ROOKIES DRAFTED</div><div class="ss-v"><span class="count-up" data-target="'+rookieCount+'" data-decimals="0">0</span></div><div class="ss-sub">'+draftKey+' class</div></div>';
 }
 function buildTicker(){
   let tk='';
