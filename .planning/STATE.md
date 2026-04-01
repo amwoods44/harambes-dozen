@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3.1 context gathered
-last_updated: "2026-04-01T17:41:47.697Z"
+status: executing
+stopped_at: Completed 03.1-01-PLAN.md
+last_updated: "2026-04-01T17:53:46.863Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 8
   completed_phases: 3
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Every screen looks like it belongs on a broadcast — not a developer's side project.
-**Current focus:** Phase 03 — contracts-complete
+**Current focus:** Phase 03.1 — offseason-hardening
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 03.1 (offseason-hardening) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-contracts-complete P01 | 2min | 2 tasks | 1 files |
 | Phase 03-contracts-complete P02 | 2min | 2 tasks | 1 files |
 | Phase 03-contracts-complete P03 | 3min | 2 tasks | 1 files |
+| Phase 03.1-offseason-hardening P01 | 15min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,9 @@ Recent decisions affecting current work:
 - [Phase 03-contracts-complete]: GM trade assets mapped through cpill without restructuring s.assets -- cpill returns '' for non-player strings
 - [Phase 03-contracts-complete]: Sub-render isolation: sortKeeperSheet calls renderKeeperTable (not renderContracts) to avoid destroying DOM state
 - [Phase 03-contracts-complete]: ynowCol kept as dead code in exemption timeline -- original template uses hardcoded var(--blu), not dynamic coloring
+- [Phase 03.1-offseason-hardening]: D.isOffseason stored on D object (not global) so mergeHistoricalData can reference it via parameter d.isOffseason without global state dependency
+- [Phase 03.1-offseason-hardening]: D.lastSeason initialized null in buildCurrentSeasonData then populated in mergeHistoricalData — buildStats guards both (D.isOffseason&&D.lastSeason) truthy check
+- [Phase 03.1-offseason-hardening]: computeRecords week initializers null not '-': null is falsy so template literals produce 'WkNull-free' output; '-' was producing WkNaN via parseInt
 
 ### Roadmap Evolution
 
@@ -122,6 +126,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T17:41:47.691Z
-Stopped at: Phase 3.1 context gathered
-Resume file: .planning/phases/03.1-offseason-hardening/03.1-CONTEXT.md
+Last session: 2026-04-01T17:53:46.860Z
+Stopped at: Completed 03.1-01-PLAN.md
+Resume file: None
