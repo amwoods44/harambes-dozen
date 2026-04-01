@@ -2763,7 +2763,7 @@ async function loadHistory(disc,playerDB){
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
       buildStats();buildTicker();buildHeroHist();
-      ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft','awards','gm'].forEach(t=>dirtyTabs.add(t));
+      ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft','awards','gm','scoring','matchups'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
