@@ -3003,7 +3003,7 @@ function renderPower(){
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgAge=ages.length?ages.reduce((a,b)=>a+b,0)/ages.length:27;
     const wPct=s25.wins/(s25.wins+s25.losses)||0;
-    const maxP=Math.max(...CUR_STANDINGS.map(s=>s.fpts));
+    const maxP=Math.max(...CUR_STANDINGS.map(s=>s.fpts))||1;
     const pPct=s25.fpts/maxP;
     const youth=1-(avgAge-22)/12;
     const acq=D.pick_trades.filter(p=>p.current_owner_roster_id===t.roster_id).length;
@@ -3021,6 +3021,7 @@ function renderPower(){
   // Narrative
   const youngest=teams.reduce((a,b)=>a.avgAge<b.avgAge?a:b);
   h+='<div class="narrative">';
+  if(D.isOffseason){h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--blu)')+'</div><div class="nar-text">Offseason power rankings based on roster composition, dynasty age, and draft capital. Win-loss record reflects '+(D.lastSeason||'last')+' season final standings.</div></div>';}
   h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text"><b>'+teams[0].team_name+'</b> leads the dynasty at <b>'+teams[0].pw+'</b> power. '+(teams[0].isChamp?'Defending champion.':'')+'</div></div>';
   h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text"><b>'+youngest.team_name+'</b> has the youngest roster at <b>'+youngest.avgAge+'</b> avg \u2014 dynasty gold with a wide championship window.</div></div>';
   h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text"><b>'+teams[teams.length-1].team_name+'</b> at <b>'+teams[teams.length-1].pw+'</b> \u2014 deep rebuild. '+D.pick_trades.filter(p=>p.current_owner_roster_id===teams[teams.length-1].roster_id).length+' extra picks acquired.</div></div>';
@@ -4400,14 +4401,25 @@ function renderAge(){
 // ═══ SCORING ═══
 function renderScoring(){
   if(!D.weekly_scores)return;
-  const sd=CUR_STANDINGS.map(function(s){
-    const wk=D.weekly_scores[s.roster_id]||[];
+  // Offseason fallback: use last-completed season data
+  var scoringStandings=CUR_STANDINGS;
+  var scoringWeeklyScores=D.weekly_scores;
+  var scoringLabel='2025 Season';
+  if(D.isOffseason&&D.lastSeason){
+    scoringStandings=D['standings_'+D.lastSeason]||CUR_STANDINGS;
+    scoringWeeklyScores=D['weekly_scores_'+D.lastSeason]||D.weekly_scores;
+    scoringLabel=D.lastSeason+' Season';
+  }else if(D.isOffseason){
+    scoringLabel='Last Season';
+  }
+  const sd=scoringStandings.map(function(s){
+    const wk=scoringWeeklyScores[s.roster_id]||[];
     const avg=wk.length?(wk.reduce(function(a,b){return a+b},0)/wk.length).toFixed(1):0;
     const mx=wk.length?Math.max.apply(null,wk):0,mn=wk.length?Math.min.apply(null,wk):0;
     const std=wk.length?Math.sqrt(wk.reduce(function(s,p){return s+Math.pow(p-avg,2)},0)/wk.length).toFixed(1):0;
     return Object.assign({},s,{wk:wk,avg:avg,mx:mx,mn:mn,std:std});
   }).sort(function(a,b){return b.fpts-a.fpts});
-  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">2025 Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+scoringLabel+' \u2022 Heat Map \u2022 Sparklines</span></div></div>';
   // ═══ HEAT MAP ═══
   h+='<div class="hm-wrap">';
   h+='<div class="hm-grid" style="grid-template-columns:100px repeat(17,1fr);min-width:520px">';
@@ -4419,7 +4431,8 @@ function renderScoring(){
   var allPts=[];
   sd.forEach(function(t){t.wk.forEach(function(p){allPts.push(p)})});
   var gMin=Math.min.apply(null,allPts),gMax=Math.max.apply(null,allPts);
-  
+  if(!allPts.length){gMin=0;gMax=1;}
+
   sd.forEach(function(t){
     h+='<div class="hm-label">'+t.team_name.substring(0,22)+'</div>';
     t.wk.forEach(function(pts){
