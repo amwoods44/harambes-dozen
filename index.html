@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="harambe-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
 <meta property="og:title" content="Harambe's Dozen — Dynasty HQ">
 <meta property="og:description" content="12-team PPR dynasty league dashboard. Power rankings, trade history, player profiles, and more.">
 <meta property="og:type" content="website">
@@ -25,9 +25,9 @@
 .loading-screen{position:fixed;inset:0;z-index:9999;background:var(--g1);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
 .loading-screen.fade-out{opacity:0;visibility:hidden;pointer-events:none}
 .loading-gorilla{font-size:72px;margin-bottom:12px;animation:loadPulse 1.8s ease-in-out infinite}
-.loading-title{font-family:'Poppins',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:-1px;line-height:1}
+.loading-title{font-family:'Inter',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:-1px;line-height:1}
 .loading-title .ld-acc{color:#ffcc00}
-.loading-sub{font-family:'Poppins',sans-serif;font-size:14px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:#666;margin-top:12px}
+.loading-sub{font-family:'Inter',sans-serif;font-size:14px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:#666;margin-top:12px}
 .loading-spinner{width:36px;height:36px;border:3px solid #262626;border-top-color:#cc0000;border-radius:50%;animation:spin .8s linear infinite;margin-top:28px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes loadPulse{0%,100%{opacity:.6;transform:scale(.97)}50%{opacity:1;transform:scale(1)}}
@@ -43,7 +43,7 @@
   --t1:#fff;--t2:#d4cfc8;--t3:#9a9188;--t4:#6b6158;
   --grn:#17b169;--grn-bg:rgba(23,177,105,.12);--red-t:#ff4444;--red-bg:rgba(255,68,68,.12);
   --blu:#3b82f6;--pur:#8b5cf6;
-  --fd:'Poppins',sans-serif;--fb:'Inter',sans-serif;--fm:'Inter',sans-serif;
+  --fd:'Inter',sans-serif;--fb:'Inter',sans-serif;--fm:'Inter',sans-serif;
   /* === TYPE SCALE (1.25 ratio off 14px) === */
   --text-2xs:10px;--text-xs:11px;--text-sm:12px;--text-base:14px;--text-md:16px;
   --text-lg:20px;--text-xl:26px;--text-2xl:34px;--text-3xl:44px;--text-4xl:56px;
@@ -3324,7 +3324,7 @@ function renderPower(){
       ctx.beginPath();
       ctx.roundRect(100,y,barW,barH,[0,4,4,0]);
       ctx.fill();
-      ctx.fillStyle='#fff';ctx.font='700 12px Poppins';ctx.textAlign='right';
+      ctx.fillStyle='#fff';ctx.font='700 12px Inter';ctx.textAlign='right';
       ctx.fillText(t.team_name.substring(0,12),94,y+barH/2+4);
       ctx.textAlign='left';ctx.font='800 14px Inter';
       ctx.fillText(t.pw,100+barW+8,y+barH/2+5);
@@ -4634,7 +4634,7 @@ function renderAge(){
     // Quadrant fills
     var qd=[[0,0,mx-pad.l,my-pad.t,'DYNASTY GOLD','rgba(23,177,105,.06)'],[mx-pad.l,0,w-pad.r-mx,my-pad.t,'WIN NOW','rgba(255,204,0,.04)'],[0,my-pad.t,mx-pad.l,ht-pad.b-my,'REBUILDING','rgba(59,130,246,.04)'],[mx-pad.l,my-pad.t,w-pad.r-mx,ht-pad.b-my,'DANGER ZONE','rgba(255,68,68,.04)']];
     var qlabels=[['rgba(23,177,105,.4)',pad.l+4,pad.t+12],['rgba(255,204,0,.4)',mx+6,pad.t+12],['rgba(59,130,246,.4)',pad.l+4,my+16],['rgba(255,68,68,.4)',mx+6,my+16]];
-    qd.forEach(function(q,i){ctx.fillStyle=q[5];ctx.fillRect(pad.l+q[0],pad.t+q[1],q[2],q[3]);ctx.fillStyle=qlabels[i][0];ctx.font='700 9px Poppins';ctx.letterSpacing='2px';ctx.textAlign='left';ctx.fillText(q[4],qlabels[i][1],qlabels[i][2]);});
+    qd.forEach(function(q,i){ctx.fillStyle=q[5];ctx.fillRect(pad.l+q[0],pad.t+q[1],q[2],q[3]);ctx.fillStyle=qlabels[i][0];ctx.font='700 9px Inter';ctx.letterSpacing='2px';ctx.textAlign='left';ctx.fillText(q[4],qlabels[i][1],qlabels[i][2]);});
     // Divider lines
     ctx.strokeStyle='rgba(255,255,255,.08)';ctx.setLineDash([4,4]);ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(mx,pad.t);ctx.lineTo(mx,ht-pad.b);ctx.stroke();
@@ -4643,9 +4643,9 @@ function renderAge(){
     // Axes
     ctx.strokeStyle='#333';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,ht-pad.b);ctx.lineTo(w-pad.r,ht-pad.b);ctx.stroke();
-    ctx.fillStyle='#444';ctx.font='600 9px Poppins';ctx.textAlign='center';
+    ctx.fillStyle='#444';ctx.font='600 9px Inter';ctx.textAlign='center';
     for(var a=Math.ceil(minAge);a<=maxAge;a++){ctx.fillText(a,sx(a),ht-pad.b+14);}
-    ctx.fillStyle='#555';ctx.font='600 9px Poppins';ctx.textAlign='center';
+    ctx.fillStyle='#555';ctx.font='600 9px Inter';ctx.textAlign='center';
     ctx.fillText('AVG ROSTER AGE',w/2,ht-4);
     // Dots
     teams.forEach(function(t){
@@ -4653,7 +4653,7 @@ function renderAge(){
       var x=sx(t.age),y=sy(t.pw);
       ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fillStyle=dotCol;ctx.fill();
       ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=2;ctx.stroke();
-      ctx.fillStyle='#fff';ctx.font='700 10px Poppins';ctx.textAlign='center';ctx.letterSpacing='0';
+      ctx.fillStyle='#fff';ctx.font='700 10px Inter';ctx.textAlign='center';ctx.letterSpacing='0';
       ctx.fillText(t.name,x,y-13);
     });
   },120);
@@ -5004,7 +5004,7 @@ function renderAnalytics(){
       const col=colors[i%colors.length];
       ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
       ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.fillStyle='#fff';ctx.font='700 10px Poppins';ctx.textAlign='center';
+      ctx.fillStyle='#fff';ctx.font='700 10px Inter';ctx.textAlign='center';
       ctx.fillText(p.name.substring(0,12),x,y-13);
     });
   },200);
@@ -5842,7 +5842,7 @@ function animateStandingsRace(canvasId,weeklyStandings){
     ctx.fillStyle='rgba(255,255,255,.04)';
     ctx.fillRect(0,ht-28,w,28);
     ctx.fillStyle='rgba(255,255,255,.18)';
-    ctx.font='700 13px Poppins';ctx.textAlign='right';
+    ctx.font='700 13px Inter';ctx.textAlign='right';
     ctx.fillText('WEEK '+(wkIdx+1),w-10,ht-10);
 
     var LABEL_W=130,BAR_AREA=w-LABEL_W-60,ROW_H=36,BAR_H=22,TOP_PAD=8;
@@ -5861,7 +5861,7 @@ function animateStandingsRace(canvasId,weeklyStandings){
 
       // Team label
       ctx.fillStyle=i===0?'#e8e8f0':'rgba(232,232,240,.7)';
-      ctx.font=(i===0?'700':'500')+' 11px Poppins';ctx.textAlign='right';
+      ctx.font=(i===0?'700':'500')+' 11px Inter';ctx.textAlign='right';
       ctx.fillText((team.name||'').substring(0,16),LABEL_W-6,y+BAR_H-5);
 
       // Bar
