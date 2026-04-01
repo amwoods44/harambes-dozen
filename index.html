@@ -2596,7 +2596,7 @@ async function init(){
     // ── HIDE LOADING SCREEN ──
     document.getElementById('ls').classList.add('fade-out');
     document.querySelector('.hero').classList.add('hero-reveal');
-    setTimeout(animateCounters,600);
+    setTimeout(function(){loadCountUp(function(){animateCounters();});},600);
     setTimeout(()=>{const ds=document.getElementById('ds');if(ds)ds.classList.add('fade-away')},4000);
 
     // ── HASH ROUTING ──
@@ -2635,7 +2635,7 @@ async function init(){
       safeRender('chronicle','Chronicle',renderChronicle);
       updateCD();setInterval(updateCD,60000);
       document.getElementById('ls').classList.add('fade-out');
-      setTimeout(animateCounters,600);
+      setTimeout(function(){loadCountUp(function(){animateCounters();});},600);
       showCacheBanner();
     }else{
       setLoadingStatus('UNABLE TO LOAD — CHECK CONNECTION');
@@ -5010,24 +5010,30 @@ function renderContracts(){
   }
   document.getElementById('tab-contracts').innerHTML=h;
 }
+// ═══ COUNTUP LOADER ═══
+function loadCountUp(cb){
+  if(window.countUp)return cb();
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/countup.js@2.10.0/dist/countUp.umd.js';
+  s.onload=cb;
+  document.head.appendChild(s);
+}
 // ═══ ANIMATED COUNTERS ═══
 function animateCounters(scope){
+  if(!window.countUp){loadCountUp(function(){animateCounters(scope);});return;}
   (scope||document).querySelectorAll('.count-up').forEach(function(el){
     var target=parseFloat(el.getAttribute('data-target'));
-    var suffix=el.getAttribute('data-suffix')||'';
+    if(isNaN(target))return;
     var decimals=parseInt(el.getAttribute('data-decimals')||'0');
-    var duration=800;
-    var startTime=null;
-    function step(timestamp){
-      if(!startTime)startTime=timestamp;
-      var progress=Math.min((timestamp-startTime)/duration,1);
-      var eased=1-Math.pow(1-progress,3);
-      var current=eased*target;
-      el.textContent=decimals>0?current.toFixed(decimals):Math.round(current).toLocaleString();
-      if(suffix)el.textContent+=suffix;
-      if(progress<1)requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+    var suffix=el.getAttribute('data-suffix')||'';
+    var c=new window.countUp.CountUp(el,target,{
+      duration:1.5,
+      decimalPlaces:decimals,
+      suffix:suffix,
+      useEasing:true,
+      easingFn:function(t,b,c,d){return c*(1-Math.pow(1-t/d,3))+b;}
+    });
+    if(!c.error)c.start();
   });
 }
 // ═══ CONSTITUTION ═══
