@@ -139,6 +139,10 @@
 .status-banner.stale{background:rgba(245,158,11,.9);color:#000}
 .status-banner .banner-dismiss{background:none;border:none;color:inherit;cursor:pointer;font-size:16px;line-height:1;padding:0 4px;opacity:.7}
 .status-banner .banner-dismiss:hover{opacity:1}
+/* Contract CSV failure banner */
+.contract-warn-banner{display:flex;align-items:center;gap:10px;background:rgba(204,0,0,.12);border-left:4px solid #cc0000;border-radius:6px;padding:10px 14px;margin-bottom:16px}
+.cwb-icon{font-family:var(--fd);font-size:16px;font-weight:800;color:#cc0000;flex-shrink:0}
+.cwb-msg{font-family:var(--fm);font-size:13px;color:rgba(255,255,255,.7);line-height:1.4}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh;overflow-x:hidden;padding-bottom:48px;line-height:1.4}
 h1,h2,h3,h4{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit}
@@ -1610,9 +1614,11 @@ async function fetchDynastyValues(){
 async function fetchContracts(ktcMap){
   try{
     const csv=await fetchCSV(CFG.sheetCsvUrl);
+    D.contractsFailed=false;
     return parseContractCSV(csv,ktcMap||{});
   }catch(e){
     const cached=cache.get('hd_contracts');
+    if(!cached)D.contractsFailed=true;
     return cached||{contracts:{},exemptions:{}};
   }
 }
@@ -2638,7 +2644,13 @@ async function init(){
 function renderTab(id){
   const map={power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
   const names={power:'Power Rankings',rosters:'Rosters',trophies:'Trophies',trades:'Trades',matchups:'Matchups',draft:'Draft',age:'Age Map',scoring:'Scoring',awards:'Awards',analytics:'Analytics',moves:'Moves',gm:'GM Dashboard',rivals:'Rivals',contracts:'Contracts',constitution:'Constitution',warroom:'War Room',pulse:'Pulse',chronicle:'Chronicle'};
-  if(map[id])safeRender(id,names[id]||id,map[id]);
+  if(!map[id])return;
+  if(id==='trades'){
+    // Scroll-snapshot: preserve scroll position across background re-renders
+    (function(){var tp=document.getElementById('tab-trades');var sv=tp?tp.scrollTop:0;safeRender(id,names[id]||id,map[id]);if(tp)tp.scrollTop=sv;})();
+  }else{
+    safeRender(id,names[id]||id,map[id]);
+  }
 }
 
 async function loadHistory(disc,playerDB){
@@ -4790,6 +4802,9 @@ function renderContracts(){
     return'<div style="background:#08080c;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-bottom:20px"><div style="display:flex"><div style="width:72px;flex-shrink:0;background:'+labelBg+';display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;gap:2px"><span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.5)">'+tag+'</span><span style="font-family:var(--fd);font-size:28px;font-weight:800;color:'+numCol+';line-height:1">'+num+'</span><span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">'+sub+'</span></div><div style="flex:1;overflow-x:auto;display:flex;gap:1px;background:rgba(255,255,255,.02);padding:8px 4px">'+cards+'<div style="min-width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.08);font-size:18px">\u2192</div></div></div></div>';
   }
   var h='<div class="bh"><h2 class="bh-tag">Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Contract Management \u2022 '+curSeason+' Season</span></div></div>';
+  if(D.contractsFailed){
+    h='<div class="contract-warn-banner" role="alert"><span class="cwb-icon">!</span><span class="cwb-msg">Contract data unavailable \u2014 Google Sheets fetch failed. Showing cached data or empty state.</span></div>'+h;
+  }
   // ── Build per-team contract data ──
   var teamContracts={};
   D.teams.forEach(function(t){
