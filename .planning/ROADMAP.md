@@ -90,10 +90,12 @@ Plans:
   6. Awards, GM Dashboard, and Chronicle generate narratives from historical data, not zero-value current season
   7. Stat strip hero shows meaningful offseason values (last-season totals or all-time records)
   8. Loading screen elements fully hidden after data load (not just faded)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 03.1 to break down)
+- [ ] 03.1-01-PLAN.md — Offseason detection infrastructure: D.isOffseason, D.lastSeason, computeRecords week fix, buildStats offseason mode, loading screen DOM removal (OFF-01, OFF-05, OFF-07, OFF-08)
+- [ ] 03.1-02-PLAN.md — Game-data tabs: renderPower NaN guard, renderScoring/renderAnalytics/renderMatchups historical fallback, renderTrades ALL default (OFF-01, OFF-02, OFF-04)
+- [ ] 03.1-03-PLAN.md — Content tabs: renderDraft last-season default, renderMoves/renderRivals messaging, renderAwards/renderGM historical data, renderChronicle zero-value suppression (OFF-03, OFF-06)
 
 ### Phase 4: Roster Intelligence
 **Goal**: FantasyCalc dynasty values are integrated for all rostered players, enabling roster value rankings, positional breakdown, and retroactive trade fairness grades
@@ -155,6 +157,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Infrastructure Hardening | 0/TBD | Not started | - |
 | 2. Narrative & Delight | 2/5 | In Progress|  |
 | 3. Contracts Complete | 0/3 | Not started | - |
+| 3.1. Offseason Hardening | 0/3 | Not started | - |
 | 4. Roster Intelligence | 0/TBD | Not started | - |
 | 5. Player Depth | 0/TBD | Not started | - |
 | 6. Polish | 0/TBD | Not started | - |
