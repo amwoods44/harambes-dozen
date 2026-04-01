@@ -2695,6 +2695,7 @@ async function init(){
 
     // ── HIDE LOADING SCREEN ──
     document.getElementById('ls').classList.add('fade-out');
+    var _ls=document.getElementById('ls');if(_ls){_ls.addEventListener('transitionend',function(){_ls.style.display='none';},{once:true});}
     document.querySelector('.hero').classList.add('hero-reveal');
     setTimeout(function(){loadCountUp(function(){animateCounters();});},600);
     setTimeout(()=>{const ds=document.getElementById('ds');if(ds)ds.classList.add('fade-away')},4000);
@@ -2734,7 +2735,7 @@ async function init(){
       safeRender('pulse','Pulse',renderPulse);
       safeRender('chronicle','Chronicle',renderChronicle);
       updateCD();setInterval(updateCD,60000);
-      document.getElementById('ls').classList.add('fade-out');
+      var _ls2=document.getElementById('ls');if(_ls2){_ls2.classList.add('fade-out');_ls2.addEventListener('transitionend',function(){_ls2.style.display='none';},{once:true});}
       setTimeout(function(){loadCountUp(function(){animateCounters();});},600);
       showCacheBanner();
     }else{
@@ -2938,15 +2939,24 @@ function buildHeroHist(){
   setInterval(show,4000);
 }
 function buildStats(){
-  const champ=D.champions[0];
-  const best=CUR_STANDINGS&&CUR_STANDINGS.length?CUR_STANDINGS.reduce((a,b)=>a.fpts>b.fpts?a:b):{fpts:0,team_name:'—'};
-  const tot=CUR_STANDINGS?CUR_STANDINGS.reduce((s,t)=>s+t.fpts,0):0;
+  // Offseason: use last-season data for meaningful values
+  var useOffseason=D.isOffseason&&D.lastSeason;
+  var standings=useOffseason?(D['standings_'+D.lastSeason]||CUR_STANDINGS):CUR_STANDINGS;
+  var draftKey=useOffseason?D.lastSeason:CURRENT_YEAR;
+  var seasonLabel=useOffseason?D.lastSeason+' Season':'2026 Season';
+  var champ=D.champions[D.champions.length-1];
+  var best=standings.length?standings.reduce(function(a,b){return a.fpts>b.fpts?a:b}):{fpts:0,team_name:'—'};
+  var tot=standings.reduce(function(s,t){return s+t.fpts},0);
+  var avgPF=standings.length?Math.round(tot/standings.length):0;
+  var draftPicks=D.draft_picks[draftKey];
+  var rookieCount=draftPicks?draftPicks.length:0;
+  var tradeCount=(D.unified_trades||D.trades||[]).length;
   document.getElementById('sstrip').innerHTML=
-    '<div class="ss champ"><div class="ss-l">\u2605 2025 Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">3-peat eligible</div></div>'+
-    '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+D.trades.length+'" data-decimals="0">0</span></div><div class="ss-sub">2024-2025</div></div>'+
-    '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+Math.round(tot/12)+'" data-decimals="0">0</span></div><div class="ss-sub">per team 2025</div></div>'+
-    '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+(D.draft_picks[CURRENT_YEAR]?D.draft_picks[CURRENT_YEAR].length:0)+'" data-decimals="0">0</span></div><div class="ss-sub">'+CURRENT_YEAR+' class</div></div>';
+    '<div class="ss champ"><div class="ss-l">\u2605 '+(champ?champ.year:'')+' Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">3-peat eligible</div></div>'+
+    '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+' \u00b7 '+seasonLabel+'</div></div>'+
+    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+tradeCount+'" data-decimals="0">0</span></div><div class="ss-sub">All seasons</div></div>'+
+    '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+avgPF+'" data-decimals="0">0</span></div><div class="ss-sub">Per team \u00b7 '+seasonLabel+'</div></div>'+
+    '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+rookieCount+'" data-decimals="0">0</span></div><div class="ss-sub">'+draftKey+' class</div></div>';
 }
 function buildTicker(){
   let tk='';
