@@ -76,6 +76,25 @@ Plans:
 - [x] 03-02-PLAN.md — cpill distribution: contract pills across Rosters bench, Trade History, GM Dashboard + RELEASABLE badge (CONT-03, CONT-04, CONT-05, CONT-06)
 - [x] 03-03-PLAN.md — Sortable keeper sheet + exemption timeline/cliff chart data verification (CONT-07, CONT-09, CONT-10)
 
+### Phase 03.1: Offseason Hardening (INSERTED)
+
+**Goal**: Every tab handles a zero-game offseason gracefully — NaN/Infinity eliminated, empty tabs show historical data, defaults favor last-completed season, and the app makes a strong first impression when shared with leaguemates
+**Depends on**: Phase 3
+**Requirements**: OFF-01, OFF-02, OFF-03, OFF-04, OFF-05, OFF-06, OFF-07, OFF-08
+**Success Criteria** (what must be TRUE):
+  1. Zero NaN or Infinity values visible anywhere in the app during offseason (zero games played)
+  2. Power Rankings, Scoring, Analytics, and Pulse show last-completed-season data with clear "2025 Season" labeling
+  3. Draft, Moves, and Rivals tabs show historical data instead of "No data" empty states
+  4. Trades tab defaults to ALL years (not current empty season)
+  5. D.records.week is populated correctly — no WkNaN in ticker or Trophies records
+  6. Awards, GM Dashboard, and Chronicle generate narratives from historical data, not zero-value current season
+  7. Stat strip hero shows meaningful offseason values (last-season totals or all-time records)
+  8. Loading screen elements fully hidden after data load (not just faded)
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 03.1 to break down)
+
 ### Phase 4: Roster Intelligence
 **Goal**: FantasyCalc dynasty values are integrated for all rostered players, enabling roster value rankings, positional breakdown, and retroactive trade fairness grades
 **Depends on**: Phase 1

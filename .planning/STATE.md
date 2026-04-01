@@ -106,6 +106,10 @@ Recent decisions affecting current work:
 - [Phase 03-contracts-complete]: Sub-render isolation: sortKeeperSheet calls renderKeeperTable (not renderContracts) to avoid destroying DOM state
 - [Phase 03-contracts-complete]: ynowCol kept as dead code in exemption timeline -- original template uses hardcoded var(--blu), not dynamic coloring
 
+### Roadmap Evolution
+
+- Phase 03.1 inserted after Phase 3: Offseason Hardening (URGENT) — every tab handles zero-game offseason gracefully, NaN/Infinity eliminated, empty tabs show historical data, defaults favor last-completed season
+
 ### Pending Todos
 
 None yet.
