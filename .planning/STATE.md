@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-infrastructure-hardening/01-04-PLAN.md
-last_updated: "2026-04-01T03:26:35.701Z"
+status: verifying
+stopped_at: Completed 01-infrastructure-hardening/01-03-PLAN.md
+last_updated: "2026-04-01T04:05:56.136Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 
 Phase: 01 (infrastructure-hardening) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-infrastructure-hardening P02 | 2 | 2 tasks | 2 files |
 | Phase 01-infrastructure-hardening P01 | 3min | 3 tasks | 2 files |
 | Phase 01-infrastructure-hardening P04 | 2min | 2 tasks | 1 files |
+| Phase 01-infrastructure-hardening P03 | 45min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 01-infrastructure-hardening]: Scroll-snapshot applied in renderTab() dispatch — single background re-render gateway, minimal interception point
 - [Phase 01-infrastructure-hardening]: contractsFailed flag only set true when fetch fails AND no cache — cached fallback is silent-acceptable, total failure requires warning
 - [Phase 01-infrastructure-hardening]: Contract warning banner is tab-scoped inline (not global status-banner) — failure is contextual to Contracts tab
+- [Phase 01-infrastructure-hardening]: Do NOT double-escape: p.name/p.nm/t.name/D.rid_to_name are esc()d at pipeline — ridToNameForSeason() returns raw strings needing esc() at injection sites
+- [Phase 01-infrastructure-hardening]: p.team (NFL abbreviation) is raw at DB build time — wrapped at every injection site including img alt attributes
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T03:26:35.699Z
-Stopped at: Completed 01-infrastructure-hardening/01-04-PLAN.md
+Last session: 2026-04-01T04:05:56.134Z
+Stopped at: Completed 01-infrastructure-hardening/01-03-PLAN.md
 Resume file: None
