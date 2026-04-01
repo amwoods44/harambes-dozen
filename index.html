@@ -4521,13 +4521,22 @@ function renderScoring(){
 // ═══ AWARDS ═══
 function renderAwards(){
   if(!D.teams||!D.champions)return;
-  const sd=CUR_STANDINGS.slice().sort((a,b)=>b.fpts-a.fpts);
+  // Offseason fallback: use last-completed season standings and weekly scores
+  var awardsStandings=CUR_STANDINGS;
+  var awardsWeeklyScores=D.weekly_scores;
+  var awardsLabel='2025 Season';
+  if(D.isOffseason&&D.lastSeason){
+    awardsStandings=D['standings_'+D.lastSeason]||CUR_STANDINGS;
+    awardsWeeklyScores=D['weekly_scores_'+D.lastSeason]||D.weekly_scores;
+    awardsLabel=D.lastSeason+' Season';
+  }
+  const sd=awardsStandings.slice().sort((a,b)=>b.fpts-a.fpts);
   const luckArr=D.luck?Object.values(D.luck).sort((a,b)=>b.luck-a.luck):[];
   const actArr=Object.entries(D.activity||{}).map(([n,a])=>({name:n,...a,total:a.trades+a.moves+a.draft_picks})).sort((a,b)=>b.total-a.total);
   // Compute per-team stats
   const teamStats=D.teams.map(t=>{
-    const s=CUR_STANDINGS.find(x=>x.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
-    const wk=D.weekly_scores[t.roster_id]||[];
+    const s=awardsStandings.find(x=>x.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
+    const wk=awardsWeeklyScores[t.roster_id]||[];
     const avg=wk.length?wk.reduce((a,b)=>a+b,0)/wk.length:0;
     const std=wk.length?Math.sqrt(wk.reduce((s,p)=>s+Math.pow(p-avg,2),0)/wk.length):0;
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
@@ -4554,7 +4563,7 @@ function renderAwards(){
   const draftGuru=Object.entries(drafterCounts).sort((a,b)=>b[1]-a[1])[0];
   // Champ check
   const latestChamp=D.champions[D.champions.length-1];
-  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 2025 Season</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 '+awardsLabel+'</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Awards are automatically computed from league data. No voting, no bias \u2014 the numbers decide everything.</div></div></div>';
   h+='<div class="award-grid stagger">';
   // Dynasty Champion
@@ -4823,11 +4832,18 @@ function renderMoves(){
 // ═══ GM DASHBOARD ═══
 function renderGM(){
   if(!D.teams)return;
+  // Offseason: use last-season standings for recent record; franchise for career totals
+  var gmStandings=CUR_STANDINGS;
+  var gmWeeklyScores=D.weekly_scores;
+  if(D.isOffseason&&D.lastSeason){
+    gmStandings=D['standings_'+D.lastSeason]||CUR_STANDINGS;
+    gmWeeklyScores=D['weekly_scores_'+D.lastSeason]||D.weekly_scores;
+  }
   let h='<div class="bh"><h2 class="bh-tag">GM Mode</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Your Franchise Command Center</span></div></div>';
   // ── MANAGER OVERVIEW GRID ──
   h+='<div class="mgr-grid">';
   D.teams.forEach(function(tm){
-    const sm=CUR_STANDINGS.find(function(x){return x.roster_id===tm.roster_id;})||{wins:0,losses:0,fpts:0};
+    const sm=gmStandings.find(function(x){return x.roster_id===tm.roster_id;})||{wins:0,losses:0,fpts:0};
     const actM=D.activity[tm.team_name]||{trades:0,moves:0,draft_picks:0};
     const lkM=D.luck[tm.roster_id];
     const lkVal=lkM?lkM.luck:0;
@@ -4839,8 +4855,9 @@ function renderGM(){
     const wpM=wM/totM;
     const trdM=actM.trades||0;
     const totActM=trdM+(actM.moves||0);
-    const wkM=D.weekly_scores[tm.roster_id]||[];
+    const wkM=gmWeeklyScores[tm.roster_id]||[];
     const ppgM=wkM.length?(wkM.reduce(function(a,b){return a+b;},0)/wkM.length).toFixed(1):'--';
+    var franchiseM=(D.franchise||[]).find(function(f){return f.roster_id===tm.roster_id;})||{total_wins:0,total_losses:0,total_pts:0,championships:0};
     const picksM=(D.pick_trades||[]).filter(function(p){return p.current_owner_roster_id===tm.roster_id;}).length;
     var archN,archC;
     if(champM.length>=1&&wpM>=0.60){archN='DYNASTY';archC='#FFD700';}
@@ -4874,6 +4891,8 @@ function renderGM(){
     h+='<div class="mgr-stat"><div class="mgr-sv" class="u-body">'+picksM+'</div><div class="mgr-sl">PICKS</div></div>';
     h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px;color:'+ageColor+'">'+avgAgeS+'</div><div class="mgr-sl">AVG AGE</div></div>';
     h+='</div>';
+    var careerLine='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--t4);margin:4px 0 8px;padding:0 2px">CAREER: '+franchiseM.total_wins+'W\u2013'+franchiseM.total_losses+'L \u00b7 '+Math.round(franchiseM.total_pts)+' PF'+(franchiseM.championships?' \u00b7 '+franchiseM.championships+' TITLE'+(franchiseM.championships>1?'S':''):'')+'</div>';
+    h+=careerLine;
     h+='<div class="mgr-badges">';
     if(champM.length)h+='<span class="mgr-badge" style="background:#FFD70022;color:#FFD700;border:1px solid #FFD70044">\u2605 CHAMP</span>';
     if(wpM>=0.60)h+='<span class="mgr-badge" style="background:var(--a)22;color:var(--a);border:1px solid var(--a)44">ELITE W%</span>';
@@ -5883,9 +5902,9 @@ function renderChronicle(){
   D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',icon:'\u2605',title:esc(c.champion)+' wins '+c.year+' Championship',body:'Defeated '+esc(c.runner_up)+' in the dynasty title game.',date:c.year+' Season Finals'});});
   // Records
   var recYr=D.records&&D.records.highest_score&&D.records.highest_score.year?D.records.highest_score.year:CURRENT_YEAR;
-  if(D.records&&D.records.highest_score){events.push({year:parseInt(recYr),type:'record',icon:icon('arrowUp',16,'var(--a)'),title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season \u2022 Wk '+D.records.highest_score.week});}
+  if(D.records&&D.records.highest_score&&D.records.highest_score.pts>0){events.push({year:parseInt(recYr),type:'record',icon:icon('arrowUp',16,'var(--a)'),title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season'+(D.records.highest_score.week?' \u2022 Wk '+D.records.highest_score.week:'')});}
   var blowYr=D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.year?D.records.biggest_blowout.year:CURRENT_YEAR;
-  if(D.records&&D.records.biggest_blowout){events.push({year:parseInt(blowYr),type:'record',icon:icon('bolt',16,'var(--a)'),title:'Biggest Blowout: '+D.records.biggest_blowout.diff+' pts',body:tn(D.records.biggest_blowout.winner.roster_id)+' dominates in a record blowout.',date:blowYr+' Season \u2022 Wk '+D.records.biggest_blowout.week});}
+  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0){events.push({year:parseInt(blowYr),type:'record',icon:icon('bolt',16,'var(--a)'),title:'Biggest Blowout: '+D.records.biggest_blowout.diff+' pts',body:tn(D.records.biggest_blowout.winner.roster_id)+' dominates in a record blowout.',date:blowYr+' Season'+(D.records.biggest_blowout.week?' \u2022 Wk '+D.records.biggest_blowout.week:'')});}
   // Exemptions by year
   var exmH=D.exemption_history||{};
   Object.entries(exmH).forEach(function(entry){
