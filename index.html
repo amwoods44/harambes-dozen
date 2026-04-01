@@ -5125,7 +5125,8 @@ function renderContracts(){
       entries.forEach(function(e){
         var isTraded=e.from&&e.from!==e.o;
         var hadCol=e.had===0?'var(--red-t)':e.had===null?'var(--t4)':'var(--y)';
-        var ynowCol=e.ynow<=0?'var(--red-t)':e.ynow<=2?'var(--y)':'var(--a)';
+        var ynow=e.new_yrs!==null?e.new_yrs:0;
+        var ynowCol=ynow<=0?'var(--red-t)':ynow<=2?'var(--y)':'var(--a)';
         var borderCol=isTraded?'var(--blu)':e.note==='Early extension'?'var(--pur)':'var(--y)';
         h+='<div style="min-width:240px;max-width:260px;flex-shrink:0;background:var(--g2);border:1px solid var(--g4);border-left:3px solid '+borderCol+';border-radius:12px;padding:16px">';
         h+='<div style="font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:1px">'+esc(e.p)+'</div>';
@@ -5136,7 +5137,7 @@ function renderContracts(){
         h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
         h+='<div class="u-text-center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--a)">'+(e.added!==null?'+'+e.added:'--')+'</div><div class="u-label-xs">ADDED</div></div>';
         h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
-        h+='<div class="u-text-center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--blu)">'+e.new_yrs+'</div><div class="u-label-xs">NEW</div></div>';
+        h+='<div class="u-text-center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--blu)">'+(e.new_yrs!==null?e.new_yrs:'--')+'</div><div class="u-label-xs">NEW</div></div>';
         h+='</div>';
         // Badges
         var badges='';
