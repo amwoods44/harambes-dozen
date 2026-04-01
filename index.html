@@ -3905,7 +3905,7 @@ function renderTrades(){
     ktcRecord[b.name]=(ktcRecord[b.name]||0)+bNet;
   });
   // Trade grade leaderboard
-  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to expand</span><span class="collapsible-indicator" id="chevron-record">\u25BE</span></div></div><div class="tc-section-body" style="display:none">';
   var krArr=Object.entries(ktcRecord).sort(function(a,b){return b[1]-a[1]});
   var maxKR=Math.max.apply(null,krArr.map(function(x){return Math.abs(x[1])}));
   krArr.forEach(function(entry){
@@ -4001,7 +4001,7 @@ function renderTrades(){
   h+='<button id="trades-show-more" class="wk-btn" style="display:none;margin:16px auto;padding:8px 24px" onclick="toggleTradeShowAll()">Show all trades</button>';
   // H2H Rivalries
   if(D.rivalries&&D.rivalries.length){
-    h+='<div class="tc-section" class="u-mt-5"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+    h+='<div class="tc-section" class="u-mt-5"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to expand</span><span class="collapsible-indicator" id="chevron-rivalries">\u25BE</span></div></div><div class="tc-section-body" style="display:none">';
     D.rivalries.filter(function(r){return r.total>=2}).forEach(function(r){
       const aName=tn(r.a),bName=tn(r.b);
       const aW=r.a_wins,bW=r.b_wins;
@@ -4012,7 +4012,7 @@ function renderTrades(){
     h+='</div></div>'; // close rivalries section body + wrapper
   }
   // Pick capital
-  h+='<div class="tc-section" class="u-mt-5"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" class="u-mt-5"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to expand</span><span class="collapsible-indicator" id="chevron-capital">\u25BE</span></div></div><div class="tc-section-body" style="display:none">';
   const cap={};
   D.pick_trades.forEach(function(p){
     cap[p.current_owner]=cap[p.current_owner]||{g:0,l:0};cap[p.current_owner].g++;
@@ -4055,7 +4055,7 @@ function renderTrades(){
   }
   h+='</div></div>'; // close capital section body + wrapper
   // ── TRADE PARTNER MATRIX ──
-  h+='<div class="tc-section" class="u-mt-6"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" class="u-mt-6"><div class="bh tc-section-hdr" class="u-pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to expand</span><span class="collapsible-indicator" id="chevron-partner">\u25BE</span></div></div><div class="tc-section-body" style="display:none">';
   const tpMap={};
   (D.unified_trades||[]).forEach(function(tr){
     if(tr.sides.length===2){
@@ -4135,6 +4135,8 @@ function toggleSection(hdr){
   if(body)body.style.display=body.style.display==='none'?'':'none';
   var sub=hdr.querySelector('.bh-sub');
   if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(body.style.display==='none'?'expand':'collapse');
+  var chev=hdr.querySelector('.collapsible-indicator');
+  if(chev)chev.style.transform=body.style.display===''?'rotate(180deg)':'rotate(0deg)';
 }
 // ═══ MATCHUPS ═══
 function renderMatchups(){
@@ -4407,13 +4409,15 @@ function renderDraft(){
   for(var rd=1;rd<=maxRd;rd++){
     var rdPicks=picks.filter(function(p){return p.rd===rd}).sort(function(a,b){return a.pk-b.pk});
     var rdStarters=rdPicks.filter(function(p){var hi=hitMap[p.pid];return hi&&hi.status==='starter'}).length;
+    var hitRateNum=rdPicks.length>0?Math.round(rdStarters/rdPicks.length*100):0;
+    var hitRateColor=hitRateNum>=50?'var(--grn)':hitRateNum>=33?'var(--y)':'var(--red-t)';
     var isRd1=rd===1;
     h+='<div class="draft-round" data-rd="'+rd+'" style="display:flex;'+(rd>1?'border-top:1px solid rgba(255,255,255,.04)':'')+'">';
     // Round label
     h+='<div class="draft-round-hdr'+(isRd1?' rd1':'')+'">';
     h+='<span style="font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,'+(isRd1?'.5':'.4')+')">ROUND</span>';
     h+='<span style="font-family:var(--fd);font-size:28px;font-weight:800;color:rgba(255,255,255,'+(isRd1?'1':'.7')+');line-height:1">'+rd+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">'+rdStarters+'/'+rdPicks.length+' hit</span>';
+    h+='<span style="font-family:var(--fm);font-size:8px;color:'+hitRateColor+';font-weight:700;margin-top:2px">'+rdStarters+'/'+rdPicks.length+' hit</span>';
     h+='</div>';
     // Scrollable picks
     h+='<div style="flex:1;overflow-x:auto;display:flex;gap:1px;background:rgba(255,255,255,.02)">';
@@ -4646,17 +4650,24 @@ function renderScoring(){
   }).sort(function(a,b){return b.fpts-a.fpts});
   let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+scoringLabel+' \u2022 Heat Map \u2022 Sparklines</span></div></div>';
   // ═══ HEAT MAP ═══
-  h+='<div class="hm-wrap">';
-  h+='<div class="hm-grid" style="grid-template-columns:100px repeat(17,1fr);min-width:520px">';
-  // Header row
-  h+='<div class="hm-label"></div>';
-  for(var w=1;w<=17;w++){h+='<div class="hm-wk">'+w+'</div>';}
-  
   // Find global min/max for color scaling
   var allPts=[];
   sd.forEach(function(t){t.wk.forEach(function(p){allPts.push(p)})});
   var gMin=Math.min.apply(null,allPts),gMax=Math.max.apply(null,allPts);
   if(!allPts.length){gMin=0;gMax=1;}
+  // Gradient legend — ABOVE the grid (D-43)
+  var lgTicks=[gMin,gMin+(gMax-gMin)*.25,gMin+(gMax-gMin)*.5,gMin+(gMax-gMin)*.75,gMax].map(v=>Math.round(v));
+  h+='<div class="hm-legend">';
+  h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--red-t)">LOW</span>';
+  h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--y)">MID</span>';
+  h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blu)">GOOD</span>';
+  h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--grn)">ELITE</span>';
+  h+='</div>';
+  h+='<div class="hm-wrap">';
+  h+='<div class="hm-grid" style="grid-template-columns:100px repeat(17,1fr);min-width:520px">';
+  // Header row
+  h+='<div class="hm-label"></div>';
+  for(var w=1;w<=17;w++){h+='<div class="hm-wk">'+w+'</div>';}
 
   sd.forEach(function(t){
     h+='<div class="hm-label">'+t.team_name.substring(0,22)+'</div>';
@@ -4671,15 +4682,6 @@ function renderScoring(){
       h+='<div class="hm-cell" style="background:rgba('+r+','+g+','+b+','+alpha.toFixed(2)+')" title="'+t.team_name+' Wk: '+pts+'">'+Math.round(pts)+'</div>';
     });
   });
-  h+='</div></div>';
-  // Item 8: Gradient legend bar
-  var lgTicks=[gMin,gMin+(gMax-gMin)*.25,gMin+(gMax-gMin)*.5,gMin+(gMax-gMin)*.75,gMax].map(v=>Math.round(v));
-  h+='<div style="max-width:420px;margin:10px auto 4px">';
-  h+='<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--red-t)">LOW</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--y)">MID</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blu)">GOOD</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;color:#17b169">ELITE</span></div>';
-  h+='<div style="height:14px;border-radius:4px;background:linear-gradient(90deg,rgba(239,68,68,.4),rgba(245,158,11,.55),rgba(59,130,246,.65),rgba(16,185,129,.85));position:relative">';
-  h+='</div>';
-  h+='<div style="display:flex;justify-content:space-between;margin-top:3px">';
-  lgTicks.forEach(v=>h+='<span class="u-mono">'+v+'</span>');
   h+='</div></div>';
   // Sparkline cards
   h+='<div class="bh" class="u-mt-5"><h2 class="bh-tag">Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Total Points \u2022 Weekly Sparklines</span></div></div>';
