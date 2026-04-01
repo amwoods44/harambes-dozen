@@ -6091,7 +6091,7 @@ function renderPulse(){
     var yr=entry[0],hits=entry[1];
     hits.filter(function(h){return h.status==='starter'&&h.rd===1}).forEach(function(h){
       var c=D.contracts&&D.contracts[h.nm];
-      cards.push({type:'draft',priority:4,icon:icon('draft',16,'var(--a)'),tag:'DRAFT',headline:h.drafter+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+' by '+h.drafter+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
+      cards.push({type:'draft',priority:4,icon:icon('draft',16,'var(--a)'),tag:'DRAFT',headline:(h.drafter||'A manager')+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+(h.drafter?' by '+h.drafter:'')+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
     });
   });
   cards.sort(function(a,b){return b.priority-a.priority});
