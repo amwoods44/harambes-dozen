@@ -62,7 +62,7 @@ After any UI change, run `/visual-verify` before considering the task done.
 ## Design System
 
 **Palette:** Dark warm theme. Base `#120e0c`, accent red `#cc0000`, gold `#ffcc00`
-**Fonts:** Space Grotesk (display/headings — modern geometric, great for numbers), Inter (body), JetBrains Mono (stats/numbers). Oswald is being phased out — too "free sports template," hard to read at small sizes.
+**Fonts:** Space Grotesk (display/headings — modern geometric, authoritative), Inter (body text), DM Sans (stats/numbers — clean geometric, sharp for data without monospace "code editor" feel). Oswald and JetBrains Mono are being phased out — Oswald is too "free sports template," JetBrains Mono feels too "developer tool."
 **Font weights:** 600-800 on headings is intentional — authority and confidence, not decoration
 **Spacing:** 4px base unit (`--sp-1` through `--sp-10`). Strict rhythm: 24px between major sections, 12px within sections, 8px between tight elements.
 **Card system:** ONE visual language with variants. Draft board cards are the reference standard — gradient backgrounds, position badges, headshots, layered information. All other card types should share this DNA.
