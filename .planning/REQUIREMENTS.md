@@ -56,7 +56,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [ ] **NARR-02**: Achievements & Milestones badge system — auto-computed league-lifetime badges (Century Club, Iron Man, Dynasty Builder, etc.)
 - [ ] **NARR-03**: Animated Season Standings Race — week-by-week bar chart race showing standings evolve
 - [ ] **NARR-04**: Season Narrative / Power Moves Feed — auto-generated text summaries of biggest weekly storylines
-- [ ] **NARR-05**: Number counter animations on stat strips (animate up on page load / tab switch)
+- [x] **NARR-05**: Number counter animations on stat strips (animate up on page load / tab switch)
 - [ ] **NARR-06**: Leaguemate Comparison Tool (Full) — broadcast-style two-team showdown across all dimensions including roster value and contract status
 
 ### Polish
@@ -152,7 +152,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NARR-02 | Phase 2 | Pending |
 | NARR-03 | Phase 2 | Pending |
 | NARR-04 | Phase 2 | Pending |
-| NARR-05 | Phase 2 | Pending |
+| NARR-05 | Phase 2 | Complete |
 | NARR-06 | Phase 5 | Pending |
 | POLI-01 | Phase 6 | Pending |
 | POLI-02 | Phase 6 | Pending |

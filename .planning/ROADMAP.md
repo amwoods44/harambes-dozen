@@ -53,7 +53,7 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Pipeline fix + CountUp.js counter animations: mergeHistoricalData persistence + animateCounters upgrade (NARR-05)
+- [x] 02-01-PLAN.md — Pipeline fix + CountUp.js counter animations: mergeHistoricalData persistence + animateCounters upgrade (NARR-05)
 - [ ] 02-02-PLAN.md — "This Week in League History" callout card: week-matched vintage ESPN hero card (NARR-01)
 - [ ] 02-03-PLAN.md — Achievements & Badges: computeLifetimeBadges, badgeSvg, GM badge case, Awards Hall of Fame (NARR-02)
 - [ ] 02-04-PLAN.md — Power Moves Feed: buildPowerMoves, Season Story section in Trophies tab (NARR-04)
