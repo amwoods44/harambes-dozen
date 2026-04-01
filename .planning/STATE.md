@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-narrative-delight/02-01-PLAN.md
-last_updated: "2026-04-01T04:41:44.825Z"
+stopped_at: Completed 02-narrative-delight/02-02-PLAN.md
+last_updated: "2026-04-01T04:45:53.864Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 1
   total_plans: 9
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 02 (narrative-delight) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-infrastructure-hardening P04 | 2min | 2 tasks | 1 files |
 | Phase 01-infrastructure-hardening P03 | 45min | 2 tasks | 1 files |
 | Phase 02-narrative-delight P01 | 8min | 2 tasks | 1 files |
+| Phase 02-narrative-delight P02 | 5min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,8 @@ Recent decisions affecting current work:
 - [Phase 01-infrastructure-hardening]: p.team (NFL abbreviation) is raw at DB build time — wrapped at every injection site including img alt attributes
 - [Phase 02-narrative-delight]: CountUp.js loaded lazily on first call — not in head — preserves initial page load performance
 - [Phase 02-narrative-delight]: mergeHistoricalData() 2-line pure insertion persists D['matchup_weeks_'+season] and D['weekly_scores_'+season] after hsMatchupWeeks is fully built
+- [Phase 02-narrative-delight]: buildHeroHist() added to loadHistory() merge cycle — card upgrades from fallback ticker to vintage fact after historical data arrives
+- [Phase 02-narrative-delight]: Vintage broadcast card pattern established: hero-hist-vintage with red top bar, muted red eyebrow label, white team name, accent-red pts stat
 
 ### Pending Todos
 
@@ -96,6 +99,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T04:41:44.823Z
-Stopped at: Completed 02-narrative-delight/02-01-PLAN.md
+Last session: 2026-04-01T04:45:53.859Z
+Stopped at: Completed 02-narrative-delight/02-02-PLAN.md
 Resume file: None
