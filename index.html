@@ -1389,6 +1389,47 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 .race-play-btn:hover{background:#e60000}
 #standings-race-canvas{width:100%;height:auto;min-height:320px;display:block;margin-top:4px;border-radius:4px;background:rgba(255,255,255,.02);border:1px solid var(--g4)}
 
+/* ═══ PHASE 03.2 — SPACING RHYTHM ═══ */
+/* D-01: 24px between major sections, 12px between items, 8px between tight elements */
+/* D-02: Broadcast header margin normalization */
+/* D-20: Consistent broadcast header styling */
+.bh{margin-top:var(--sp-6);margin-bottom:var(--sp-4)}
+.panel > .bh:first-child{margin-top:var(--sp-5)}
+.bh + .bh{margin-top:var(--sp-4)}
+
+/* D-03: Card padding normalization */
+.u-card,.u-card-stat,.u-surface{padding:var(--sp-4)}
+@media(max-width:600px){
+  .u-card,.u-card-stat,.u-surface{padding:var(--sp-3)}
+}
+
+/* D-18: Three card variants — base, stat, action */
+/* u-card and u-card-stat already exist; add u-card-action */
+.u-card-action{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:var(--sp-4);cursor:pointer;transition:border-color var(--transition-base),transform var(--transition-base),box-shadow var(--transition-base)}
+.u-card-action:hover{border-color:var(--g5);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.u-card-action:active{transform:translateY(0);box-shadow:var(--shadow-sm)}
+
+/* Section item gap normalization */
+.plist{gap:var(--sp-3)}
+.move-feed{gap:var(--sp-2)}
+.award-grid{gap:var(--sp-5)}
+.gm-grid{gap:var(--sp-5)}
+
+/* ═══ PHASE 03.2 — SCROLL STRIP FADES (D-19) ═══ */
+/* Horizontal scroll containers get a gradient fade at the right edge */
+/* to indicate more content is scrollable */
+.scroll-fade{position:relative}
+.scroll-fade::after{content:'';position:absolute;top:0;right:0;bottom:0;width:48px;background:linear-gradient(270deg,var(--g1) 0%,transparent 100%);pointer-events:none;z-index:2}
+.scroll-fade.on-dark::after{background:linear-gradient(270deg,var(--g2) 0%,transparent 100%)}
+
+/* D-19: Gradient scroll fades on known strip containers */
+/* Apply to direct stat containers that already use overflow-x:auto */
+.wk-sel{-webkit-mask-image:linear-gradient(to right,#000 80%,transparent 100%);mask-image:linear-gradient(to right,#000 80%,transparent 100%)}
+.move-filters{-webkit-mask-image:linear-gradient(to right,#000 80%,transparent 100%);mask-image:linear-gradient(to right,#000 80%,transparent 100%)}
+
+/* Scroll utility class for render functions (used in Plan 04/05) */
+.scroll-x-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,#000 80%,transparent 100%);mask-image:linear-gradient(to right,#000 80%,transparent 100%)}
+
 </style>
 </head>
 <body>
