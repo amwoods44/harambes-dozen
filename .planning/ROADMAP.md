@@ -111,11 +111,16 @@ Plans:
   6. The hero section and first 3 seconds of page load create an undeniable "wow" impression
   7. Mobile (375px) feels designed, not shrunk — touch targets, readable text, no horizontal scroll
   8. Card and section styling uses one consistent visual language across all 18 tabs
-**Plans**: TBD
+**Plans**: 6 plans
 **UI hint**: yes
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 03.2 to break down)
+- [ ] 03.2-01-PLAN.md — Spacing rhythm + card consistency + scroll strip fades (D-01, D-02, D-03, D-18, D-19, D-20) — CSS only, Wave 1
+- [ ] 03.2-02-PLAN.md — Transitions + hover states + loading state upgrades (D-09 through D-17, D-25, D-26, D-42, D-53 CSS) — CSS only, Wave 1
+- [ ] 03.2-03-PLAN.md — Hero + countdown + stat strip + mobile foundation (D-05, D-08, D-21 through D-33) — Wave 2
+- [ ] 03.2-04-PLAN.md — Tab polish A: Power, Rosters, Matchups, Draft, Trades, Scoring (D-34 through D-43) — Wave 2
+- [ ] 03.2-05-PLAN.md — Tab polish B: Age, Awards, Analytics, GM, Rivals, Contracts, Trophies, War Room, Pulse, Chronicle (D-44 through D-57) — Wave 2
+- [ ] 03.2-06-PLAN.md — Cross-tab audit + human visual verification checkpoint — Wave 3
 
 ### Phase 4: Roster Intelligence
 **Goal**: FantasyCalc dynasty values are integrated for all rostered players, enabling roster value rankings, positional breakdown, and retroactive trade fairness grades
@@ -178,6 +183,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Narrative & Delight | 2/5 | In Progress|  |
 | 3. Contracts Complete | 0/3 | Not started | - |
 | 3.1. Offseason Hardening | 2/3 | In Progress|  |
+| 3.2. Broadcast Polish | 0/6 | Not started | - |
 | 4. Roster Intelligence | 0/TBD | Not started | - |
 | 5. Player Depth | 0/TBD | Not started | - |
 | 6. Polish | 0/TBD | Not started | - |
