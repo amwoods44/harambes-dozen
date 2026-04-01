@@ -791,7 +791,7 @@ body{padding-bottom:48px}
 .award-card.blue::before{background:var(--blu)}
 .award-card.purple{background:linear-gradient(180deg,rgba(139,92,246,.06) 0%,var(--g2) 40%)}
 .award-card.purple::before{background:var(--pur)}
-.award-emoji{width:56px;height:56px;border-radius:var(--radius-full);background:var(--g3);display:grid;place-items:center;font-family:var(--fd);font-size:16px;font-weight:800;letter-spacing:1px;color:var(--t2);margin:0 auto var(--sp-4);border:1px solid var(--g4)}
+.award-emoji{width:56px;height:56px;border-radius:var(--radius-full);background:var(--g3);display:grid;place-items:center;color:var(--t2);margin:0 auto var(--sp-4);border:1px solid var(--g4)}
 .award-title{font-family:var(--fd);font-size:var(--text-2xs);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-bottom:var(--sp-2)}
 .award-winner{font-family:var(--fd);font-size:var(--text-lg);font-weight:800;color:var(--t1);text-transform:uppercase;line-height:1.1}
 .award-stat{font-family:var(--fm);font-size:var(--text-sm);font-weight:700;color:var(--a);margin-top:var(--sp-2)}
@@ -933,7 +933,6 @@ body{padding-bottom:48px}
   .h2h-cell{font-size:10px;padding:4px 1px;min-height:28px}
 }
 @media(max-width:480px){
-  .award-emoji{font-size:36px}
   .award-winner{font-size:18px}
   .move-card{padding:10px 12px}
   .gm-btn{font-size:10px;padding:6px 10px}
@@ -2424,27 +2423,27 @@ const pimg=(id,sz)=>{const s=sz||40;const pn=(playerMap[id]||{}).name||'Player';
 let selGM=1;
 // ═══ SVG ICON SYSTEM ═══
 const ICONS={
-  trophy:'<path d="M6 2h12v2h3v6c0 1.7-1.3 3-3 3h-1.2c-.8 1.8-2.4 3-4.3 3.4V19h3v2H8.5v-2h3v-2.6c-1.9-.4-3.5-1.6-4.3-3.4H6c-1.7 0-3-1.3-3-3V4h3V2zm0 4H5v4c0 .6.4 1 1 1h.3c-.2-.6-.3-1.3-.3-2V6zm12 0v3c0 .7-.1 1.4-.3 2H18c.6 0 1-.4 1-1V6h-1z" fill="currentColor"/>',
-  crown:'<path d="M2 17h20v3H2v-3zM3.5 8l3.5 4 5-6 5 6 3.5-4v8H3.5V8z" fill="currentColor"/>',
-  fire:'<path d="M12 23c-4.4 0-8-3.6-8-8 0-3.3 2.1-6.2 4-8l1.4 1.4C7.5 10.3 6 12.8 6 15c0 3.3 2.7 6 6 6s6-2.7 6-6c0-1.5-.4-2.8-1-4-.2.5-.5 1-1 1.5-.6.5-1 .5-1.5 0-.4-.5-.5-1-.5-1.5 0-1.5.5-3 1.5-4l1-.8c1.2 1.5 2 3 2.5 4.8.3 1 .5 2 .5 3 0 4.4-3.6 8-8 8z" fill="currentColor"/>',
-  bolt:'<path d="M13 2L4 14h7v8l9-12h-7V2z" fill="currentColor"/>',
-  target:'<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm0-14c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/>',
-  trade:'<path d="M21 9l-4-4v3H7v2h10v3l4-4zM3 15l4 4v-3h10v-2H7v-3l-4 4z" fill="currentColor"/>',
-  chart:'<path d="M3 20h18v2H3v-2zm2-7h2v5H5v-5zm4-3h2v8H9v-8zm4-4h2v12h-2V6zm4 2h2v10h-2V8z" fill="currentColor"/>',
-  lock:'<path d="M18 8h-1V6c0-2.8-2.2-5-5-5S7 3.2 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.7 1.3-3 3-3s3 1.3 3 3v2H9z" fill="currentColor"/>',
-  tag:'<path d="M21.4 11.6l-9-9C12.1 2.2 11.5 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .6.2 1.1.6 1.4l9 9c.4.4.9.6 1.4.6s1-.2 1.4-.6l7-7c.4-.4.6-.9.6-1.4s-.2-1-.6-1.4zM5.5 7C4.7 7 4 6.3 4 5.5S4.7 4 5.5 4 7 4.7 7 5.5 6.3 7 5.5 7z" fill="currentColor"/>',
-  seedling:'<path d="M12 22c-1 0-2-.4-2.8-1C7 19 6 16.3 6 14c0-3.3 2-6 4-7.5V4c-3 .5-6 3-6 7 0 1-.5 2-1 2v2c1.5 0 3-1 3.5-2.5.2 2.2 1 4 2.5 5.5 1 1 2.3 2 4 2v-2c-1 0-2-.5-3-1.5C9 15 8 13 8 11c0-2.5 1.5-5 4-6v2c-1.5.8-2 2.5-2 4 0 2 .5 3.5 1.5 5 .3.4.6.7 1 1V22h-.5zM18 7c0-4-2-6-6-7v2c2.5.5 4 2 4 5 0 2-.5 3.5-2 5v2.5c2-1.5 4-4 4-7.5z" fill="currentColor"/>',
-  ghost:'<path d="M12 2C7.6 2 4 5.6 4 10v12l3-3 3 3 2-2 2 2 3-3 3 3V10c0-4.4-3.6-8-8-8zm-2 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm4 0c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill="currentColor"/>',
-  handshake:'<path d="M11 6l-4 4-1-1-3 3 4 4 1-1 1 1 2-2 2 2 5-5-1-1 3-3-4-4-3 3-2-2zm-5 6l1-1 2 2-1 1-2-2zm8-2l1-1 2 2-1 1-2-2z" fill="currentColor"/>',
-  dice:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm3 4.5c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm10 0c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5zm-5 3c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5 1.5-.7 1.5-1.5-.7-1.5-1.5-1.5z" fill="currentColor"/>',
-  draft:'<path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM8 14h8v2H8v-2zm0-3h8v2H8v-3zm0 6h5v2H8v-2z" fill="currentColor"/>',
-  info:'<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="currentColor"/>',
-  arrowUp:'<path d="M4 12l1.4 1.4L11 7.8V20h2V7.8l5.6 5.6L20 12l-8-8-8 8z" fill="currentColor"/>',
-  arrowDown:'<path d="M20 12l-1.4-1.4L13 16.2V4h-2v12.2l-5.6-5.6L4 12l8 8 8-8z" fill="currentColor"/>',
-  equal:'<path d="M4 9h16v2H4V9zm0 4h16v2H4v-2z" fill="currentColor"/>',
-  building:'<path d="M4 21V7l8-5 8 5v14H4zm2-2h4v-4h4v4h4V8l-6-3.7L6 8v11z" fill="currentColor"/>'
+  trophy:'<path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/>',
+  crown:'<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+  fire:'<path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/>',
+  bolt:'<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  trade:'<path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/>',
+  chart:'<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  lock:'<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  tag:'<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  seedling:'<path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3"/><path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4"/><path d="M5 21h14"/>',
+  ghost:'<path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/>',
+  handshake:'<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  dice:'<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M16 8h.01"/><path d="M8 8h.01"/><path d="M8 16h.01"/><path d="M16 16h.01"/><path d="M12 12h.01"/>',
+  draft:'<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  arrowUp:'<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
+  arrowDown:'<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>',
+  equal:'<line x1="5" x2="19" y1="9" y2="9"/><line x1="5" x2="19" y1="15" y2="15"/>',
+  building:'<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>'
 };
-function icon(name,sz,color){const s=sz||16;const c=color||'currentColor';const p=ICONS[name];if(!p)return'';return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;display:inline-block;vertical-align:middle;color:'+c+'">'+p+'</svg>';}
+function icon(name,sz,color){const s=sz||16;const c=color||'currentColor';const p=ICONS[name];if(!p)return'';return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;display:inline-block;vertical-align:middle">'+p+'</svg>';}
 // Team identity colors keyed by roster_id
 const TC={
   1:{p:'#FFCB05',s:'#00274C',i:'CP'},  // Charlie / Commissioner of Power / Michigan
@@ -2463,7 +2462,7 @@ const TC={
 function tcGrad(rid){const c=TC[rid];if(!c)return'var(--g3)';return'linear-gradient(135deg,'+c.p+','+c.p+'cc)';}
 function tcInit(rid,sz){const t=D.teams.find(x=>x.roster_id===rid);const c=TC[rid]||{p:'var(--g4)',i:'?'};const s=sz||56;const fs=Math.round(s*.38);const nm=c.i||(t?t.team_name.substring(0,2).toUpperCase():'??');return'<div style="width:'+s+'px;height:'+s+'px;border-radius:50%;border:2px solid '+c.p+'66;background:'+tcGrad(rid)+';display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:'+fs+'px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);flex-shrink:0">'+nm+'</div>';}
 // Item 14: Empty state placeholders (replaced by render functions)
-const EMPTY_STATES={power:['\u25A0','POWER RANKINGS'],rosters:['\u25A0','ROSTERS'],trophies:['\u25A0','TROPHY CASE'],trades:['\u25A0','TRADE CENTER'],matchups:['\u25A0','MATCHUPS'],age:['\u25A0','AGE MAP'],scoring:['\u25A0','SCORING'],draft:['\u25A0','DRAFT BOARD'],awards:['\u25A0','AWARDS'],analytics:['\u25A0','ANALYTICS'],moves:['\u25A0','TRANSACTIONS'],gm:['\u25A0','GM PROFILE'],rivals:['\u25A0','RIVALRIES'],contracts:['\u25A0','CONTRACTS'],constitution:['\u25A0','RULES'],warroom:['\u25A0','WAR ROOM'],pulse:['\u25A0','LEAGUE PULSE'],chronicle:['\u25A0','CHRONICLE']};
+const EMPTY_STATES={power:[icon('crown',36,'var(--t4)'),'POWER RANKINGS'],rosters:[icon('chart',36,'var(--t4)'),'ROSTERS'],trophies:[icon('trophy',36,'var(--t4)'),'TROPHY CASE'],trades:[icon('trade',36,'var(--t4)'),'TRADE CENTER'],matchups:[icon('bolt',36,'var(--t4)'),'MATCHUPS'],age:[icon('chart',36,'var(--t4)'),'AGE MAP'],scoring:[icon('chart',36,'var(--t4)'),'SCORING'],draft:[icon('draft',36,'var(--t4)'),'DRAFT BOARD'],awards:[icon('trophy',36,'var(--t4)'),'AWARDS'],analytics:[icon('chart',36,'var(--t4)'),'ANALYTICS'],moves:[icon('trade',36,'var(--t4)'),'TRANSACTIONS'],gm:[icon('info',36,'var(--t4)'),'GM PROFILE'],rivals:[icon('bolt',36,'var(--t4)'),'RIVALRIES'],contracts:[icon('tag',36,'var(--t4)'),'CONTRACTS'],constitution:[icon('info',36,'var(--t4)'),'RULES'],warroom:[icon('target',36,'var(--t4)'),'WAR ROOM'],pulse:[icon('fire',36,'var(--t4)'),'LEAGUE PULSE'],chronicle:[icon('building',36,'var(--t4)'),'CHRONICLE']};
 function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{const el=document.getElementById('tab-'+id);if(el&&!el.innerHTML.trim()){el.innerHTML='<div class="empty-state"><div class="empty-state-icon">'+e[0]+'</div><div class="empty-state-text">'+e[1]+'</div><div class="empty-state-sub">Loading data...</div></div>';}});}
 // Item 16: Dynasty value tier tag helper
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
@@ -4300,17 +4299,17 @@ function renderAwards(){
   // Luckiest
   if(luckiest){h+='<div class="award-card"><div class="award-emoji">'+icon('dice',28)+'</div><div class="award-title">Luckiest Manager</div><div class="award-winner">'+luckiest.team_name+'</div><div class="award-stat">+'+luckiest.luck+' luck factor</div><div class="award-desc">Expected '+luckiest.expected_wins+'W, got '+luckiest.actual_wins+'W \u2014 schedule gift</div></div>';}
   // Snake Bitten
-  if(unluckiest){h+='<div class="award-card red"><div class="award-emoji">\u2013W</div><div class="award-title">Snake Bitten</div><div class="award-winner">'+unluckiest.team_name+'</div><div class="award-stat">'+unluckiest.luck+' luck factor</div><div class="award-desc">Expected '+unluckiest.expected_wins+'W, got '+unluckiest.actual_wins+'W</div></div>';}
+  if(unluckiest){h+='<div class="award-card red"><div class="award-emoji">'+icon('dice',28)+'</div><div class="award-title">Snake Bitten</div><div class="award-winner">'+unluckiest.team_name+'</div><div class="award-stat">'+unluckiest.luck+' luck factor</div><div class="award-desc">Expected '+unluckiest.expected_wins+'W, got '+unluckiest.actual_wins+'W</div></div>';}
   // Dynasty Builder
-  if(youngest){h+='<div class="award-card"><div class="award-emoji">YNG</div><div class="award-title">Dynasty Builder</div><div class="award-winner">'+youngest.name+'</div><div class="award-stat">Avg age '+youngest.avgAge.toFixed(1)+'</div><div class="award-desc">Youngest roster in the league \u2014 the future is bright</div></div>';}
+  if(youngest){h+='<div class="award-card"><div class="award-emoji">'+icon('seedling',28)+'</div><div class="award-title">Dynasty Builder</div><div class="award-winner">'+youngest.name+'</div><div class="award-stat">Avg age '+youngest.avgAge.toFixed(1)+'</div><div class="award-desc">Youngest roster in the league \u2014 the future is bright</div></div>';}
   // Wheeler-Dealer
-  if(trader){h+='<div class="award-card purple"><div class="award-emoji">TRD</div><div class="award-title">Wheeler-Dealer</div><div class="award-winner">'+trader.name+'</div><div class="award-stat">'+trader.trades+' trades \u00b7 '+trader.total_players_traded+' players moved</div><div class="award-desc">Most active in the trade market</div></div>';}
+  if(trader){h+='<div class="award-card purple"><div class="award-emoji">'+icon('trade',28)+'</div><div class="award-title">Wheeler-Dealer</div><div class="award-winner">'+trader.name+'</div><div class="award-stat">'+trader.trades+' trades \u00b7 '+trader.total_players_traded+' players moved</div><div class="award-desc">Most active in the trade market</div></div>';}
   // The Ghost
-  if(ghost){h+='<div class="award-card silver"><div class="award-emoji">\u2014</div><div class="award-title">The Ghost</div><div class="award-winner">'+ghost.name+'</div><div class="award-stat">'+ghost.total+' total moves</div><div class="award-desc">Least active manager \u2014 set it and forget it</div></div>';}
+  if(ghost){h+='<div class="award-card silver"><div class="award-emoji">'+icon('ghost',28)+'</div><div class="award-title">The Ghost</div><div class="award-winner">'+ghost.name+'</div><div class="award-stat">'+ghost.total+' total moves</div><div class="award-desc">Least active manager \u2014 set it and forget it</div></div>';}
   // Big Week
-  if(bigWeek){h+='<div class="award-card blue"><div class="award-emoji">WK1</div><div class="award-title">Single Week Record</div><div class="award-winner">'+bigWeek.name+'</div><div class="award-stat">'+bigWeek.high+' pts</div><div class="award-desc">Highest single-week score of the season</div></div>';}
+  if(bigWeek){h+='<div class="award-card blue"><div class="award-emoji">'+icon('fire',28)+'</div><div class="award-title">Single Week Record</div><div class="award-winner">'+bigWeek.name+'</div><div class="award-stat">'+bigWeek.high+' pts</div><div class="award-desc">Highest single-week score of the season</div></div>';}
   // Draft Guru
-  if(draftGuru){h+='<div class="award-card"><div class="award-emoji">DFT</div><div class="award-title">Draft Guru</div><div class="award-winner">'+draftGuru[0]+'</div><div class="award-stat">'+draftGuru[1]+' draft picks became starters</div><div class="award-desc">Best eye for talent on draft day</div></div>';}
+  if(draftGuru){h+='<div class="award-card"><div class="award-emoji">'+icon('draft',28)+'</div><div class="award-title">Draft Guru</div><div class="award-winner">'+draftGuru[0]+'</div><div class="award-stat">'+draftGuru[1]+' draft picks became starters</div><div class="award-desc">Best eye for talent on draft day</div></div>';}
   h+='</div>';
   document.getElementById('tab-awards').innerHTML=h;
 }
@@ -5147,15 +5146,15 @@ function renderPulse(){
   // Record alerts
   var rec=D.records;
   if(rec&&rec.highest_score){
-    cards.push({type:'record',priority:9,icon:'\u2191',tag:'RECORD',headline:tn(rec.highest_score.roster_id)+' posts '+rec.highest_score.pts+' — highest single-week score',body:'Week '+rec.highest_score.week+'. A performance that set the all-time league standard.',meta:(rec.highest_score.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.highest_score.week});
+    cards.push({type:'record',priority:9,icon:icon('arrowUp',16,'var(--a)'),tag:'RECORD',headline:tn(rec.highest_score.roster_id)+' posts '+rec.highest_score.pts+' — highest single-week score',body:'Week '+rec.highest_score.week+'. A performance that set the all-time league standard.',meta:(rec.highest_score.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.highest_score.week});
   }
   if(rec&&rec.biggest_blowout){
-    cards.push({type:'record',priority:8,icon:'\u25B2',tag:'RECORD',headline:'Biggest Blowout: '+tn(rec.biggest_blowout.winner.roster_id)+' wins by '+rec.biggest_blowout.diff,body:tn(rec.biggest_blowout.winner.roster_id)+' ('+rec.biggest_blowout.winner.points+') defeats '+tn(rec.biggest_blowout.loser.roster_id)+' ('+rec.biggest_blowout.loser.points+') in Week '+rec.biggest_blowout.week+'.',meta:(rec.biggest_blowout.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.biggest_blowout.week});
+    cards.push({type:'record',priority:8,icon:icon('bolt',16,'var(--a)'),tag:'RECORD',headline:'Biggest Blowout: '+tn(rec.biggest_blowout.winner.roster_id)+' wins by '+rec.biggest_blowout.diff,body:tn(rec.biggest_blowout.winner.roster_id)+' ('+rec.biggest_blowout.winner.points+') defeats '+tn(rec.biggest_blowout.loser.roster_id)+' ('+rec.biggest_blowout.loser.points+') in Week '+rec.biggest_blowout.week+'.',meta:(rec.biggest_blowout.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.biggest_blowout.week});
   }
   // Power movement
   var pw=D.teams.map(function(t){var s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,fpts:0};var wPct=s25.wins/(s25.wins+(s25.losses||0)||1);var maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}));var pPct=s25.fpts/maxP;return{name:t.team_name,pw:Math.round((wPct*40+pPct*60)*10)/10};}).sort(function(a,b){return b.pw-a.pw});
   if(pw.length>=2){
-    cards.push({type:'power',priority:7,icon:'\u25A0',tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering 2026, ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:'2026 OFFSEASON POWER INDEX'});
+    cards.push({type:'power',priority:7,icon:icon('chart',16,'var(--blu)'),tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering 2026, ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:'2026 OFFSEASON POWER INDEX'});
   }
   // Trade stories
   (D.unified_trades||[]).slice(0,6).forEach(function(t){
@@ -5164,7 +5163,7 @@ function renderPulse(){
     var body=sideB.name+' sends '+mainPlayer+' to '+sideA.name;
     if(sideB.players.length)body+='. Return package includes '+sideB.players.map(function(p){return p.nm}).join(', ');
     if(t.exm)body+='. Exemption included: used on '+t.exm.used_on+'.';
-    cards.push({type:'trade',priority:6,icon:'\u21C4',tag:'TRADE',headline:sideA.name+' & '+sideB.name+' swing deal in '+t.yr+' Wk '+t.wk,body:body,meta:''+t.yr+' \u2022 WEEK '+t.wk});
+    cards.push({type:'trade',priority:6,icon:icon('trade',16,'var(--y)'),tag:'TRADE',headline:sideA.name+' & '+sideB.name+' swing deal in '+t.yr+' Wk '+t.wk,body:body,meta:''+t.yr+' \u2022 WEEK '+t.wk});
   });
   // Exemption news
   var exmH=D.exemption_history||{};
@@ -5172,7 +5171,7 @@ function renderPulse(){
     var yr=entry[0],exms=entry[1];
     exms.slice(0,3).forEach(function(e){
       var isTraded=e.from&&e.from!==e.o;
-      cards.push({type:'exemption',priority:5,icon:'\u25CB',tag:'EXEMPTION',headline:e.o+' uses '+(isTraded?'traded ':'')+'exemption on '+e.p,body:e.o+' restructures '+e.p+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+e.from+'.':'')+(e.note?' '+e.note+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
+      cards.push({type:'exemption',priority:5,icon:icon('tag',16,'var(--pur)'),tag:'EXEMPTION',headline:e.o+' uses '+(isTraded?'traded ':'')+'exemption on '+e.p,body:e.o+' restructures '+e.p+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+e.from+'.':'')+(e.note?' '+e.note+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
     });
   });
   // Draft highlights
@@ -5181,7 +5180,7 @@ function renderPulse(){
     var yr=entry[0],hits=entry[1];
     hits.filter(function(h){return h.status==='starter'&&h.rd===1}).forEach(function(h){
       var c=D.contracts&&D.contracts[h.nm];
-      cards.push({type:'draft',priority:4,icon:'\u25C6',tag:'DRAFT',headline:h.drafter+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+' by '+h.drafter+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
+      cards.push({type:'draft',priority:4,icon:icon('draft',16,'var(--a)'),tag:'DRAFT',headline:h.drafter+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+' by '+h.drafter+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
     });
   });
   cards.sort(function(a,b){return b.priority-a.priority});
@@ -5230,26 +5229,26 @@ function renderChronicle(){
   D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
   // Records
   var recYr=D.records&&D.records.highest_score&&D.records.highest_score.year?D.records.highest_score.year:CURRENT_YEAR;
-  if(D.records&&D.records.highest_score){events.push({year:parseInt(recYr),type:'record',icon:'\u2191',title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season \u2022 Wk '+D.records.highest_score.week});}
+  if(D.records&&D.records.highest_score){events.push({year:parseInt(recYr),type:'record',icon:icon('arrowUp',16,'var(--a)'),title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season \u2022 Wk '+D.records.highest_score.week});}
   var blowYr=D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.year?D.records.biggest_blowout.year:CURRENT_YEAR;
-  if(D.records&&D.records.biggest_blowout){events.push({year:parseInt(blowYr),type:'record',icon:'\u25B2',title:'Biggest Blowout: '+D.records.biggest_blowout.diff+' pts',body:tn(D.records.biggest_blowout.winner.roster_id)+' dominates in a record blowout.',date:blowYr+' Season \u2022 Wk '+D.records.biggest_blowout.week});}
+  if(D.records&&D.records.biggest_blowout){events.push({year:parseInt(blowYr),type:'record',icon:icon('bolt',16,'var(--a)'),title:'Biggest Blowout: '+D.records.biggest_blowout.diff+' pts',body:tn(D.records.biggest_blowout.winner.roster_id)+' dominates in a record blowout.',date:blowYr+' Season \u2022 Wk '+D.records.biggest_blowout.week});}
   // Exemptions by year
   var exmH=D.exemption_history||{};
   Object.entries(exmH).forEach(function(entry){
     var yr=parseInt(entry[0]),exms=entry[1];
-    exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:'\u25CB',title:e.o+' extends '+e.p,body:'New deal: '+e.new_yrs+'yr. '+(e.note||''),date:yr+' Offseason'});});
+    exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:icon('tag',16,'var(--pur)'),title:e.o+' extends '+e.p,body:'New deal: '+e.new_yrs+'yr. '+(e.note||''),date:yr+' Offseason'});});
   });
   // Trades
   (D.unified_trades||[]).forEach(function(t){
     var yr=parseInt(t.yr);
     var sideA=t.sides[0],sideB=t.sides[1];
     var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks].slice(0,2).join(', ')||'picks';
-    events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Deal: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
+    events.push({year:yr,type:'trade',icon:icon('trade',16,'var(--y)'),title:sideA.name+' \u2194 '+sideB.name,body:'Deal: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
   });
   // All-time era (CBS era 2016-2020)
   if(D.alltime_standings&&D.alltime_standings.length){
-    events.push({year:2016,type:'record',icon:'\u25A0',title:'League Founded — CBS Era Begins',body:'Harambe\'s Dozen launches on CBS. '+D.alltime_standings.length+' all-time records tracked.',date:'2016 \u2022 Founding Season'});
-    events.push({year:2021,type:'record',icon:'\u25CF',title:'Migration to Sleeper',body:'League transitions from CBS to Sleeper. Dynasty era begins.',date:'2021 \u2022 Platform Migration'});
+    events.push({year:2016,type:'record',icon:icon('chart',16,'var(--blu)'),title:'League Founded — CBS Era Begins',body:'Harambe\'s Dozen launches on CBS. '+D.alltime_standings.length+' all-time records tracked.',date:'2016 \u2022 Founding Season'});
+    events.push({year:2021,type:'record',icon:icon('info',16,'var(--grn)'),title:'Migration to Sleeper',body:'League transitions from CBS to Sleeper. Dynasty era begins.',date:'2021 \u2022 Platform Migration'});
   }
   // Group by year, sort most recent first
   var years={};
