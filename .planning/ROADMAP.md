@@ -94,7 +94,7 @@ Plans:
 
 Plans:
 - [x] 03.1-01-PLAN.md — Offseason detection infrastructure: D.isOffseason, D.lastSeason, computeRecords week fix, buildStats offseason mode, loading screen DOM removal (OFF-01, OFF-05, OFF-07, OFF-08)
-- [ ] 03.1-02-PLAN.md — Game-data tabs: renderPower NaN guard, renderScoring/renderAnalytics/renderMatchups historical fallback, renderTrades ALL default (OFF-01, OFF-02, OFF-04)
+- [x] 03.1-02-PLAN.md — Game-data tabs: renderPower NaN guard, renderScoring/renderAnalytics/renderMatchups historical fallback, renderTrades ALL default (OFF-01, OFF-02, OFF-04)
 - [ ] 03.1-03-PLAN.md — Content tabs: renderDraft last-season default, renderMoves/renderRivals messaging, renderAwards/renderGM historical data, renderChronicle zero-value suppression (OFF-03, OFF-06)
 
 ### Phase 4: Roster Intelligence
@@ -157,7 +157,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Infrastructure Hardening | 0/TBD | Not started | - |
 | 2. Narrative & Delight | 2/5 | In Progress|  |
 | 3. Contracts Complete | 0/3 | Not started | - |
-| 3.1. Offseason Hardening | 0/3 | Not started | - |
+| 3.1. Offseason Hardening | 2/3 | In Progress|  |
 | 4. Roster Intelligence | 0/TBD | Not started | - |
 | 5. Player Depth | 0/TBD | Not started | - |
 | 6. Polish | 0/TBD | Not started | - |

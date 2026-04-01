@@ -36,9 +36,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Offseason Hardening (INSERTED)
 
 - [x] **OFF-01**: Zero NaN or Infinity values visible anywhere during offseason (all formulas guard against divide-by-zero)
-- [ ] **OFF-02**: Power Rankings, Scoring, Analytics, Pulse show last-completed-season data when current season has zero games
+- [x] **OFF-02**: Power Rankings, Scoring, Analytics, Pulse show last-completed-season data when current season has zero games
 - [ ] **OFF-03**: Draft, Moves, and Rivals tabs show historical data instead of empty states when current season has no data
-- [ ] **OFF-04**: Trades tab defaults to ALL years instead of current empty season
+- [x] **OFF-04**: Trades tab defaults to ALL years instead of current empty season
 - [x] **OFF-05**: D.records populates week numbers correctly — no null weeks producing WkNaN in ticker or Trophies
 - [ ] **OFF-06**: Awards, GM Dashboard, and Chronicle use historical/all-time data for offseason narratives
 - [x] **OFF-07**: Hero stat strip shows meaningful offseason values (last-season totals or all-time records)
@@ -149,9 +149,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-09 | Phase 3 | Complete |
 | CONT-10 | Phase 3 | Complete |
 | OFF-01 | Phase 3.1 | Complete |
-| OFF-02 | Phase 3.1 | Pending |
+| OFF-02 | Phase 3.1 | Complete |
 | OFF-03 | Phase 3.1 | Pending |
-| OFF-04 | Phase 3.1 | Pending |
+| OFF-04 | Phase 3.1 | Complete |
 | OFF-05 | Phase 3.1 | Complete |
 | OFF-06 | Phase 3.1 | Pending |
 | OFF-07 | Phase 3.1 | Complete |

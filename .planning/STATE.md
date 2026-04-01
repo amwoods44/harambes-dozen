@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 03.1-01-PLAN.md
-last_updated: "2026-04-01T17:53:46.863Z"
+status: verifying
+stopped_at: Completed 03.1-02-PLAN.md
+last_updated: "2026-04-01T18:01:34.922Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
   percent: 0
 ---
 
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 03.1 (offseason-hardening) — EXECUTING
-Plan: 2 of 3
-Status: Ready to execute
+Plan: 3 of 3
+Status: Phase complete — ready for verification
 Last activity: 2026-04-01
 
 Progress: [░░░░░░░░░░] 0%
@@ -65,6 +65,8 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-contracts-complete P02 | 2min | 2 tasks | 1 files |
 | Phase 03-contracts-complete P03 | 3min | 2 tasks | 1 files |
 | Phase 03.1-offseason-hardening P01 | 15min | 2 tasks | 1 files |
+| Phase 03.1-offseason-hardening P02 | 4min | 3 tasks | 1 files |
+| Phase 03.1-offseason-hardening P02 | 4min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -109,6 +111,12 @@ Recent decisions affecting current work:
 - [Phase 03.1-offseason-hardening]: D.isOffseason stored on D object (not global) so mergeHistoricalData can reference it via parameter d.isOffseason without global state dependency
 - [Phase 03.1-offseason-hardening]: D.lastSeason initialized null in buildCurrentSeasonData then populated in mergeHistoricalData — buildStats guards both (D.isOffseason&&D.lastSeason) truthy check
 - [Phase 03.1-offseason-hardening]: computeRecords week initializers null not '-': null is falsy so template literals produce 'WkNull-free' output; '-' was producing WkNaN via parseInt
+- [Phase 03.1-offseason-hardening]: scoringLabel/analyticsLabel as local vars so they reset correctly on each re-render
+- [Phase 03.1-offseason-hardening]: scoring and matchups added to dirty tabs set after mergeHistoricalData so offseason fallbacks fire when D.lastSeason becomes available
+- [Phase 03.1-offseason-hardening]: renderMatchups shows loading placeholder when D.isOffseason but D.lastSeason is null (historical still loading)
+- [Phase 03.1-offseason-hardening]: scoringLabel/analyticsLabel declared as local vars so they reset correctly on each re-render
+- [Phase 03.1-offseason-hardening]: renderMatchups shows loading placeholder when D.isOffseason but D.lastSeason is null (historical still loading)
+- [Phase 03.1-offseason-hardening]: scoring and matchups added to dirty tabs set after mergeHistoricalData so offseason fallbacks fire when D.lastSeason becomes available
 
 ### Roadmap Evolution
 
@@ -126,6 +134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T17:53:46.860Z
-Stopped at: Completed 03.1-01-PLAN.md
+Last session: 2026-04-01T18:01:34.920Z
+Stopped at: Completed 03.1-02-PLAN.md
 Resume file: None
