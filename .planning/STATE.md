@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-infrastructure-hardening/01-01-PLAN.md
-last_updated: "2026-04-01T03:20:50.165Z"
+stopped_at: Completed 01-infrastructure-hardening/01-04-PLAN.md
+last_updated: "2026-04-01T03:26:35.701Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-03-31)
 ## Current Position
 
 Phase: 01 (infrastructure-hardening) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-infrastructure-hardening P02 | 2 | 2 tasks | 2 files |
 | Phase 01-infrastructure-hardening P01 | 3min | 3 tasks | 2 files |
+| Phase 01-infrastructure-hardening P04 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 01-infrastructure-hardening]: CFG.nflKickoff: hardcoded NFL kickoff date centralized to single config property — one edit point for annual season update
 - [Phase 01-infrastructure-hardening]: cache._prune throttle: 60-second gate added to prevent tight-loop grinding under localStorage quota pressure
 - [Phase 01-infrastructure-hardening]: docs/screenshots/ excluded via .gitignore (not *.png glob) to preserve app asset PNGs
+- [Phase 01-infrastructure-hardening]: Scroll-snapshot applied in renderTab() dispatch — single background re-render gateway, minimal interception point
+- [Phase 01-infrastructure-hardening]: contractsFailed flag only set true when fetch fails AND no cache — cached fallback is silent-acceptable, total failure requires warning
+- [Phase 01-infrastructure-hardening]: Contract warning banner is tab-scoped inline (not global status-banner) — failure is contextual to Contracts tab
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T03:20:50.163Z
-Stopped at: Completed 01-infrastructure-hardening/01-01-PLAN.md
+Last session: 2026-04-01T03:26:35.699Z
+Stopped at: Completed 01-infrastructure-hardening/01-04-PLAN.md
 Resume file: None
