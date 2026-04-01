@@ -92,8 +92,8 @@ Every screen looks like it belongs on a broadcast — not a developer's side pro
 - **Audience:** 12 leaguemates in the Harambe's Dozen dynasty league, potentially public-facing if quality is high enough, eventually templatable for other leagues
 - **Data source:** Sleeper API (public, no auth) for all league data; FantasyCalc API for dynasty trade values; Google Sheets CSV for contract data
 - **Contract rules:** Players drafted get 1-7 year contracts (owner's choice). Players on contract stay on your team for that duration. Releasable at 1 year remaining. 1 annual exemption per team to restructure any contract. Waiver pickups auto-assigned 1-year contracts, released to draft pool after season.
-- **Existing app:** ~5,800+ lines in index.html, 18 render functions, 40+ working features, 13 tabs. Heavily polished broadcast aesthetic with Oswald/Inter/JetBrains Mono font stack. Phase 1 (Infrastructure) and Phase 2 (Narrative & Delight) complete.
-- **Design identity:** ESPN broadcast parody. Dark warm theme (#120e0c base, #cc0000 accent red, #ffcc00 gold). Angled clip-path headers, team-colored accents, gradient circles. Font weights 600-900 on headings are intentional.
+- **Existing app:** ~6,000+ lines in index.html, 18 render functions, 40+ working features, 18 tabs. Phases 1-3.2 complete (Infrastructure, Narrative, Contracts, Offseason Hardening, Broadcast Polish).
+- **Design identity:** Modern broadcast aesthetic that beats ESPN, not just parodies it. Dark warm theme (#120e0c base, #cc0000 accent red, #ffcc00 gold). Space Grotesk for display headings (replacing Oswald — too "sports template"), Inter for body, JetBrains Mono for stats. Draft board cards are the visual gold standard — gradient backgrounds, position badges, headshots, layered information. Font weights 600-800 on headings for authority.
 - **Known tech debt:** Global mutable `D` object (load-bearing, not refactorable), mixed var/let/const, innerHTML destructive rendering, hardcoded kickoff date, XSS surface from unescaped API data.
 
 ## Constraints

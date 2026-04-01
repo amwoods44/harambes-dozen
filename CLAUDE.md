@@ -44,11 +44,16 @@ index.html
 
 ## Design Quality Bar (MANDATORY)
 
-Every visual element must feel like a broadcast graphic or magazine editorial — not data in styled containers.
+The bar: a leaguemate opens this and says "one person built this? It's the best fantasy app I've ever seen." Not compared to side projects — compared to ESPN, compared to any fantasy app that exists. That feeling comes from obsessive attention to every detail.
 
 - **Lead with composition, not components.** Ask "what should dominate this space?" before "what elements go inside this container?" Start with the dominant element, the visual hierarchy, where the eye goes — then break it into parts
-- Use real broadcast patterns: angled header bars, red dividers, clip-path accents, full-bleed hero images, gradient fades, overlay text
-- When proposing options, each must be a genuinely different creative direction — not variations on the same structure
+- **One dominant element per screen.** Every tab needs ONE thing that's significantly larger than everything else — a number, a name, a stat. Everything else serves that element. If everything speaks at the same volume, nothing speaks.
+- **Draft board cards are the visual gold standard.** The teal/dark gradient backgrounds, position badges, headshots with college logos, round/pick numbers — this is the level of craft every card in the app should match.
+- **Beat ESPN, don't just parody it.** The broadcast aesthetic is the foundation but we're not constrained to looking like ESPN. If we can be cleaner, more modern, more refined — do it.
+- **Developer labels are not broadcast copy.** "COMPOSITE SCORE * 2026 OFFSEASON" reads like a developer subtitle. "SEASON RANKINGS" reads like a broadcast graphic. Every label should be punchy and confident, not descriptive and technical.
+- **Empty space is a design element.** Let things breathe. A section with room around it feels more important than one crammed between two others.
+- **Depth, not flatness.** Use gradients, subtle shadows, and layering to create dimension. Flat colored text on dark backgrounds feels cheap. Layered, dimensional surfaces feel premium.
+- **Interactions should reward you.** Every click, hover, and transition should feel satisfying. Tab switches should feel like a camera cut. Expanding a card should feel like opening something. Sorting should feel responsive.
 - If a design looks like "a styled div with smaller styled divs inside it," it's not done
 - Go bold first, pull back if needed — don't iterate timidly
 
@@ -57,9 +62,10 @@ After any UI change, run `/visual-verify` before considering the task done.
 ## Design System
 
 **Palette:** Dark warm theme. Base `#120e0c`, accent red `#cc0000`, gold `#ffcc00`
-**Fonts:** Oswald (display/headings), Inter (body), JetBrains Mono (stats/numbers)
-**Font weights:** 600-900 on headings is intentional — broadcast aesthetic, not a bug
-**Spacing:** 4px base unit (`--sp-1` through `--sp-10`)
+**Fonts:** Space Grotesk (display/headings — modern geometric, great for numbers), Inter (body), JetBrains Mono (stats/numbers). Oswald is being phased out — too "free sports template," hard to read at small sizes.
+**Font weights:** 600-800 on headings is intentional — authority and confidence, not decoration
+**Spacing:** 4px base unit (`--sp-1` through `--sp-10`). Strict rhythm: 24px between major sections, 12px within sections, 8px between tight elements.
+**Card system:** ONE visual language with variants. Draft board cards are the reference standard — gradient backgrounds, position badges, headshots, layered information. All other card types should share this DNA.
 **Component identity:** Broadcast headers (`.bh`) with angled clip-path, team-colored accents throughout
 
 ## Code Conventions
