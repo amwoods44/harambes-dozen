@@ -202,6 +202,13 @@ button{min-height:36px}
 .hero-hist-lbl{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--a);flex-shrink:0}
 .hero-hist-txt{font-family:var(--fb);font-size:13px;color:var(--t2);transition:opacity .4s}
 .hero-hist-txt.fade{opacity:0}
+.hero-hist-vintage{display:inline-block;padding:10px 20px 12px;background:linear-gradient(135deg,rgba(20,16,12,.9),rgba(30,22,16,.85));border:1px solid rgba(204,0,0,.25);border-radius:4px;text-align:center;position:relative;overflow:hidden}
+.hero-hist-vintage::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent)}
+.hero-hist-eyebrow{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(204,0,0,.6);margin-bottom:6px}
+.hero-hist-headline{font-family:var(--fd);font-size:clamp(14px,2vw,18px);line-height:1.2}
+.hero-hist-team{font-weight:800;color:var(--t1)}
+.hero-hist-verb{font-weight:400;color:var(--t3)}
+.hero-hist-pts{font-weight:800;color:var(--a);font-variant-numeric:tabular-nums}
 /* ═══ STAT STRIP ═══ */
 .sstrip{display:flex;background:var(--g2);border-top:1px solid var(--g5);border-bottom:1px solid var(--g5);max-width:100%;margin:0;padding:0}
 .ss{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 10px;border-right:1px solid var(--g5);gap:3px;min-width:0;position:relative;overflow:hidden}
@@ -2661,7 +2668,7 @@ async function loadHistory(disc,playerDB){
     try{
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
-      buildStats();buildTicker();
+      buildStats();buildTicker();buildHeroHist();
       ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
@@ -2767,24 +2774,71 @@ function buildCast(){
   }).join('');
   document.getElementById('cast-strip').innerHTML='<div class="cast-in">'+h+'</div><div class="cast-line"></div>';
 }
+function getCurrentNFLWeek(){
+  var now=new Date();
+  function septKickoff(yr){
+    var d=new Date(yr,8,1);
+    var dow=d.getDay();
+    var daysToThur=(4-dow+7)%7;
+    return new Date(yr,8,1+daysToThur);
+  }
+  var kickoff=septKickoff(now.getFullYear());
+  var diff=now-kickoff;
+  if(diff<0){kickoff=septKickoff(now.getFullYear()-1);diff=now-kickoff;}
+  return Math.max(1,Math.min(18,Math.floor(diff/(7*24*60*60*1000))+1));
+}
 function buildHeroHist(){
-  const el=document.getElementById('hero-hist');if(!el)return;
-  const facts=[
-    D.champions[0]?'\u2605 '+D.champions[0].champion+' \u2014 2025 Champion, 3-peat eligible':'',
-    D.records.highest_score?'All-time high score: '+D.records.highest_score.pts+' pts by '+tn(D.records.highest_score.roster_id)+' (Wk '+D.records.highest_score.week+')':'',
-    D.records.closest_game?'Closest game ever: '+D.records.closest_game.diff+' pts — Wk '+D.records.closest_game.week:'',
-    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts — Wk '+D.records.biggest_blowout.week:'',
-    D.trades.length+' total trades across 2024–2025',
-    D.champions[1]?'\u2605 '+D.champions[1].champion+' \u2014 2024 Champion over '+D.champions[1].runner_up:'',
-    D.champions[2]?'\u2605 '+D.champions[2].champion+' \u2014 2023 Champion over '+D.champions[2].runner_up:'',
-    (()=>{if(!D.franchise||!D.franchise.length)return'';const f=D.franchise.reduce((a,b)=>a.total_wins>b.total_wins?a:b);return 'All-time leader: '+f.name+' — '+f.total_wins+'-'+f.total_losses+' ('+Math.round(f.win_pct*100)+'% win rate)';})(),
+  var el=document.getElementById('hero-hist');if(!el)return;
+
+  var week=getCurrentNFLWeek();
+  var bestFact=null;
+  var bestScore=0;
+
+  var histYears=SEASON_YEARS.filter(function(yr){return yr!==CURRENT_YEAR;});
+  histYears.forEach(function(yr){
+    var mwKey='matchup_weeks_'+yr;
+    var mw=D[mwKey]||{};
+    var games=mw[week]||[];
+    games.forEach(function(g){
+      var highScore=Math.max(g.team_a.points,g.team_b.points);
+      var highTeam=g.team_a.points>=g.team_b.points?g.team_a.name:g.team_b.name;
+      if(highScore>bestScore){
+        bestScore=highScore;
+        bestFact={yr:yr,wk:week,team:highTeam,pts:highScore.toFixed(2),type:'high'};
+      }
+    });
+  });
+
+  if(bestFact){
+    el.innerHTML=
+      '<div class="hero-hist-vintage">'+
+        '<div class="hero-hist-eyebrow">THIS WEEK IN LEAGUE HISTORY \u2022 WEEK '+bestFact.wk+'</div>'+
+        '<div class="hero-hist-headline">'+
+          '<span class="hero-hist-team">'+esc(bestFact.team)+'</span>'+
+          '<span class="hero-hist-verb"> dropped </span>'+
+          '<span class="hero-hist-pts">'+bestFact.pts+'</span>'+
+          '<span class="hero-hist-verb"> pts in '+bestFact.yr+'</span>'+
+        '</div>'+
+      '</div>';
+    return;
+  }
+
+  // Fallback: rotating ticker
+  var facts=[
+    D.champions[0]?'\u2605 '+D.champions[0].champion+' \u2014 '+D.champions[0].year+' Champion':'',
+    D.records.highest_score?'All-time high: '+D.records.highest_score.pts+' pts by '+tn(D.records.highest_score.roster_id):'',
+    D.records.closest_game?'Closest ever: '+D.records.closest_game.diff+' pts \u2022 Wk '+D.records.closest_game.week:'',
+    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts \u2022 Wk '+D.records.biggest_blowout.week:'',
+    D.trades.length+' total trades \u2022 All Seasons',
+    D.champions[1]?'\u2605 '+D.champions[1].champion+' \u2014 '+D.champions[1].year+' Champion over '+D.champions[1].runner_up:'',
   ].filter(Boolean);
-  let idx=0;
+  if(!facts.length)return;
+  var idx=0;
   function show(){
-    const inner=el.querySelector('.hero-hist-txt');
+    var inner=el.querySelector('.hero-hist-txt');
     if(!inner)return;
     inner.classList.add('fade');
-    setTimeout(()=>{inner.textContent=facts[idx%facts.length];inner.classList.remove('fade');idx++;},350);
+    setTimeout(function(){inner.textContent=facts[idx%facts.length];inner.classList.remove('fade');idx++;},350);
   }
   el.innerHTML='<div class="hero-hist-inner"><span class="hero-hist-lbl">LEAGUE LORE</span><span class="hero-hist-txt">'+facts[0]+'</span></div>';
   idx=1;
