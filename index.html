@@ -1795,10 +1795,10 @@ function setLoadingStatus(msg){
 // ═══ COMPUTE RECORDS ═══
 function computeRecords(matchupWeeks){
   const _et={roster_id:0,points:0,name:'—'};
-  let biggestBlowout={diff:0,week:'-',winner:_et,loser:_et};
-  let closestGame={diff:Infinity,week:'-',winner:_et,loser:_et};
-  let highestScore={pts:0,roster_id:0,week:'-'};
-  let lowestScore={pts:Infinity,roster_id:0,week:'-'};
+  let biggestBlowout={diff:0,week:null,winner:_et,loser:_et};
+  let closestGame={diff:Infinity,week:null,winner:_et,loser:_et};
+  let highestScore={pts:0,roster_id:0,week:null};
+  let lowestScore={pts:Infinity,roster_id:0,week:null};
   Object.entries(matchupWeeks).forEach(([wk,games])=>{
     const week=parseInt(wk);
     (games||[]).forEach(g=>{
@@ -2035,6 +2035,9 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   });
   d.weekly_scores=weeklyScores;
   d.matchup_weeks=matchupWeeks;
+  // ── Offseason detection ──
+  d.isOffseason=!Object.keys(matchupWeeks).length;
+  d.lastSeason=null; // populated by mergeHistoricalData once historical seasons load
 
   // ── Records ──
   d.records=computeRecords(matchupWeeks);
@@ -2269,6 +2272,12 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       }
     }
   });
+
+  // ── Set lastSeason: most recent historical season with matchup data ──
+  var completedYears=historicalSeasons.filter(function(hs){return Object.keys(hs.matchups||{}).some(function(wk){return(hs.matchups[wk]||[]).length>0;});}).map(function(hs){return String(hs.season);}).sort();
+  d.lastSeason=completedYears.length?completedYears[completedYears.length-1]:null;
+  // If current season has games, it IS the last season
+  if(!d.isOffseason)d.lastSeason=String(d.league&&d.league.season?d.league.season:CURRENT_YEAR);
 
   // ── Recompute records across all seasons ──
   // Merge all matchup weeks from current + historical
