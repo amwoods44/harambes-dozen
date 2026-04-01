@@ -3524,7 +3524,14 @@ function renderTrophies(){
   h+='</div>';
   h+='<button class="race-play-btn" id="race-play-btn">'+icon('play',14,'#fff')+' Play Season</button>';
   h+='</div>';
+  h+='<div style="position:relative">';
   h+='<canvas id="standings-race-canvas" class="race-canvas"></canvas>';
+  h+='<div id="race-play-prompt" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--g2);border-radius:8px;cursor:pointer;transition:opacity 0.3s" onclick="this.style.opacity=\'0\';this.style.pointerEvents=\'none\';var pb=document.getElementById(\'race-play-btn\');if(pb)pb.click()">';
+  h+='<div style="font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--a)">PRESS PLAY</div>';
+  h+='<div style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--t1);margin-top:6px;text-transform:uppercase;letter-spacing:1px">WATCH THE '+(D.lastSeason||CURRENT_YEAR)+' SEASON UNFOLD</div>';
+  h+='<div style="width:48px;height:48px;border-radius:50%;background:var(--a);display:flex;align-items:center;justify-content:center;margin-top:16px"><div style="width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:16px solid #fff;margin-left:3px"></div></div>';
+  h+='</div>';
+  h+='</div>';
   // Records
   h+='<div class="rec-grid"><div class="rec"><div class="rec-emoji">'+icon('bolt',24,'var(--a)')+'</div><div class="rec-lbl">Biggest Win</div><div class="rec-val">'+D.records.biggest_blowout.diff+'</div><div class="rec-sub">'+(D.records.biggest_blowout.week?'Wk'+D.records.biggest_blowout.week+' \u2022 ':'')+tn(D.records.biggest_blowout.winner.roster_id)+'</div></div>';
   h+='<div class="rec"><div class="rec-emoji">'+icon('equal',24,'var(--y)')+'</div><div class="rec-lbl">Closest</div><div class="rec-val">'+D.records.closest_game.diff+'</div><div class="rec-sub">'+(D.records.closest_game.week?'Wk'+D.records.closest_game.week:'')+'</div></div>';
@@ -5953,7 +5960,7 @@ function renderWarRoom(){
       var target=new Date(ev.date);
       var diff=target-now;
       days=Math.floor(diff/864e5);
-      urgency=days<14?'urgent':days<60?'soon':'future';
+      urgency=days<30?'urgent':days<60?'soon':'future';
     }
     h+='<div class="wr-timer '+urgency+'">';
     h+='<div class="wr-timer-label">'+ev.label+'</div>';
@@ -6099,6 +6106,7 @@ function renderPulse(){
   var tempColor=tempScore>=70?'var(--a)':tempScore>=40?'var(--y)':'var(--blu)';
   var circ=2*Math.PI*34;
   var offset=circ-(tempScore/100)*circ;
+  h+='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--t4);margin-bottom:var(--sp-2)">LEAGUE TEMPERATURE</div>';
   h+='<div class="pulse-temp">';
   h+='<div class="pulse-temp-gauge"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="34"/><circle class="fg" cx="40" cy="40" r="34" stroke="'+tempColor+'" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+offset.toFixed(1)+'"/></svg><div class="pulse-temp-val">'+tempScore+'</div></div>';
   h+='<div style="flex:1"><div style="font:800 var(--text-base)/1.2 var(--fd);color:var(--t1);margin-bottom:var(--sp-1)">League Temperature: <span style="color:'+tempColor+'">'+tempLabel+'</span></div>';
