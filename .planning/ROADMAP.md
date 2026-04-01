@@ -72,7 +72,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Pipeline fixes: exemption aggregation in parseContractCSV, waiver auto-assignment, POS/Fantasy Team column parsing (CONT-01, CONT-02, CONT-08)
+- [x] 03-01-PLAN.md — Pipeline fixes: exemption aggregation in parseContractCSV, waiver auto-assignment, POS/Fantasy Team column parsing (CONT-01, CONT-02, CONT-08)
 - [ ] 03-02-PLAN.md — cpill distribution: contract pills across Rosters bench, Trade History, GM Dashboard + RELEASABLE badge (CONT-03, CONT-04, CONT-05, CONT-06)
 - [ ] 03-03-PLAN.md — Sortable keeper sheet + exemption timeline/cliff chart data verification (CONT-07, CONT-09, CONT-10)
 

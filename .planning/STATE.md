@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 context gathered
-last_updated: "2026-04-01T14:19:45.079Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-04-01T14:40:52.446Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 12
+  completed_plans: 10
   percent: 0
 ---
 
@@ -21,12 +21,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-31)
 
 **Core value:** Every screen looks like it belongs on a broadcast — not a developer's side project.
-**Current focus:** Phase 02 — narrative-delight
+**Current focus:** Phase 03 — contracts-complete
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (contracts-complete) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
 Last activity: 2026-04-01
 
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-narrative-delight P03 | 25min | 2 tasks | 1 files |
 | Phase 02-narrative-delight P04 | 14min | 1 tasks | 1 files |
 | Phase 02-narrative-delight P05 | 3min | 2 tasks | 1 files |
+| Phase 03-contracts-complete P01 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,9 @@ Recent decisions affecting current work:
 - [Phase 02-narrative-delight]: buildPowerMoves derives winner/loser names from team_a/team_b (which have .name) — winner/loser objects only have roster_id and points
 - [Phase 02-narrative-delight]: ID selector for standings race canvas CSS to avoid conflicting with existing .race-canvas Power Race rule
 - [Phase 02-narrative-delight]: RAF cleanup at top of renderTrophies() prevents orphaned animation loops on re-render
+- [Phase 03-contracts-complete]: Exemption had/added fields set to null -- CSV lacks before/after data, timeline UI handles nulls with '--' display
+- [Phase 03-contracts-complete]: Waiver auto-assignment placed AFTER acquisition tracking (option b) for correct data ordering
+- [Phase 03-contracts-complete]: Fantasy Team column detection uses combined check: header matching + positional fallback at index 3
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T14:19:45.074Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-contracts-complete/03-CONTEXT.md
+Last session: 2026-04-01T14:40:52.444Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None

@@ -22,14 +22,14 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Contracts
 
-- [ ] **CONT-01**: Contract data flows reliably from Google Sheets CSV into `D.contracts` with parsed years, team, and player mapping
-- [ ] **CONT-02**: `D.exemption_history` populated from contract data in `buildCurrentSeasonData()`
+- [x] **CONT-01**: Contract data flows reliably from Google Sheets CSV into `D.contracts` with parsed years, team, and player mapping
+- [x] **CONT-02**: `D.exemption_history` populated from contract data in `buildCurrentSeasonData()`
 - [ ] **CONT-03**: Contract pills (1-7 years) visible on player cards in Rosters tab
 - [ ] **CONT-04**: Contract pills visible in GM Dashboard player listings
 - [ ] **CONT-05**: Contract years visible in Trade History cards (what contract came with traded players)
 - [ ] **CONT-06**: Release eligibility indicator on players with 1 year remaining
 - [ ] **CONT-07**: Annual exemption tracking — which team used their exemption, on which player, displayed in Contracts tab
-- [ ] **CONT-08**: Waiver pickups display as 1-year auto-assigned contracts
+- [x] **CONT-08**: Waiver pickups display as 1-year auto-assigned contracts
 - [ ] **CONT-09**: Contract Cliff Chart — stacked area showing when each team's contracted talent expires
 - [ ] **CONT-10**: Contracts tab fully functional with sortable keeper/contract sheet view
 
@@ -127,14 +127,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-08 | Phase 1 | Complete |
 | INFRA-09 | Phase 1 | Complete |
 | INFRA-10 | Phase 1 | Complete |
-| CONT-01 | Phase 3 | Pending |
-| CONT-02 | Phase 3 | Pending |
+| CONT-01 | Phase 3 | Complete |
+| CONT-02 | Phase 3 | Complete |
 | CONT-03 | Phase 3 | Pending |
 | CONT-04 | Phase 3 | Pending |
 | CONT-05 | Phase 3 | Pending |
 | CONT-06 | Phase 3 | Pending |
 | CONT-07 | Phase 3 | Pending |
-| CONT-08 | Phase 3 | Pending |
+| CONT-08 | Phase 3 | Complete |
 | CONT-09 | Phase 3 | Pending |
 | CONT-10 | Phase 3 | Pending |
 | ROST-01 | Phase 4 | Pending |
