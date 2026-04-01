@@ -5286,8 +5286,8 @@ function renderKeeperTable(){
     var tagText=p.tag?esc(typeof p.tag==='string'?p.tag:'TAG'):'';
     var exmText=p.exm?esc(p.exm):'';
     h+='<tr class="'+(i%2===0?'keeper-even':'')+'">';
-    h+='<td class="keeper-name"><span class="pp-trigger" data-pid="'+p.id+'">'+esc(p.name)+'</span>'+cpill(p.name)+(p.yrs===1?cbadge('RELEASABLE','red'):'')+'</td>';
-    h+='<td>'+av(p.rid,16)+' <span class="keeper-team">'+esc(p.team).substring(0,14)+'</span></td>';
+    h+='<td class="keeper-name"><span class="pp-trigger" data-pid="'+p.id+'">'+p.name+'</span>'+cpill(p.name)+(p.yrs===1?cbadge('RELEASABLE','red'):'')+'</td>';
+    h+='<td>'+av(p.rid,16)+' <span class="keeper-team">'+p.team.substring(0,14)+'</span></td>';
     h+='<td><span class="pl-pos pos-'+p.pos+'">'+p.pos+'</span></td>';
     h+='<td style="color:'+yrCol+';font-weight:700">'+yrText+'</td>';
     h+='<td>'+(tagText?cbadge(tagText,'y'):'')+'</td>';
