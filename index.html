@@ -1590,6 +1590,30 @@ span.player-link:hover,a.player-link:hover{color:var(--a)}
 .hm-legend{margin:0 0 8px 0;justify-content:flex-start;gap:20px;padding-left:185px}
 @media(max-width:600px){.hm-legend{padding-left:80px}}
 
+/* ═══ PHASE 03.2 PLAN 05 — ANALYTICS, GM, AWARDS, CONTRACTS, TROPHIES, PULSE ═══ */
+
+/* D-46: H2H matrix row break every 4 rows */
+.h2h-row-break{border-top:2px solid var(--g5)!important}
+
+/* D-49: GM lifetime badge label — 11px not 9px */
+.badge-case-hdr{font-size:11px!important;letter-spacing:3px}
+
+/* D-51: Keeper sheet header row visual weight — upgrade background */
+.keeper-tbl thead th{background:var(--g2)!important}
+.keeper-tbl thead tr{background:var(--g2)}
+
+/* D-44: Age Map minor polish */
+.window-tag{font-size:12px;padding:3px 10px;letter-spacing:.5px}
+.age-avg.age-y{font-size:16px}
+
+/* D-50: Rivals consistent spacing */
+.rival-card{margin-bottom:var(--sp-4)}
+.rival-badge{font-size:11px;padding:3px 10px}
+
+/* D-52: Narrative section elevation */
+.narrative{box-shadow:var(--shadow-sm)}
+.narrative:hover{box-shadow:var(--shadow-md)}
+
 </style>
 </head>
 <body>
@@ -4800,7 +4824,7 @@ function renderAwards(){
   h+='</div>';
   // ── Hall of Fame ──
   h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">Hall of Fame</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Lifetime Achievement Rankings</span></div></div>';
-  h+='<div class="hof-section">';
+  h+='<div class="hof-section"><div style="background:var(--g2);border:1px solid var(--g4);border-radius:12px;overflow:hidden;margin-top:var(--sp-4)">';
   var hofData=D.teams.map(function(t){
     return{name:t.team_name,rid:t.roster_id,badges:computeLifetimeBadges(t.roster_id)};
   }).sort(function(a,b){return b.badges.length-a.badges.length;});
@@ -4816,7 +4840,7 @@ function renderAwards(){
     h+='<div class="hof-count">'+row.badges.length+' badge'+(row.badges.length!==1?'s':'')+'</div>';
     h+='</div>';
   });
-  h+='</div>';
+  h+='</div></div>';
   document.getElementById('tab-awards').innerHTML=h;
 }
 // ═══ ANALYTICS ═══
@@ -4842,8 +4866,9 @@ function renderAnalytics(){
   h+='<div class="h2h-matrix"><div class="h2h-grid" style="grid-template-columns:160px repeat('+n+',1fr)">';
   h+='<div class="h2h-hdr"></div>';
   rids.forEach(r=>{h+='<div class="h2h-hdr rot" title="'+D.rid_to_name[r]+'">'+toAbbr(D.rid_to_name[r])+'</div>'});
-  rids.forEach(a=>{
-    h+='<div class="h2h-hdr" style="text-align:left">'+D.rid_to_name[a].substring(0,22)+'</div>';
+  rids.forEach((a,ri)=>{
+    const rowBreak=ri>0&&ri%4===0?' h2h-row-break':'';
+    h+='<div class="h2h-hdr'+rowBreak+'" style="text-align:left">'+D.rid_to_name[a].substring(0,22)+'</div>';
     rids.forEach(b=>{
       if(a===b){h+='<div class="h2h-cell h2h-self">\u2014</div>';return;}
       const key=a+'-'+b;
@@ -4855,7 +4880,7 @@ function renderAnalytics(){
   });
   h+='</div></div>';
   // ── ALL-PLAY RECORD ──
-  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">All-Play</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">How Many Teams You\'d Beat Each Week</span></div></div>';
+  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">ALL-PLAY RECORDS</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">IF YOU PLAYED EVERY TEAM EACH WEEK</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">All-play record: for each week, count how many of the other 11 teams your score would have beaten. This removes schedule luck entirely.</div></div></div>';
   const allPlay=rids.map(rid=>{
     const wk=analyticsWeeklyScores[rid]||[];
@@ -4882,11 +4907,11 @@ function renderAnalytics(){
   });
   h+='</tbody></table></div>';
   // ── CONSISTENCY SCATTER ──
-  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">Consistency</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Average Points vs Variance</span></div></div>';
+  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">CONSISTENCY</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">WEEKLY SCORING VARIANCE</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Top-right = high scoring + inconsistent (boom/bust). Top-left = low scoring + inconsistent (bad + volatile). Bottom-right = high scoring + consistent (elite). Bottom-left = low + consistent (mediocre but steady).</div></div></div>';
   h+='<canvas class="consistency-chart" id="scatter-chart"></canvas>';
   // ── PYTHAGOREAN WINS ──
-  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">Pythagorean</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Expected Wins Based on Points For/Against</span></div></div>';
+  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">PYTHAGOREAN EXPECTATION</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">EXPECTED W-L BASED ON POINTS</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Pythagorean expectation: uses PF and PA to calculate "deserved" wins. Teams above expected are overperforming, below are underperforming.</div></div></div>';
   // Calc PA per team from matchups
   const paMap={};
@@ -4914,7 +4939,7 @@ function renderAnalytics(){
   });
   h+='</tbody></table></div>';
   // ── STRENGTH OF SCHEDULE ──
-  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">SOS</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Strength of Schedule \u2022 Opponent Win %</span></div></div>';
+  h+='<div class="bh" class="u-mt-6"><h2 class="bh-tag">STRENGTH OF SCHEDULE</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">AVERAGE OPPONENT SCORE</span></div></div>';
   const sosData=rids.map(rid=>{
     let oppWins=0,oppGames=0;
     Object.values(analyticsMatchupWeeks).forEach(wk=>{
@@ -5098,7 +5123,7 @@ function renderGM(){
     h+='<div class="mgr-stat"><div class="mgr-sv" class="u-body">'+picksM+'</div><div class="mgr-sl">PICKS</div></div>';
     h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px;color:'+ageColor+'">'+avgAgeS+'</div><div class="mgr-sl">AVG AGE</div></div>';
     h+='</div>';
-    var careerLine='<div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--t4);margin:4px 0 8px;padding:0 2px">CAREER: '+franchiseM.total_wins+'W\u2013'+franchiseM.total_losses+'L \u00b7 '+Math.round(franchiseM.total_pts)+' PF'+(franchiseM.championships?' \u00b7 '+franchiseM.championships+' TITLE'+(franchiseM.championships>1?'S':''):'')+'</div>';
+    var careerLine='<div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--t2);letter-spacing:.5px;padding:var(--sp-2) var(--sp-4);background:var(--g3);border-radius:var(--radius-sm);margin:6px 0 8px;border-left:3px solid var(--a)">'+'<span style="color:var(--t1);font-weight:800">'+franchiseM.total_wins+'W\u2013'+franchiseM.total_losses+'L</span>'+'<span style="color:var(--t4);margin:0 6px">\u00b7</span>'+'<span style="color:var(--y)">'+Math.round(franchiseM.total_pts)+' PF</span>'+(franchiseM.championships?'<span style="color:var(--t4);margin:0 6px">\u00b7</span>'+franchiseM.championships+' TITLE'+(franchiseM.championships>1?'S':''):'')+'</div>';
     h+=careerLine;
     h+='<div class="mgr-badges">';
     if(champM.length)h+='<span class="mgr-badge" style="background:#FFD70022;color:#FFD700;border:1px solid #FFD70044">\u2605 CHAMP</span>';
