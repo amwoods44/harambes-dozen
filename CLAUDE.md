@@ -62,7 +62,7 @@ After any UI change, run `/visual-verify` before considering the task done.
 ## Design System
 
 **Palette:** Dark warm theme. Base `#120e0c`, accent red `#cc0000`, gold `#ffcc00`
-**Fonts:** Poppins (display/headings — geometric, industry standard for fantasy sports, used by FantasyPros + Sleeper), Inter (body + stats). Two-font stack. Clean, proven, readable at every size.
+**Fonts:** DM Sans (everything — display, body, stats). Single-font stack. Geometric, clean, modern — similar DNA to Google Sans/Calibri. Loaded via Google Fonts, weights 400-900.
 **Font weights:** 600-800 on headings is intentional — authority and confidence, not decoration
 **Spacing:** 4px base unit (`--sp-1` through `--sp-10`). Strict rhythm: 24px between major sections, 12px within sections, 8px between tight elements.
 **Card system:** ONE visual language with variants. Draft board cards are the reference standard — gradient backgrounds, position badges, headshots, layered information. All other card types should share this DNA.
@@ -230,10 +230,8 @@ The world's most polished dynasty fantasy football league companion app. An ESPN
 - Strategy: Cache-first for static assets, network-first for HTML, network-only for API calls
 - Assets in cache: `./`, `manifest.json`, `harambe-logo.png`
 ## Web Fonts
-- `Oswald` — Display/headings — weights 300, 400, 500, 600, 700, 800, 900
-- `Inter` — Body text — weights 400, 500, 600, 700, 800, 900
-- `JetBrains Mono` — Monospace/stats — weights 500, 600, 700, 800
-- Load URL: `https://fonts.googleapis.com/css2?family=Oswald:wght@300..900&family=Inter:wght@400..900&family=JetBrains+Mono:wght@500..800&display=swap`
+- `DM Sans` — All text (display, body, stats) — weights 400, 500, 600, 700, 800, 900
+- Load URL: `https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap`
 - Preconnect to `https://fonts.gstatic.com` for performance
 ## Icons & Assets
 - `harambe-logo.png` — App logo, 192x192 and 512x512 (PWA), committed to repo
