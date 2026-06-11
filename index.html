@@ -1309,6 +1309,15 @@ async function fetchAll(urls,concurrency=8){
 // Escape external strings at ingestion — everything renders via innerHTML
 function esc(s){return s==null?s:String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
+// Open/expanded UI state, keyed by stable ids so it survives destructive re-renders
+const UI_OPEN=new Set();
+function uiToggle(el){
+  el.classList.toggle('open');
+  const k=el.dataset.okey;
+  if(k){if(el.classList.contains('open'))UI_OPEN.add(k);else UI_OPEN.delete(k);}
+}
+function secOpen(key){return UI_OPEN.has('sec:'+key);}
+
 async function fetchCSV(url){
   for(let i=0;i<2;i++){
     try{
@@ -2590,7 +2599,7 @@ function renderPower(){
     const champBadge=t.isChamp?' \u2605':'';
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF').slice(0,5);
     const rankClass=i>=9?' rank-low':'';
-    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+'" onclick="this.classList.toggle(\'open\')">';
+    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+(UI_OPEN.has('power:'+t.roster_id)?' open':'')+'" data-okey="power:'+t.roster_id+'" onclick="uiToggle(this)">';
     h+='<div class="prk'+rankClass+'"><div class="prk-n">'+(i+1)+'</div></div>';
     h+='<div class="pcbar" style="background:'+barC+'"></div>';
     h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
@@ -2726,7 +2735,7 @@ function renderRosters(){
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgA=ages.length?(ages.reduce((a,b)=>a+b,0)/ages.length).toFixed(1):'?';
     const badges=calcBadges(t.team_name);
-    h+='<div class="pcard" onclick="this.classList.toggle(\'open\')" style="grid-template-columns:auto 3px 1fr auto">';
+    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto">';
     h+='<div class="prk" style="padding:10px">'+av(t.roster_id,36)+'</div>';
     h+='<div class="pcbar" style="background:var(--a)"></div>';
     var cCount=0,cExp=0;
@@ -3193,7 +3202,7 @@ function renderTrades(){
     ktcRecord[b.name]=(ktcRecord[b.name]||0)+bNet;
   });
   // Trade grade leaderboard
-  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'record\')"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to '+(secOpen('record')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('record')?'':'none')+'">';
   var krArr=Object.entries(ktcRecord).sort(function(a,b){return b[1]-a[1]});
   var maxKR=Math.max.apply(null,krArr.map(function(x){return Math.abs(x[1])}));
   krArr.forEach(function(entry){
@@ -3289,7 +3298,7 @@ function renderTrades(){
   h+='<button id="trades-show-more" class="wk-btn" style="display:none;margin:16px auto;padding:8px 24px" onclick="toggleTradeShowAll()">Show all trades</button>';
   // H2H Rivalries
   if(D.rivalries&&D.rivalries.length){
-    h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+    h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'rivalries\')"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to '+(secOpen('rivalries')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('rivalries')?'':'none')+'">';
     D.rivalries.filter(function(r){return r.total>=2}).forEach(function(r){
       const aName=tn(r.a),bName=tn(r.b);
       const aW=r.a_wins,bW=r.b_wins;
@@ -3300,7 +3309,7 @@ function renderTrades(){
     h+='</div></div>'; // close rivalries section body + wrapper
   }
   // Pick capital
-  h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'capital\')"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to '+(secOpen('capital')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('capital')?'':'none')+'">';
   const cap={};
   D.pick_trades.forEach(function(p){
     cap[p.current_owner]=cap[p.current_owner]||{g:0,l:0};cap[p.current_owner].g++;
@@ -3343,7 +3352,7 @@ function renderTrades(){
   }
   h+='</div></div>'; // close capital section body + wrapper
   // ── TRADE PARTNER MATRIX ──
-  h+='<div class="tc-section" style="margin-top:24px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:24px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'partners\')"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to '+(secOpen('partners')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('partners')?'':'none')+'">';
   const tpMap={};
   (D.unified_trades||[]).forEach(function(tr){
     if(tr.sides.length===2){
@@ -3373,12 +3382,16 @@ function renderTrades(){
       wrap.classList.toggle('flipped');
     });
   });
-  // Default: show current year only
-  filterTradeYear(currentYr);
-  var yrBtn=document.querySelector('.wk-sel .wk-btn:not(:first-child)');
-  if(yrBtn){document.querySelectorAll('.wk-sel .wk-btn').forEach(function(b){b.classList.remove('active')});yrBtn.classList.add('active');}
+  // Default: show current year only; keep the user's filter across re-renders
+  var selYr=_tradeYearSel&&(_tradeYearSel==='all'||tradeYears.indexOf(_tradeYearSel)>=0)?_tradeYearSel:currentYr;
+  filterTradeYear(selYr);
+  document.querySelectorAll('#tab-trades .wk-sel .wk-btn').forEach(function(b){
+    var t=b.textContent.trim();
+    b.classList.toggle('active',(selYr==='all'&&t==='ALL')||t===selYr);
+  });
 }
 var _tradeShowAll=false;
+var _tradeYearSel=null;
 function fixTradeCardHeights(){
   document.querySelectorAll('.tc-wrap').forEach(function(wrap){
     if(wrap.style.display==='none')return;
@@ -3387,6 +3400,7 @@ function fixTradeCardHeights(){
   });
 }
 function filterTradeYear(yr){
+  _tradeYearSel=yr;
   _tradeShowAll=false;
   var cards=document.querySelectorAll('.tc-wrap');
   var shown=0;
@@ -3415,11 +3429,14 @@ function toggleTradeShowAll(){
   if(btn)btn.style.display='none';
   requestAnimationFrame(fixTradeCardHeights);
 }
-function toggleSection(hdr){
+function toggleSection(hdr,key){
   var body=hdr.nextElementSibling;
-  if(body)body.style.display=body.style.display==='none'?'':'none';
+  if(!body)return;
+  var open=body.style.display==='none';
+  body.style.display=open?'':'none';
+  if(key){if(open)UI_OPEN.add('sec:'+key);else UI_OPEN.delete('sec:'+key);}
   var sub=hdr.querySelector('.bh-sub');
-  if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(body.style.display==='none'?'expand':'collapse');
+  if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(open?'collapse':'expand');
 }
 // ═══ MATCHUPS ═══
 function renderMatchups(){
