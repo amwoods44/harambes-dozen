@@ -1547,7 +1547,7 @@ function computeRecords(matchupWeeks){
   let highestScore={pts:0,roster_id:0,week:'-'};
   let lowestScore={pts:Infinity,roster_id:0,week:'-'};
   Object.entries(matchupWeeks).forEach(([wk,games])=>{
-    const week=parseInt(wk);
+    const week=parseInt(String(wk).split('_').pop());
     (games||[]).forEach(g=>{
       const a=g.team_a,b=g.team_b;
       const diff=parseFloat(Math.abs(a.points-b.points).toFixed(2));
@@ -2403,6 +2403,7 @@ async function loadHistory(disc,playerDB){
     try{
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
+      initSeasonConstants();
       buildStats();buildTicker();
       ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
@@ -2525,7 +2526,7 @@ function heroFacts(){
   const facts=[
     latest?'★ '+latest.champion+' — '+latest.year+' Champion'+(isRepeatChamp(champs)?', 3-peat eligible':''):'',
     r.highest_score&&r.highest_score.pts>0?'All-time high score: '+r.highest_score.pts+' pts by '+tn(r.highest_score.roster_id)+' (Wk '+r.highest_score.week+')':'',
-    r.closest_game&&isFinite(r.closest_game.diff)?'Closest game ever: '+r.closest_game.diff+' pts — Wk '+r.closest_game.week:'',
+    r.closest_game&&r.closest_game.week!=='-'?'Closest game ever: '+r.closest_game.diff+' pts — Wk '+r.closest_game.week:'',
     r.biggest_blowout&&r.biggest_blowout.diff>0?'Biggest blowout: '+r.biggest_blowout.diff+' pts — Wk '+r.biggest_blowout.week:'',
     D.trades.length?D.trades.length+' total trades across '+YEAR_RANGE:'',
     ...champs.slice(1).map(c=>'★ '+c.champion+' — '+c.year+' Champion over '+c.runner_up),
