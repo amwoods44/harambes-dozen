@@ -379,6 +379,7 @@ button{min-height:36px}
   .pcard{grid-template-columns:50px 4px 1fr auto}
   .prk-n{font-size:22px}
   .pnums{gap:10px;padding:12px 12px}
+  .roster-faces{display:none!important}
   .pnv.w{font-size:26px}
   .pk-grid{grid-template-columns:1fr}
   .banner-pn-wrap,.banner-pn-outer{width:140px}
@@ -780,6 +781,27 @@ body{padding-bottom:48px}
 .rival-bar-a{height:100%;display:flex;align-items:center;justify-content:flex-start;padding-left:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;transition:width .6s}
 .rival-bar-b{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;flex:1}
 .rival-badge{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+/* Rivalry marquee — tale of the tape */
+.rvq-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--g4);margin-bottom:14px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
+.rvq-rank{position:absolute;top:0;left:0;font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:2px;color:#000;background:var(--y);padding:3px 10px 3px 8px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%);z-index:2}
+.rvq-split{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px 16px 14px;gap:10px;position:relative}
+.rvq-side{display:flex;align-items:center;gap:12px;min-width:0}
+.rvq-side.right{flex-direction:row-reverse;text-align:right}
+.rvq-name{font-family:var(--fd);font-size:clamp(14px,2vw,20px);font-weight:800;color:var(--t1);text-transform:uppercase;line-height:1.05;overflow:hidden;text-overflow:ellipsis}
+.rvq-sub{font-family:var(--fm);font-size:10px;color:var(--t4);margin-top:3px}
+.rvq-center{text-align:center;padding:0 10px;flex-shrink:0}
+.rvq-score{font-family:var(--fd);font-size:clamp(26px,3vw,38px);font-weight:900;color:var(--t1);letter-spacing:1px;line-height:1;white-space:nowrap}
+.rvq-vs{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:3px;color:var(--a);margin-top:3px}
+.rvq-bar{height:7px;display:flex;overflow:hidden}
+.rvq-chips{display:flex;gap:6px;flex-wrap:wrap;padding:11px 16px 14px;position:relative}
+.rvq-chip{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(0,0,0,.3);color:var(--t3);border:1px solid var(--g4);text-transform:uppercase}
+.rvq-chip b{color:var(--t1)}
+.rvi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:8px}
+.rvi-row{display:flex;align-items:center;gap:8px;background:var(--g2);border:1px solid var(--g3);border-radius:8px;padding:8px 10px}
+.rvi-names{flex:1;min-width:0;font-family:var(--fd);font-size:11px;font-weight:700;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rvi-rec{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--y);flex-shrink:0}
+.rvi-bar{width:46px;height:5px;border-radius:3px;overflow:hidden;display:flex;flex-shrink:0;background:var(--g4)}
+@media(max-width:600px){.rvq-split{grid-template-columns:1fr auto 1fr;padding:20px 10px 10px}.rvq-side{flex-direction:column;text-align:center;gap:6px}.rvq-side.right{flex-direction:column;text-align:center}.rvq-name{font-size:12px}}
 /* ═══ PLAYOFF BRACKET ═══ */
 .bracket-wrap{margin:16px 0}
 .bracket-yr-sel{display:flex;gap:4px;margin-bottom:12px}
@@ -874,6 +896,17 @@ body{padding-bottom:48px}
 /* ═══ WAR ROOM ═══ */
 .wr-countdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:16px 0}
 .wr-timer{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:20px;text-align:center;position:relative;overflow:hidden}
+/* War Room status grid */
+.wr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:4px}
+.wr-card{background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:12px 14px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
+.wr-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.wr-card-name{font-family:var(--fd);font-size:13px;font-weight:800;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr-card-exm{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1.5px;display:flex;align-items:center;gap:5px;margin-top:3px}
+.wr-ind-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.wr-card-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center}
+.wr-csv{font-family:var(--fm);font-size:18px;font-weight:800;line-height:1}
+.wr-csl{font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--t4);margin-top:3px}
+.wr-card-exp{font-family:var(--fb);font-size:10px;color:var(--t3);margin-top:9px;padding-top:8px;border-top:1px solid var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wr-timer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .wr-timer.urgent::before{background:var(--red-t);animation:pulse 1.4s infinite}
 .wr-timer.soon::before{background:var(--y)}
@@ -893,6 +926,8 @@ body{padding-bottom:48px}
 .wr-ind.red{background:var(--red-t);box-shadow:0 0 6px rgba(239,68,68,.4)}
 /* ═══ PULSE FEED ═══ */
 .pulse-card{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px 20px;margin-bottom:12px;border-left:3px solid var(--a);transition:border-color .2s}
+.pulse-card.pulse-feature{background:linear-gradient(135deg,rgba(255,204,0,.08),transparent 55%),var(--g2);border-color:rgba(255,204,0,.35);border-left:4px solid var(--y);padding:22px 24px}
+.pulse-card.pulse-feature .pulse-headline{font-size:clamp(20px,3vw,28px);font-weight:900;text-transform:uppercase;letter-spacing:.5px}
 .pulse-card:hover{border-color:var(--a)}
 .pulse-card.trade{border-left-color:var(--y)}
 .pulse-card.record{border-left-color:var(--red-t)}
@@ -921,6 +956,8 @@ body{padding-bottom:48px}
 .chronicle-dot.record{background:var(--red-t);box-shadow:0 0 8px rgba(239,68,68,.4)}
 .chronicle-dot.exemption{background:var(--pur);box-shadow:0 0 8px rgba(139,92,246,.4)}
 .chronicle-event{background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:12px 16px;margin-top:100px;margin-bottom:12px;width:260px;transition:border-color .2s,transform .2s}
+.chronicle-event.feat{background:linear-gradient(150deg,rgba(255,204,0,.1),transparent 60%),var(--g2);border-color:rgba(255,204,0,.4);width:300px}
+.chronicle-event.feat .chronicle-event-title{font-size:17px;font-weight:900;text-transform:uppercase;color:var(--y)}
 .chronicle-event:hover{border-color:var(--g5);transform:translateY(-2px)}
 .chronicle-event-icon{font-size:24px;margin-bottom:6px}
 .chronicle-event-title{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px}
@@ -2201,7 +2238,7 @@ const TABS=[
   {id:'pulse',label:'Pulse'},
   {id:'chronicle',label:'Chronicle'},
 ];
-let aTab='power',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null;
+let aTab='power',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null,selMovesYr=null;
 const dirtyTabs=new Set();
 const tn=r=>D.rid_to_name[r]||'?';
 const isDefaultAvatar=url=>!url||url.includes('/avatars/thumbs/')||url.includes('default');
@@ -2776,15 +2813,36 @@ function renderRosters(){
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgA=ages.length?(ages.reduce((a,b)=>a+b,0)/ages.length).toFixed(1):'?';
     const badges=calcBadges(t.team_name);
-    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto">';
-    h+='<div class="prk" style="padding:10px">'+av(t.roster_id,36)+'</div>';
-    h+='<div class="pcbar" style="background:var(--a)"></div>';
-    var cCount=0,cExp=0;
-    if(D.contracts){t.players.forEach(function(p){var c=D.contracts[p.name];if(c){cCount++;if(c.yrs===0)cExp++;}});}
-    h+='<div class="pinfo"><div style="min-width:0"><div class="pname" style="font-size:16px">'+t.team_name+'</div><div class="psub">'+t.num_players+' players \u00b7 Avg '+avgA+(cCount?' \u00b7 '+cCount+' contracts'+(cExp?' \u00b7 <span style="color:var(--red-t)">'+cExp+' expiring</span>':''):'')+'</div>';
+    const tcR=TC[t.roster_id]||{};
+    const tcP=tcR.p||'#cc0000';
+    var cCount=0,cExp=0,cLong=0,cMid=0;
+    if(D.contracts){t.players.forEach(function(p){var c=D.contracts[p.name];if(c&&c.contracted){cCount++;if(c.yrs===0)cExp++;else if(c.yrs>=4)cLong++;else if(c.yrs>=2)cMid++;}});}
+    const cShort=Math.max(0,cCount-cExp-cLong-cMid);
+    const cNone=Math.max(0,t.num_players-cCount);
+    const totKtc=t.players.reduce((s2,p)=>s2+(p.ktc||0),0);
+    const rosterStarters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
+    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto;background:linear-gradient(100deg,'+tcP+'14,transparent 35%),var(--g2)">';
+    h+='<div class="prk" style="padding:10px">'+av(t.roster_id,40)+'</div>';
+    h+='<div class="pcbar" style="background:'+tcP+'"></div>';
+    h+='<div class="pinfo"><div style="min-width:0;flex:1">';
+    h+='<div class="pname" style="font-size:17px">'+t.team_name+'</div>';
+    h+='<div class="psub">'+t.num_players+' players \u00b7 Avg '+avgA+(cCount?' \u00b7 '+cCount+' contracts'+(cExp?' \u00b7 <span style="color:var(--red-t)">'+cExp+' expiring</span>':''):'')+'</div>';
+    // Contract heat strip: long (green) / mid (gold) / short (orange) / expiring (red) / uncontracted (gray)
+    if(t.num_players){
+      h+='<div style="display:flex;height:5px;border-radius:3px;overflow:hidden;margin-top:6px;max-width:300px">';
+      [[cLong,'#17b169'],[cMid,'var(--y)'],[cShort,'#f97316'],[cExp,'var(--red-t)'],[cNone,'var(--g4)']].forEach(function(seg){
+        if(seg[0]>0)h+='<span style="flex:'+seg[0]+';background:'+seg[1]+'"></span>';
+      });
+      h+='</div>';
+    }
     if(badges.length){h+='<div class="badge-row">';badges.forEach(b=>{h+='<span class="mgr-badge" style="background:'+b.bg+';color:'+b.color+'">'+b.label+'</span>'});h+='</div>';}
-    h+='</div></div>';
-    h+='<div class="pnums"><div class="parr">\u25BE</div></div>';
+    h+='</div>';
+    // Collapsed starter face strip
+    h+='<div class="roster-faces" style="display:flex;align-items:center;margin-left:12px">';
+    rosterStarters.slice(0,5).forEach(function(p,fi){h+='<span style="display:inline-block;margin-left:'+(fi?'-10px':'0')+';border-radius:50%;border:2px solid '+tcP+'55;line-height:0;background:var(--g3)">'+pimg(p.id,34)+'</span>';});
+    h+='</div>';
+    h+='</div>';
+    h+='<div class="pnums"><div class="pnb"><div class="pnv w" style="color:'+tcP+'">'+(totKtc>=1000?(totKtc/1000).toFixed(1)+'K':totKtc||'\u2014')+'</div><div class="pnl">Roster Value</div></div><div class="parr">\u25BE</div></div>';
     h+='<div class="pdet"><div class="pdet-in">';
     // Headshot row for starters
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
@@ -2955,60 +3013,55 @@ function renderTrophies(){
       h+='<div class="act-row"><span class="act-name">'+name+'</span><div class="act-bars"><div class="act-seg" style="width:'+tPct+'%;background:var(--a)"></div><div class="act-seg" style="width:'+mPct+'%;background:var(--y)"></div><div class="act-seg" style="width:'+dPct+'%;background:var(--pur)"></div></div><span class="act-val">'+total+'</span></div>';
     });
   }
-  // Season standings — dynamic from all available years
+  // Season-by-season chapters — standings + bracket per year, accordion (latest open)
+  if(!UI_OPEN.has('rafters-seeded')&&SEASON_YEARS.length){UI_OPEN.add('rafters-seeded');UI_OPEN.add('sec:rafters-'+SEASON_YEARS[SEASON_YEARS.length-1]);}
   SEASON_YEARS.slice().reverse().forEach(function(yr){
     var st=getStandings(yr);
     if(!st||!st.length)return;
     const champ=D.champions.find(function(c){return c.year===yr});
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">'+yr+'</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+(champ?'\u2605 '+champ.champion:'Final Standings')+'</span></div></div>';
+    var key='rafters-'+yr;
+    var open=secOpen(key);
+    h+='<div class="tc-section" style="margin-top:14px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\''+key+'\')"><h2 class="bh-tag">'+yr+'</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+(champ?'\u2605 '+champ.champion:'Final Standings')+' \u2022 Click to '+(open?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(open?'':'none')+'">';
     st.forEach(function(s,i){
       const isC=champ&&champ.champion===s.team_name;
       h+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team">'+(isC?'\u2605 ':i<6?'\u2705 ':'')+s.team_name+'</span><span class="h-rec">'+s.wins+'-'+s.losses+'</span><span class="h-pts">'+s.fpts+' PF</span></div>';
     });
-  });
-  // ── PLAYOFF BRACKET ──
-  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Playoffs</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Championship Bracket \u2022 Top 6 Seeds</span></div></div>';
-  SEASON_YEARS.slice().reverse().forEach(function(yr){
-    const stData=getStandings(yr);
-    const champ=D.champions.find(function(c){return c.year===yr});
-    if(!stData||!stData.length||!champ)return;
-    const top6=stData.slice(0,6);
-    h+='<div style="font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--y);margin:16px 0 8px">\u2605 '+yr+' PLAYOFFS</div>';
-    var s3=top6[2]?top6[2].team_name:'?',s4=top6[3]?top6[3].team_name:'?',s5=top6[4]?top6[4].team_name:'?',s6=top6[5]?top6[5].team_name:'?';
-    var s1=top6[0]?top6[0].team_name:'?',s2=top6[1]?top6[1].team_name:'?';
-    var arrow='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--g5);font-size:14px;padding-top:22px">&#x25B6;</div>';
-    h+='<div class="bracket-grid" style="grid-template-columns:1fr 20px 1fr 20px 1fr">';
-    // QF column
-    h+='<div><div class="bracket-round">Quarterfinals</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#3</span><span class="b-name">'+s3+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#6</span><span class="b-name">'+s6+'</span></div>';
-    h+='<div style="height:12px"></div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#4</span><span class="b-name">'+s4+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#5</span><span class="b-name">'+s5+'</span></div>';
-    h+='</div>';
-    // Connector QF→Semi
-    h+='<div>'+arrow+'</div>';
-    // Semi column
-    h+='<div><div class="bracket-round">Semifinals</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#1</span><span class="b-name">'+s1+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s3+' / '+s6+'</span></div>';
-    h+='<div style="height:12px"></div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#2</span><span class="b-name">'+s2+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s4+' / '+s5+'</span></div>';
-    h+='</div>';
-    // Connector Semi→Final
-    h+='<div>'+arrow+'</div>';
-    // Finals column
-    h+='<div><div class="bracket-round">Championship</div>';
-    h+='<div class="bracket-slot winner"><span class="b-name">\u2605 '+champ.champion+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">defeated</div>';
-    h+='<div class="bracket-slot"><span class="b-name">'+champ.runner_up+'</span></div>';
-    h+='</div>';
-    h+='</div>';
+    // Playoff bracket for this year
+    if(champ){
+      const top6=st.slice(0,6);
+      var s3=top6[2]?top6[2].team_name:'?',s4=top6[3]?top6[3].team_name:'?',s5=top6[4]?top6[4].team_name:'?',s6=top6[5]?top6[5].team_name:'?';
+      var s1=top6[0]?top6[0].team_name:'?',s2=top6[1]?top6[1].team_name:'?';
+      var arrow='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--g5);font-size:14px;padding-top:22px">&#x25B6;</div>';
+      h+='<div style="font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--y);margin:16px 0 8px">\u2605 '+yr+' PLAYOFFS</div>';
+      h+='<div class="bracket-grid" style="grid-template-columns:1fr 20px 1fr 20px 1fr">';
+      h+='<div><div class="bracket-round">Quarterfinals</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#3</span><span class="b-name">'+s3+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#6</span><span class="b-name">'+s6+'</span></div>';
+      h+='<div style="height:12px"></div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#4</span><span class="b-name">'+s4+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#5</span><span class="b-name">'+s5+'</span></div>';
+      h+='</div>';
+      h+='<div>'+arrow+'</div>';
+      h+='<div><div class="bracket-round">Semifinals</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#1</span><span class="b-name">'+s1+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s3+' / '+s6+'</span></div>';
+      h+='<div style="height:12px"></div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#2</span><span class="b-name">'+s2+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s4+' / '+s5+'</span></div>';
+      h+='</div>';
+      h+='<div>'+arrow+'</div>';
+      h+='<div><div class="bracket-round">Championship</div>';
+      h+='<div class="bracket-slot winner"><span class="b-name">\u2605 '+champ.champion+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">defeated</div>';
+      h+='<div class="bracket-slot"><span class="b-name">'+champ.runner_up+'</span></div>';
+      h+='</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
   });
   // ── ALL-TIME STANDINGS (CBS Era 2016-2020) ──
   if(D.alltime_standings&&D.alltime_standings.length){
@@ -4213,9 +4266,16 @@ function renderAnalytics(){
 }
 // ═══ MOVES ═══
 function renderMoves(){
-  const moves=D.moves||[];
-  let h='<div class="bh"><h2 class="bh-tag">Moves</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+moves.length+' Waiver & FA Transactions</span></div></div>';
-  if(!moves.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No moves data</div>';document.getElementById('tab-moves').innerHTML=h;return;}
+  const allMoves=D.moves||[];
+  let h='<div class="bh"><h2 class="bh-tag">Moves</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allMoves.length+' Waiver & FA Transactions</span></div></div>';
+  if(!allMoves.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No moves data</div>';document.getElementById('tab-moves').innerHTML=h;return;}
+  // Year filter — render one season at a time, newest by default
+  const mvYears=[...new Set(allMoves.map(m=>String(m.yr)))].sort();
+  if(!selMovesYr||mvYears.indexOf(selMovesYr)<0)selMovesYr=mvYears[mvYears.length-1];
+  if(mvYears.length>1){
+    h+='<div class="tab-sub">'+mvYears.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===selMovesYr?' active':'')+'" onclick="selMovesYr=\''+y+'\';renderMoves()">'+y+'</button>';}).join('')+'</div>';
+  }
+  const moves=allMoves.filter(m=>String(m.yr)===selMovesYr);
   // Stats bar
   const waivers=moves.filter(m=>m.tp==='waiver').length;
   const fas=moves.filter(m=>m.tp==='free_agent').length;
@@ -4484,32 +4544,73 @@ function renderGM(){
   },50);
 }
 // ═══ RIVALS ═══
+// Every regular-season meeting between two rosters, oldest first
+function rivalSeries(aRid,bRid){
+  const games=[];
+  SEASON_YEARS.forEach(y=>{
+    const mw=seasonMatchupWeeks(y);
+    Object.keys(mw).map(Number).sort((x,z)=>x-z).forEach(wk=>{
+      (mw[wk]||[]).forEach(g=>{
+        const ra=g.team_a.roster_id,rb=g.team_b.roster_id;
+        if((ra===aRid&&rb===bRid)||(ra===bRid&&rb===aRid))games.push({y,wk,g});
+      });
+    });
+  });
+  return games;
+}
 function renderRivals(){
   const rivals=D.rivalries||[];
-  let h='<div class="bh"><h2 class="bh-tag">Rivals</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+rivals.length+' Rivalry Matchups \u2022 Dominance Tracker</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Rivals</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Marquee Matchups \u2022 '+rivals.length+' Series Tracked</span></div></div>';
   if(!rivals.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No rivalry data</div>';document.getElementById('tab-rivals').innerHTML=h;return;}
-  h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Rivalries ranked by total games played. The dominance bar shows who owns the series. Rivalries are born in the regular season.</div></div></div>';
-  // Sort by total games then dominance
-  const sorted=rivals.slice().sort((a,b)=>b.total-a.total||(b.dominance||0)-(a.dominance||0));
-  sorted.forEach(r=>{
+  // Heat = volume + how contested the series is \u2014 the marquee earns its spot
+  const ranked=rivals.slice().map(r=>{
     const totalG=r.a_wins+r.b_wins;
     const aPct=totalG>0?(r.a_wins/totalG*100):50;
-    const bPct=100-aPct;
-    const aCol=r.a_wins>r.b_wins?'var(--a)':'var(--g5)';
-    const bCol=r.b_wins>r.a_wins?'var(--red-t)':'var(--g5)';
-    const isDom=r.dominant&&r.dominated;
-    h+='<div class="rival-card">';
-    h+='<div class="rival-hdr">';
-    h+='<div class="rival-vs">'+r.a+' <span style="color:var(--t4);font-size:12px">vs</span> '+r.b+'</div>';
-    h+='<div class="rival-total">'+totalG+' games</div>';
+    return{...r,totalG,aPct,heat:totalG*2+(50-Math.abs(aPct-50))/4};
+  }).sort((a,b)=>b.heat-a.heat);
+  const marquee=ranked.slice(0,6);
+  h+='<div class="stagger">';
+  marquee.forEach((r,mi)=>{
+    const tcA=TC[r.a_rid]||{},tcB=TC[r.b_rid]||{};
+    const aCol=tcA.p||'#cc0000',bCol=tcB.p||'#3b82f6';
+    const games=rivalSeries(r.a_rid,r.b_rid);
+    // Streak from the most recent meeting backwards
+    let stN=0,stRid=null;
+    for(let i=games.length-1;i>=0;i--){
+      const w=games[i].g.winner.roster_id;
+      if(stRid===null){stRid=w;stN=1;}
+      else if(w===stRid)stN++;
+      else break;
+    }
+    const last=games[games.length-1];
+    let big=null;games.forEach(gm=>{if(!big||gm.g.diff>big.g.diff)big=gm;});
+    h+='<div class="rvq-card" style="background:linear-gradient(105deg,'+aCol+'2e 0%,transparent 40%,transparent 60%,'+bCol+'2e 100%),var(--g2)">';
+    h+='<div class="rvq-rank">RIVALRY #'+(mi+1)+'</div>';
+    h+='<div class="rvq-split">';
+    h+='<div class="rvq-side">'+av(r.a_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.a+'</div><div class="rvq-sub">'+Math.round(r.aPct)+'% of series</div></div></div>';
+    h+='<div class="rvq-center"><div class="rvq-score">'+r.a_wins+'\u2013'+r.b_wins+'</div><div class="rvq-vs">ALL-TIME SERIES</div></div>';
+    h+='<div class="rvq-side right">'+av(r.b_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.b+'</div><div class="rvq-sub">'+Math.round(100-r.aPct)+'% of series</div></div></div>';
     h+='</div>';
-    h+='<div class="rival-bar-track">';
-    h+='<div class="rival-bar-a" style="width:'+aPct+'%;background:'+aCol+'">'+r.a_wins+'W</div>';
-    h+='<div class="rival-bar-b" style="background:'+bCol+'">'+r.b_wins+'W</div>';
+    h+='<div class="rvq-bar"><div style="width:'+r.aPct+'%;background:'+aCol+'"></div><div style="flex:1;background:'+bCol+'"></div></div>';
+    h+='<div class="rvq-chips">';
+    if(stRid!==null&&stN>1)h+='<span class="rvq-chip" style="border-color:'+(stRid===r.a_rid?aCol:bCol)+'66">STREAK <b>'+tn(stRid)+' W'+stN+'</b></span>';
+    if(last)h+='<span class="rvq-chip">LAST <b>\u2019'+String(last.y).slice(2)+' WK'+last.wk+' \u00b7 '+tn(last.g.winner.roster_id)+' '+last.g.winner.points.toFixed(1)+'\u2013'+last.g.loser.points.toFixed(1)+'</b></span>';
+    if(big&&big.g.diff>0)h+='<span class="rvq-chip">BIGGEST WIN <b>'+tn(big.g.winner.roster_id)+' BY '+big.g.diff.toFixed(1)+'</b></span>';
+    if(r.dominant&&r.dominance>=65)h+='<span class="rvq-chip" style="color:var(--y);border-color:rgba(255,204,0,.3)">'+r.dominant.toUpperCase()+' OWNS IT \u00b7 '+r.dominance+'%</span>';
     h+='</div>';
-    if(isDom){h+='<div style="margin-top:6px;display:flex;gap:8px;align-items:center"><span class="rival-badge" style="background:rgba(204,0,0,.12);color:var(--a)">'+r.dominant+' owns this rivalry</span></div>';}
     h+='</div>';
   });
+  h+='</div>';
+  // The other 60 pairings are reference data \u2014 a compact index, not 60 cards
+  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All Series</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Every Head-to-Head \u2022 Sorted by Games Played</span></div></div>';
+  h+='<div class="rvi-grid">';
+  ranked.slice(6).forEach(r=>{
+    const tcA=TC[r.a_rid]||{},tcB=TC[r.b_rid]||{};
+    h+='<div class="rvi-row"><span class="rvi-names">'+r.a+' <span style="color:var(--t4)">vs</span> '+r.b+'</span>';
+    h+='<span class="rvi-bar"><span style="width:'+r.aPct+'%;background:'+(tcA.p||'var(--a)')+'"></span><span style="flex:1;background:'+(tcB.p||'var(--g5)')+'"></span></span>';
+    h+='<span class="rvi-rec">'+r.a_wins+'\u2013'+r.b_wins+'</span></div>';
+  });
+  h+='</div>';
   document.getElementById('tab-rivals').innerHTML=h;
 }
 // ═══ CONTRACTS ═══
@@ -4805,53 +4906,13 @@ function renderWarRoom(){
     h+='</div>';
   });
   h+='</div>';
-  // Exemption Status Board
+  // \u2014 Team Status Grid: exemption + expiring + draft capital in one card per team \u2014
   var curSznNum=parseInt(D.league.season)||parseInt(CURRENT_YEAR);
   var prevSzn=String(curSznNum-1);
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Exemption Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+curSznNum+' Exemption Ownership</span></div></div>';
-  h+='<div class="wr-checklist">';
   var exmH=D.exemption_history||{};
   var usedPrev=(exmH[prevSzn]||[]).map(function(e){return e.o});
   var ownerCounts={};
   usedPrev.forEach(function(o){ownerCounts[o]=(ownerCounts[o]||0)+1});
-  D.teams.forEach(function(t){
-    var used=ownerCounts[t.team_name]||0;
-    var indColor=used===0?'green':used===1?'yellow':'red';
-    var label=used===0?'Has '+curSznNum+' Exemption':used>=2?'Used Multiple':'Possible Carryover';
-    h+='<div class="wr-team-row">';
-    h+=av(t.roster_id,32);
-    h+='<div style="min-width:0"><div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--t1)">'+t.team_name+'</div>';
-    h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">'+label+'</div></div>';
-    h+='<div class="wr-indicators"><div class="wr-ind '+indColor+'" title="'+label+'"></div></div>';
-    h+='</div>';
-  });
-  h+='</div>';
-  // Expiring Contracts Alert
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag" style="background:var(--red-t);color:white">Expiring Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">0-Year Deals \u2022 Decision Required</span></div></div>';
-  var expiringByTeam=[];
-  D.teams.forEach(function(t){
-    var exp=[];
-    t.players.forEach(function(p){
-      var c=D.contracts&&D.contracts[p.name];
-      if(c&&c.yrs===0)exp.push(p.name);
-    });
-    if(exp.length)expiringByTeam.push({team:t.team_name,rid:t.roster_id,players:exp});
-  });
-  expiringByTeam.sort(function(a,b){return b.players.length-a.players.length});
-  if(expiringByTeam.length){
-    expiringByTeam.forEach(function(row){
-      h+='<div class="wr-team-row">';
-      h+=av(row.rid,32);
-      h+='<div style="min-width:0;flex:1"><div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--t1)">'+row.team+'</div>';
-      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">'+row.players.join(', ')+'</div></div>';
-      h+='<div style="font-family:var(--fm);font-size:16px;font-weight:800;color:var(--red-t)">'+row.players.length+'</div>';
-      h+='</div>';
-    });
-  }else{
-    h+='<div style="text-align:center;padding:20px;color:var(--t3);font-family:var(--fb);font-size:13px">No expiring contracts found.</div>';
-  }
-  // Draft Capital Overview
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Draft Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Future Pick Inventory \u2022 Net Balance</span></div></div>';
   var capMap={};
   D.pick_trades.forEach(function(p){
     var cur=p.current_owner,orig=p.original_owner;
@@ -4860,28 +4921,41 @@ function renderWarRoom(){
     capMap[cur].gained++;
     if(orig!==cur)capMap[orig].lost++;
   });
-  var capArr=Object.entries(capMap).sort(function(a,b){return(b[1].gained-b[1].lost)-(a[1].gained-a[1].lost)});
-  capArr.forEach(function(entry){
-    var nm=entry[0],c=entry[1];
-    var net=c.gained-c.lost;
-    var col=net>0?'var(--grn)':net<0?'var(--red-t)':'var(--t4)';
-    var teamObj=D.teams.find(function(t){return t.team_name===nm});
-    h+='<div class="h-row" style="gap:8px">';
-    if(teamObj)h+=av(teamObj.roster_id,28);
-    h+='<span class="h-team" style="flex:1">'+nm+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4)">+'+c.gained+' gained</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4)">-'+c.lost+' traded</span>';
-    h+='<span style="font-family:var(--fm);font-size:16px;font-weight:800;color:'+col+';min-width:36px;text-align:right">'+(net>0?'+':'')+net+'</span>';
+  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Franchise Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Exemptions \u2022 Expiring Deals \u2022 Draft Capital \u2014 One Card Per Team</span></div></div>';
+  var statusCards=D.teams.map(function(t){
+    var used=ownerCounts[t.team_name]||0;
+    var exmColor=used===0?'#17b169':used===1?'var(--y)':'var(--red-t)';
+    var exmLabel=used===0?'EXEMPTION IN HAND':used>=2?'USED MULTIPLE':'CARRYOVER?';
+    var exp=[];
+    t.players.forEach(function(p){var c=D.contracts&&D.contracts[p.name];if(c&&c.yrs===0)exp.push(p.name);});
+    var cap=capMap[t.team_name]||{gained:0,lost:0};
+    var net=cap.gained-cap.lost;
+    return{t:t,used:used,exmColor:exmColor,exmLabel:exmLabel,exp:exp,net:net,urgency:exp.length*2+(used>=2?3:0)};
+  }).sort(function(a,b){return b.urgency-a.urgency});
+  h+='<div class="wr-grid stagger">';
+  statusCards.forEach(function(sc){
+    var t=sc.t,tc=TC[t.roster_id]||{},tcP=tc.p||'#cc0000';
+    var netCol=sc.net>0?'#17b169':sc.net<0?'var(--red-t)':'var(--t4)';
+    h+='<div class="wr-card" style="border-top:3px solid '+tcP+'">';
+    h+='<div class="wr-card-hdr">'+av(t.roster_id,34)+'<div style="min-width:0;flex:1"><div class="wr-card-name">'+t.team_name+'</div>';
+    h+='<div class="wr-card-exm" style="color:'+sc.exmColor+'"><span class="wr-ind-dot" style="background:'+sc.exmColor+'"></span>'+sc.exmLabel+'</div></div></div>';
+    h+='<div class="wr-card-stats">';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:'+(sc.exp.length?'var(--red-t)':'var(--t4)')+'">'+sc.exp.length+'</div><div class="wr-csl">EXPIRING</div></div>';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:'+netCol+'">'+(sc.net>0?'+':'')+sc.net+'</div><div class="wr-csl">NET PICKS</div></div>';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:var(--t2)">'+sc.used+'</div><div class="wr-csl">EXM USED \u2019'+prevSzn.slice(2)+'</div></div>';
+    h+='</div>';
+    if(sc.exp.length)h+='<div class="wr-card-exp">'+sc.exp.slice(0,3).join(' \u00b7 ')+(sc.exp.length>3?' +'+(sc.exp.length-3):'')+'</div>';
     h+='</div>';
   });
+  h+='</div>';
   document.getElementById('tab-warroom').innerHTML=h;
 }
 // ═══ PULSE FEED ═══
 function renderPulse(){
   var cards=[];
   // Championship recaps
-  D.champions.forEach(function(c){
-    cards.push({type:'championship',priority:10,icon:'\u2605',tag:'CHAMPIONSHIP',headline:c.champion+' Dynasty Champion — '+c.year,body:c.champion+' defeats '+c.runner_up+' in the '+c.year+' title game. A dynasty moment cemented in Harambe\'s Dozen lore.',meta:'SEASON '+c.year});
+  champsDesc().slice(0,2).forEach(function(c,i){
+    cards.push({type:'championship',priority:10-i,feature:i===0,icon:'\u2605',tag:i===0?'REIGNING CHAMPION':'CHAMPIONSHIP',headline:c.champion+' Dynasty Champion — '+c.year,body:c.champion+' defeats '+c.runner_up+' in the '+c.year+' title game. A dynasty moment cemented in Harambe\'s Dozen lore.',meta:'SEASON '+c.year});
   });
   // Record alerts
   var rec=D.records;
@@ -4915,20 +4989,23 @@ function renderPulse(){
       cards.push({type:'exemption',priority:5,icon:'\u25CB',tag:'EXEMPTION',headline:e.o+' uses '+(isTraded?'traded ':'')+'exemption on '+e.p,body:e.o+' restructures '+e.p+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+e.from+'.':'')+(e.note?' '+e.note+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
     });
   });
-  // Draft highlights
+  // Draft highlights — one story per draft class, not one per player
   var dh=D.draft_hits||{};
-  Object.entries(dh).forEach(function(entry){
-    var yr=entry[0],hits=entry[1];
-    hits.filter(function(h){return h.status==='starter'&&h.rd===1}).forEach(function(h){
-      var c=D.contracts&&D.contracts[h.nm];
-      cards.push({type:'draft',priority:4,icon:'\u25C6',tag:'DRAFT',headline:h.drafter+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+' by '+h.drafter+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
-    });
+  Object.keys(dh).sort().reverse().forEach(function(yr){
+    var hits=dh[yr]||[];
+    var r1=hits.filter(function(h){return h.rd===1});
+    var r1S=r1.filter(function(h){return h.status==='starter'});
+    if(!r1S.length)return;
+    var names=r1S.slice(0,4).map(function(h){return h.nm+' ('+h.drafter+')'}).join(', ');
+    var more=r1S.length>4?' +'+(r1S.length-4)+' more':'';
+    cards.push({type:'draft',priority:4,icon:'\u25C6',tag:'DRAFT CLASS',headline:yr+' first round: '+r1S.length+' of '+r1.length+' picks became starters',body:'The hits: '+names+more+'.',meta:yr+' ROOKIE DRAFT \u2022 ROUND 1 REPORT CARD'});
   });
   cards.sort(function(a,b){return b.priority-a.priority});
+  cards=cards.slice(0,20);
   var h='<div class="bh"><h2 class="bh-tag">League Pulse</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+cards.length+' League Stories \u2022 Powered by Dynasty Data</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Auto-generated narrative cards from real league data. Every trade, championship, record, and exemption has a story.</div></div></div>';
   cards.forEach(function(card){
-    h+='<div class="pulse-card '+card.type+'">';
+    h+='<div class="pulse-card '+card.type+(card.feature?' pulse-feature':'')+'">';
     h+='<span class="pulse-tag '+card.type+'">'+card.tag+'</span>';
     h+='<div class="pulse-headline">'+card.icon+' '+card.headline+'</div>';
     h+='<div class="pulse-body">'+card.body+'</div>';
@@ -4941,7 +5018,7 @@ function renderPulse(){
 function renderChronicle(){
   var events=[];
   // Championships
-  D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
+  D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',feat:true,icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
   // Records
   var recYr=D.records&&D.records.highest_score&&D.records.highest_score.year?D.records.highest_score.year:CURRENT_YEAR;
   if(D.records&&D.records.highest_score){events.push({year:parseInt(recYr),type:'record',icon:'\u2191',title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season \u2022 Wk '+D.records.highest_score.week});}
@@ -4953,12 +5030,24 @@ function renderChronicle(){
     var yr=parseInt(entry[0]),exms=entry[1];
     exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:'\u25CB',title:e.o+' extends '+e.p,body:'New deal: '+e.new_yrs+'yr. '+(e.note||''),date:yr+' Offseason'});});
   });
-  // Trades
-  (D.unified_trades||[]).forEach(function(t){
-    var yr=parseInt(t.yr);
-    var sideA=t.sides[0],sideB=t.sides[1];
-    var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks].slice(0,2).join(', ')||'picks';
-    events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Deal: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
+  // Trades \u2014 only the 3 biggest deals per year make the history books
+  var tradesByYear={};
+  (D.unified_trades||[]).forEach(function(t){var y=String(t.yr);(tradesByYear[y]=tradesByYear[y]||[]).push(t);});
+  function tradeHeat(t){
+    var v=0;
+    t.sides.forEach(function(sd){
+      sd.players.forEach(function(p){var c=D.contracts&&D.contracts[p.nm];v+=(c&&c.ktc)||800;});
+      v+=sd.picks.length*1500;
+    });
+    return v;
+  }
+  Object.keys(tradesByYear).forEach(function(y){
+    tradesByYear[y].sort(function(a,b){return tradeHeat(b)-tradeHeat(a)}).slice(0,3).forEach(function(t){
+      var yr=parseInt(t.yr);
+      var sideA=t.sides[0],sideB=t.sides[1];
+      var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks].slice(0,2).join(', ')||'picks';
+      events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Blockbuster: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
+    });
   });
   // All-time era (CBS era 2016-2020)
   if(D.alltime_standings&&D.alltime_standings.length){
@@ -4978,14 +5067,14 @@ function renderChronicle(){
   h+='<div class="chronicle">';
   h+='<div class="chronicle-track" id="chronicle-track">';
   yearList.forEach(function(yr){
-    var evts=years[yr];
+    var evts=years[yr].slice().sort(function(a,b){return(b.feat?1:0)-(a.feat?1:0)});
     h+='<div class="chronicle-year" id="chr-'+yr+'">';
     h+='<div class="chronicle-year-label">'+yr+'</div>';
     h+='<div class="chronicle-line"></div>';
     evts.forEach(function(ev,i){
       h+='<div style="position:relative">';
       h+='<div class="chronicle-dot '+ev.type+'" style="left:'+((i%3)*30)+'px" title="'+ev.title+'"></div>';
-      h+='<div class="chronicle-event">';
+      h+='<div class="chronicle-event'+(ev.feat?' feat':'')+'">';
       h+='<div class="chronicle-event-icon">'+ev.icon+'</div>';
       h+='<div class="chronicle-event-title">'+ev.title+'</div>';
       h+='<div class="chronicle-event-body">'+ev.body+'</div>';
