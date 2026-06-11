@@ -87,6 +87,7 @@ button{min-height:36px}
 .live-badge{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:4px;background:rgba(204,0,0,.1);border:1px solid rgba(204,0,0,.25)}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--a);box-shadow:0 0 10px rgba(204,0,0,.5);animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes cpillPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .live-txt{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:3px;color:var(--a)}
 .nfl-cd{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:6px;background:rgba(0,53,148,.1);border:1px solid rgba(0,53,148,.25);white-space:nowrap}
 .nfl-cd-units{display:flex;gap:5px;align-items:center}
@@ -1000,7 +1001,7 @@ body{padding-bottom:48px}
 .cpill-4{background:rgba(23,177,105,.12);color:#17b169}
 .cpill-23{background:rgba(245,158,11,.12);color:#ffcc00}
 .cpill-1{background:rgba(239,68,68,.12);color:#ff4444}
-.cpill-0{background:rgba(239,68,68,.20);color:#ff4444;animation:pulse 1.4s infinite}
+.cpill-0{background:rgba(239,68,68,.20);color:#ff4444;animation:cpillPulse 1.4s infinite}
 /* Item 18: Dynasty scatter */
 .dynasty-scatter{width:100%;height:320px;border-radius:12px;border:1px solid var(--g4);background:var(--g2);display:block;margin:16px 0}
 /* Item 19: Manager cards */
@@ -2397,6 +2398,7 @@ function renderTab(id){
 
 async function loadHistory(disc,playerDB){
   const historical=disc.chain.filter(c=>c.id!==disc.current.league_id).reverse();
+  const failed=[];
   for(const entry of historical){
     try{
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
@@ -2406,8 +2408,19 @@ async function loadHistory(disc,playerDB){
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
+      failed.push(entry.season);
     }
   }
+  if(failed.length)showHistoryNotice(failed);
+}
+
+function showHistoryNotice(seasons){
+  const div=document.createElement('div');
+  div.className='data-status';
+  div.style.cssText='color:var(--y);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)';
+  div.textContent=seasons.join(', ')+' HISTORY UNAVAILABLE — SHOWING PARTIAL DATA';
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),8000);
 }
 
 function showCacheBanner(){
@@ -2639,7 +2652,7 @@ function renderPower(){
   // Draw race chart
   setTimeout(()=>{
     const cvs=document.getElementById('race-chart');
-    if(!cvs)return;
+    if(!cvs||!cvs.offsetWidth)return;
     const ctx=cvs.getContext('2d');
     const dpr=window.devicePixelRatio||1;
     cvs.width=cvs.offsetWidth*dpr;cvs.height=cvs.offsetHeight*dpr;
@@ -3441,7 +3454,12 @@ function toggleSection(hdr,key){
 // ═══ MATCHUPS ═══
 function renderMatchups(){
   const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
-  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">2025 \u2022 Week '+selWk+'</span></div></div>';
+  if(!wks.length){
+    document.getElementById('tab-matchups').innerHTML='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season</span></div></div>'
+      +'<div class="empty-state"><div class="empty-state-icon">\u25a0</div><div class="empty-state-text">NO MATCHUPS YET</div><div class="empty-state-sub">The '+CURRENT_YEAR+' season kicks off '+fmtSeasonDate(SEASON_DATES.nflKickoff)+'</div></div>';
+    return;
+  }
+  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Week '+selWk+'</span></div></div>';
   h+='<div class="wk-sel">';
   wks.forEach(w=>{h+='<button class="wk-btn'+(w===selWk?' active':'')+'" onclick="selWk='+w+';renderMatchups()">'+w+'</button>'});
   h+='</div>';
@@ -3616,7 +3634,7 @@ function renderDraft(){
   draftYears.forEach(yr=>{h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+'</button>';});
   h+='</div>';
   var picks=D.draft_picks[selDraft]||[];
-  if(!picks.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No draft data</div>';document.getElementById('tab-draft').innerHTML=h;return;}
+  if(!picks.length){h+='<div class="empty-state"><div class="empty-state-icon">■</div><div class="empty-state-text">DRAFT BOARD</div><div class="empty-state-sub">'+(selDraft?'No picks for '+selDraft+' yet':'The '+CURRENT_YEAR+' rookie draft hasn\'t happened yet')+'</div></div>';document.getElementById('tab-draft').innerHTML=h;return;}
   var maxRd=Math.max.apply(null,picks.map(function(p){return p.rd}));
   var hits=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft]:[];
   var hitMap={};hits.forEach(function(h2){hitMap[h2.pid]=h2;});
@@ -4962,8 +4980,8 @@ window.addEventListener('DOMContentLoaded',init);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
-      .then(reg => { console.log('SW registered'); reg.update(); })
-      .catch(err => console.log('SW failed:', err));
+      .then(reg => { reg.update(); })
+      .catch(err => console.warn('SW failed:', err));
   });
 }
 
