@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Harambe's Dozen — Dynasty HQ</title>
-<meta name="description" content="Dynasty league headquarters for Harambe's Dozen. 12 teams, 3 seasons, full broadcast-quality dashboard.">
+<meta name="description" content="Dynasty league headquarters for Harambe's Dozen. 12 teams, full broadcast-quality dashboard.">
 <meta name="theme-color" content="#cc0000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dynasty HQ">
+<link rel="icon" type="image/png" href="harambe-logo.png">
+<link rel="apple-touch-icon" href="harambe-logo.png">
 <link rel="manifest" href="manifest.json">
 <meta property="og:title" content="Harambe's Dozen — Dynasty HQ">
 <meta property="og:description" content="12-team PPR dynasty league dashboard. Power rankings, trade history, player profiles, and more.">
@@ -1220,7 +1222,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 <body>
 <a href="#main" class="skip-nav">Skip to content</a>
 <div class="loading-screen" id="ls">
-  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAAAoCAYAAABwx1HiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA7dJREFUeNrsXdFR4zAQtTP5xx3EVICvAkIHuQoIFRAqOK6CXAfJVUCowL4KzlQQ04E7MKsbmdEoMsSSsnni9GY0MEk8s+w+Pb9d2yFNNHRdN6cfZYKDXZqm301vUKw5/binVdCaJ/83WloVrWfK13boQ5Sz8sy5qkWMtLYUZ6O/OTEckIMl+sWQ1IzWhn7d01pFMv5DRmtBa0O52dMqBj537vqKuH6I2lGMqxAJ2WpkLCQRl5GDgxA1LAdIiVTfNcW4/oyQM7Dk1topupRqEPG5Yj4ZLA4aVtImBqmQm0jGcUpJxV4C17bHfTCEJONbK81W9Irjca2pJiKCUUhVHW8jt6z9pNpQQNoL0ageELJ/EdE/Ap9uQsIFcGyFSSHRdlBrkvUIt6KDojUREk0hXyKHvHfekOh7hSAUUh0LRDjZngI92FTzkDmYV6tp57TS2xaRW1Zo+kt0wBu77RUyIiIiIiIiIgikin8UPm0F5n22Mrblmb2t8DeV8LNDH0C9kkQxP8r4FjY+vD/+GMgeZGkR5uGtaCKhHRaelNhQsBm6eECvP3Z42CvxlS7HH0lI2xy8b5QJ8IwKcQYpdv/QvYYzwHgbx/o2TCpemwiJfJUGCaKwpUEpc8BYXWeQYwl57VpnlZAXwMmsAUm5DoCQr0p/YH08Y52DUUjEoekiAELuHGs7ViHnjnXG9ZDa5P434qm795Kgd2LvlM41YyKkc6+AqpCtRs5KjAZA/SSiOor83Xmo7dGEdLgseaiQ4PdB9qQUCf4F2uggEVJs3kttZmrVH5geUz11rachddiUoAfaPOL0fZtgPYudnzlXtVzP8myig6PD9qKQU0ePcTOQgFN7S69NjvSCfx1298zyb0mZrQWaf9R7hXcPydWFoSKzTGbroJCcuUOdQR5gEoDHQD3luj7vw5I78BlkNUTIAnyHIxKyDYGQjGc/L32Ii4fM5BcXncJX3MjdvUx4Hn+1IdQfGaNtQ/PKREiuGWRmm0NfXXZ2oi5XfxYbpZMeijNnKjisQn7wxVbjPWQIM0hQ1MwKZAuO/sA2B0YPiTyDLAIgJPqEgqM/8KeQCfZ9kKjPETfKyAd9QsExg7QdmwWhkN59yQmwY1YgdIW88qmQaPdBVuDqKJTxJ7MC2W5qrhlk5lDnMBQSOK4H7cYFZIUMagYJ6SEVX4GokHfqF8qDXwXhnAB4mUGiK+QVUCxik3wz/HeDr9hh97bkLF5/CuofERSykrt4+0FHjD6DtD1LjZkFe5tBCrwJMADOg2IEMOOZEQAAAABJRU5ErkJggg==" alt="ESPN" class="loading-logo" style="height:48px;width:auto">
+  <img src="harambe-logo.png" alt="Harambe's Dozen" class="loading-logo" style="height:48px;width:auto">
   <div class="loading-title">HARAMBE'S <span class="ld-acc">DOZEN</span></div>
   <div class="loading-sub">Dynasty HQ Loading</div>
   <div class="loading-spinner"></div>
@@ -4973,7 +4975,7 @@ if ('serviceWorker' in navigator) {
     banner.className = 'install-banner';
 
     if (type === 'ios') {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Tap the ' + shareIconSVG + ' <b>Share</b> button above, then <b>\u201cAdd to Home Screen\u201d</b></div>'
@@ -4986,7 +4988,7 @@ if ('serviceWorker' in navigator) {
         + '<path d="M8 28 L20 12 L32 28" stroke="var(--a, #cc0000)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
         + '</svg></div>';
     } else if (type === 'chrome') {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Get instant access like a native app</div>'
@@ -4994,7 +4996,7 @@ if ('serviceWorker' in navigator) {
         + '<button class="install-banner-btn" id="pwa-install-btn">Install</button>'
         + '<button class="install-banner-close" id="pwa-close-btn">&times;</button>';
     } else {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Tap &#8942; menu then <b>\u201cAdd to Home Screen\u201d</b></div>'
