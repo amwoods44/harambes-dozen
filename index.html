@@ -1306,6 +1306,9 @@ async function fetchAll(urls,concurrency=8){
   return results;
 }
 
+// Escape external strings at ingestion — everything renders via innerHTML
+function esc(s){return s==null?s:String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
 async function fetchCSV(url){
   for(let i=0;i<2;i++){
     try{
@@ -1384,7 +1387,7 @@ async function fetchCurrentSeason(leagueId){
 
 // ═══ PLAYER DATABASE ═══
 async function fetchPlayerDB(allPlayerIds){
-  const cached=cache.get('hd_players');
+  const cached=cache.get('hd_players2');
   if(cached)return cached;
   const raw=await fetchJSON(`${CFG.sleeperBase}/players/nfl`);
   const db={};
@@ -1392,13 +1395,13 @@ async function fetchPlayerDB(allPlayerIds){
   for(const[id,p]of Object.entries(raw)){
     if(keep.has(id)||p.active){
       db[id]={
-        id,fn:p.full_name||`${p.first_name||''} ${p.last_name||''}`.trim(),
-        pos:p.position,tm:p.team,age:p.age,yrs:p.years_exp,
-        col:p.college,num:p.number,inj:p.injury_status,st:p.status
+        id,fn:esc(p.full_name||`${p.first_name||''} ${p.last_name||''}`.trim()),
+        pos:esc(p.position),tm:esc(p.team),age:p.age,yrs:p.years_exp,
+        col:esc(p.college),num:p.number,inj:esc(p.injury_status),st:esc(p.status)
       };
     }
   }
-  cache.set('hd_players',db,24*60*60*1000);
+  cache.set('hd_players2',db,24*60*60*1000);
   return db;
 }
 
@@ -1426,7 +1429,7 @@ async function fetchContracts(ktcMap){
     const csv=await fetchCSV(CFG.sheetCsvUrl);
     return parseContractCSV(csv,ktcMap||{});
   }catch(e){
-    const cached=cache.get('hd_contracts');
+    const cached=cache.get('hd_contracts2');
     return cached||{contracts:{},exemptions:{}};
   }
 }
@@ -1454,7 +1457,7 @@ function parseContractCSV(csv,ktcMap){
   for(let i=1;i<rows.length;i++){
     const r=rows[i];
     if(!r[nameIdx])continue;
-    const name=r[nameIdx];
+    const name=esc(r[nameIdx]);
     const sid=r[idIdx]||null;
     const ktcEntry=sid&&ktcMap[sid]?ktcMap[sid]:{};
     // Parse contract years: empty/blank = uncontracted (null), number = years remaining
@@ -1470,16 +1473,16 @@ function parseContractCSV(csv,ktcMap){
       sleeperId:sid,
       yrs:parsedYrs,
       contracted:parsedYrs!==null,
-      tag,
-      exm,
-      note:r[noteIdx]||'',
+      tag:esc(tag),
+      exm:esc(exm),
+      note:esc(r[noteIdx]||''),
       ktc:ktcEntry.val||0,
       rnk:ktcEntry.rnk||0,
       tier:ktcEntry.tier||0
     };
     if(sid)contracts['_id_'+sid]=contracts[name];
   }
-  cache.set('hd_contracts',{contracts,exemptions:{}},2*60*60*1000);
+  cache.set('hd_contracts2',{contracts,exemptions:{}},2*60*60*1000);
   return{contracts,exemptions:{}};
 }
 
@@ -1588,7 +1591,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   // ── League info ──
   const ls=league.settings||{};
   d.league={
-    name:league.name,
+    name:esc(league.name),
     season:league.season,
     status:league.status,
     num_teams:league.total_rosters||12,
@@ -1601,7 +1604,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
 
   // ── User map ──
   const userMap={};
-  (users||[]).forEach(u=>{userMap[u.user_id]={name:u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name,display_name:u.display_name,avatar:u.avatar};});
+  (users||[]).forEach(u=>{userMap[u.user_id]={name:esc(u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name),display_name:esc(u.display_name),avatar:u.avatar};});
 
   // ── rid_to_name ──
   d.rid_to_name={};
@@ -1830,7 +1833,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
   // Build rid_to_name helper that may need updating per season
   function ridToNameForSeason(rosters,users){
     const uMap={};
-    (users||[]).forEach(u=>{uMap[u.user_id]=u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name;});
+    (users||[]).forEach(u=>{uMap[u.user_id]=esc(u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name);});
     const map={};
     (rosters||[]).forEach(r=>{map[r.roster_id]=uMap[r.owner_id]||'Team '+r.roster_id;});
     return map;
@@ -2331,7 +2334,7 @@ async function init(){
     rebuildPlayerMap();
 
     // ── CACHE for fallback ──
-    cache.set('hd_cache_current',D);
+    cache.set('hd_cache_current2',D);
 
     // ── RENDER ──
     injectEmptyStates();
@@ -2357,7 +2360,7 @@ async function init(){
 
   }catch(e){
     console.error('Init failed:',e);
-    const cached=cache.get('hd_cache_current');
+    const cached=cache.get('hd_cache_current2');
     if(cached){
       D=cached;
       initSeasonConstants();
