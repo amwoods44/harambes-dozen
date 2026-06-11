@@ -1,5 +1,5 @@
-const CACHE_NAME = 'harambes-dozen-v3';
-const ASSETS = ['./', 'manifest.json'];
+const CACHE_NAME = 'harambes-dozen-v4';
+const ASSETS = ['./', 'index.html', 'manifest.json', 'harambe-logo.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(

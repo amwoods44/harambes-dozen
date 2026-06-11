@@ -6,8 +6,8 @@ Fantasy football dynasty league dashboard for a 12-team PPR league. Single-file 
 
 ## Tech Stack
 
-- **Frontend:** Vanilla HTML + CSS + JS in a single `index.html` (~4,500 lines)
-- **Data:** Sleeper.app REST API (live), Google Sheets CSV (contracts — currently placeholder)
+- **Frontend:** Vanilla HTML + CSS + JS in a single `index.html` (~5,300 lines)
+- **Data:** Sleeper.app REST API (live), Google Sheets CSV (contracts — live published sheet), FantasyCalc API (dynasty values)
 - **Storage:** Browser localStorage with TTL-based cache
 - **PWA:** Service worker (`sw.js`) + manifest for installable app
 - **Charts:** Custom canvas rendering (no D3, no charting library)
@@ -34,8 +34,10 @@ index.html
 
 **Key patterns:**
 
-- Configuration lives in the `CFG` object (~line 1141): `userId`, `leagueName`, `sheetId`, `avatarOverrides`, API base URLs
-- Caching via the `cache` object (~line 1188): `get(key)`, `set(key, data, ttl)`, `has(key)` wrapping localStorage
+- Configuration lives in the `CFG` object (~line 1271): `userId`, `leagueName`, `sheetCsvUrl`, `ktcUrl`, `avatarOverrides`, API base URLs; annual dates live in `SEASON_DATES` just below it
+- Caching via the `cache` object (~line 1337): `get(key)`, `set(key, data, ttl)`, `has(key)` wrapping localStorage
+- External strings are HTML-escaped once at ingestion via `esc()` — never insert raw API/sheet strings into `D`
+- Expanded/open UI state is keyed in the `UI_OPEN` set (`data-okey` attrs + `uiToggle()`/`secOpen()`) so it survives destructive re-renders
 - Each tab has a `renderX()` function that builds HTML via string concatenation and sets `innerHTML`
 - Tab switching calls `showTab(id)` which toggles `.active` class on panels
 - Team identity colors live in the `TC` object (keyed by roster_id)
@@ -106,7 +108,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 1. `init()` discovers the league via Sleeper API (user ID + league name)
 2. Fetches current season: rosters, users, matchups (per week), transactions, draft picks
 3. Fetches full NFL player database (~20K players, pruned to active + rostered)
-4. Fetches contracts from Google Sheets CSV (currently `PLACEHOLDER_SHEET_ID` — returns empty)
+4. Fetches dynasty values from FantasyCalc, then contracts from the published Google Sheets CSV (`CFG.sheetCsvUrl`)
 5. `buildCurrentSeasonData()` assembles everything into `D`
 6. All 16+ render functions fire, populating tab panels
 7. Background: historical seasons load and `mergeHistoricalData()` progressively re-renders affected tabs
@@ -115,11 +117,9 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 
 ## Known Issues & Debt
 
-- **ESPN logo in loading screen:** Base64-encoded ESPN image at line ~1096. Should be the Harambe logo
-- **PWA paths hardcoded to root:** `/sw.js` and `/manifest.json` won't resolve on GitHub Pages subdirectory (`/harambes-dozen/`)
-- **No input sanitization:** Player names from Sleeper API are injected directly into innerHTML (XSS surface)
-- **No .gitignore:** Excel files, backup files, and PNGs are tracked that probably shouldn't be
-- **Hardcoded NFL kickoff date:** `2026-09-10T20:20:00` in `updateCD()` — must be manually updated each year
+- **Annual date maintenance:** `SEASON_DATES` (exemption deadline, NFL kickoff — near the top of the script next to `CFG`) must be updated once each offseason. Everything else derives the season dynamically from the Sleeper API
+- **Chronicle start year:** the "League History • 2016–…" label hardcodes the league's 2016 founding (pre-Sleeper era); the end year is dynamic
+- **Exemption history:** `D.exemption_history` is never populated from the sheet — the War Room exemption board only reflects current-season exemptions
 
 ## Session Start (This Project)
 
@@ -143,12 +143,12 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 | File | Purpose |
 |------|---------|
 | `index.html` | The entire app — CSS + HTML + JS |
-| `FEATURES.md` | Feature inventory and status |
+| `docs/FEATURES.md` | Feature inventory and status |
 | `manifest.json` | PWA manifest |
 | `sw.js` | Service worker (cache strategy) |
-| `harambe-logo.png` | App logo |
-| `Kevin.png`, `Chuck.png` | Custom manager avatar overrides |
+| `harambe-logo.png` | App logo (also favicon, touch icon, PWA icon) |
+| `assets/avatars/Kevin.png`, `Chuck.png` | Custom manager avatar overrides (`CFG.avatarOverrides`) |
 | `features.html` | Marketing/status page (not the app) |
-| `Harambe's Dozen FF 2025 (AW Version).xlsx` | Source contract/exemption data for Google Sheets import |
-| `index.html.backup` | Pre-refactor snapshot |
-| `*.png` (Avatars, ChampionExample, PlayerProfile) | Documentation screenshots, not app assets |
+| `data/contracts.csv` | Contract source material — NOT read by the app at runtime (app reads the published Google Sheet) |
+| `data/sheets-setup.js` | Google Sheets formatting helper, not app code |
+| `docs/superpowers/` | Implementation plans and design specs |

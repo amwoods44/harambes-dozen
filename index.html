@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Harambe's Dozen — Dynasty HQ</title>
-<meta name="description" content="Dynasty league headquarters for Harambe's Dozen. 12 teams, 3 seasons, full broadcast-quality dashboard.">
+<meta name="description" content="Dynasty league headquarters for Harambe's Dozen. 12 teams, full broadcast-quality dashboard.">
 <meta name="theme-color" content="#cc0000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dynasty HQ">
+<link rel="icon" type="image/png" href="harambe-logo.png">
+<link rel="apple-touch-icon" href="harambe-logo.png">
 <link rel="manifest" href="manifest.json">
 <meta property="og:title" content="Harambe's Dozen — Dynasty HQ">
 <meta property="og:description" content="12-team PPR dynasty league dashboard. Power rankings, trade history, player profiles, and more.">
@@ -85,6 +87,7 @@ button{min-height:36px}
 .live-badge{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:4px;background:rgba(204,0,0,.1);border:1px solid rgba(204,0,0,.25)}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--a);box-shadow:0 0 10px rgba(204,0,0,.5);animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes cpillPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .live-txt{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:3px;color:var(--a)}
 .nfl-cd{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:6px;background:rgba(0,53,148,.1);border:1px solid rgba(0,53,148,.25);white-space:nowrap}
 .nfl-cd-units{display:flex;gap:5px;align-items:center}
@@ -998,7 +1001,7 @@ body{padding-bottom:48px}
 .cpill-4{background:rgba(23,177,105,.12);color:#17b169}
 .cpill-23{background:rgba(245,158,11,.12);color:#ffcc00}
 .cpill-1{background:rgba(239,68,68,.12);color:#ff4444}
-.cpill-0{background:rgba(239,68,68,.20);color:#ff4444;animation:pulse 1.4s infinite}
+.cpill-0{background:rgba(239,68,68,.20);color:#ff4444;animation:cpillPulse 1.4s infinite}
 /* Item 18: Dynasty scatter */
 .dynasty-scatter{width:100%;height:320px;border-radius:12px;border:1px solid var(--g4);background:var(--g2);display:block;margin:16px 0}
 /* Item 19: Manager cards */
@@ -1220,7 +1223,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 <body>
 <a href="#main" class="skip-nav">Skip to content</a>
 <div class="loading-screen" id="ls">
-  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAAAoCAYAAABwx1HiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA7dJREFUeNrsXdFR4zAQtTP5xx3EVICvAkIHuQoIFRAqOK6CXAfJVUCowL4KzlQQ04E7MKsbmdEoMsSSsnni9GY0MEk8s+w+Pb9d2yFNNHRdN6cfZYKDXZqm301vUKw5/binVdCaJ/83WloVrWfK13boQ5Sz8sy5qkWMtLYUZ6O/OTEckIMl+sWQ1IzWhn7d01pFMv5DRmtBa0O52dMqBj537vqKuH6I2lGMqxAJ2WpkLCQRl5GDgxA1LAdIiVTfNcW4/oyQM7Dk1topupRqEPG5Yj4ZLA4aVtImBqmQm0jGcUpJxV4C17bHfTCEJONbK81W9Irjca2pJiKCUUhVHW8jt6z9pNpQQNoL0ageELJ/EdE/Ap9uQsIFcGyFSSHRdlBrkvUIt6KDojUREk0hXyKHvHfekOh7hSAUUh0LRDjZngI92FTzkDmYV6tp57TS2xaRW1Zo+kt0wBu77RUyIiIiIiIiIgikin8UPm0F5n22Mrblmb2t8DeV8LNDH0C9kkQxP8r4FjY+vD/+GMgeZGkR5uGtaCKhHRaelNhQsBm6eECvP3Z42CvxlS7HH0lI2xy8b5QJ8IwKcQYpdv/QvYYzwHgbx/o2TCpemwiJfJUGCaKwpUEpc8BYXWeQYwl57VpnlZAXwMmsAUm5DoCQr0p/YH08Y52DUUjEoekiAELuHGs7ViHnjnXG9ZDa5P434qm795Kgd2LvlM41YyKkc6+AqpCtRs5KjAZA/SSiOor83Xmo7dGEdLgseaiQ4PdB9qQUCf4F2uggEVJs3kttZmrVH5geUz11rachddiUoAfaPOL0fZtgPYudnzlXtVzP8myig6PD9qKQU0ePcTOQgFN7S69NjvSCfx1298zyb0mZrQWaf9R7hXcPydWFoSKzTGbroJCcuUOdQR5gEoDHQD3luj7vw5I78BlkNUTIAnyHIxKyDYGQjGc/L32Ii4fM5BcXncJX3MjdvUx4Hn+1IdQfGaNtQ/PKREiuGWRmm0NfXXZ2oi5XfxYbpZMeijNnKjisQn7wxVbjPWQIM0hQ1MwKZAuO/sA2B0YPiTyDLAIgJPqEgqM/8KeQCfZ9kKjPETfKyAd9QsExg7QdmwWhkN59yQmwY1YgdIW88qmQaPdBVuDqKJTxJ7MC2W5qrhlk5lDnMBQSOK4H7cYFZIUMagYJ6SEVX4GokHfqF8qDXwXhnAB4mUGiK+QVUCxik3wz/HeDr9hh97bkLF5/CuofERSykrt4+0FHjD6DtD1LjZkFe5tBCrwJMADOg2IEMOOZEQAAAABJRU5ErkJggg==" alt="ESPN" class="loading-logo" style="height:48px;width:auto">
+  <img src="harambe-logo.png" alt="Harambe's Dozen" class="loading-logo" style="height:48px;width:auto">
   <div class="loading-title">HARAMBE'S <span class="ld-acc">DOZEN</span></div>
   <div class="loading-sub">Dynasty HQ Loading</div>
   <div class="loading-spinner"></div>
@@ -1274,6 +1277,13 @@ const CFG={
   ktcUrl:'https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams=12&ppr=1'
 };
 
+// Key league/NFL dates — update once each offseason
+const SEASON_DATES={
+  exemptionDeadline:'2026-05-26T12:00:00',
+  nflKickoff:'2026-09-10T20:20:00'
+};
+function fmtSeasonDate(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+
 // ═══ FETCH UTILITIES ═══
 async function fetchJSON(url,retries=2){
   for(let i=0;i<=retries;i++){
@@ -1296,6 +1306,18 @@ async function fetchAll(urls,concurrency=8){
   }
   return results;
 }
+
+// Escape external strings at ingestion — everything renders via innerHTML
+function esc(s){return s==null?s:String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+// Open/expanded UI state, keyed by stable ids so it survives destructive re-renders
+const UI_OPEN=new Set();
+function uiToggle(el){
+  el.classList.toggle('open');
+  const k=el.dataset.okey;
+  if(k){if(el.classList.contains('open'))UI_OPEN.add(k);else UI_OPEN.delete(k);}
+}
+function secOpen(key){return UI_OPEN.has('sec:'+key);}
 
 async function fetchCSV(url){
   for(let i=0;i<2;i++){
@@ -1375,7 +1397,7 @@ async function fetchCurrentSeason(leagueId){
 
 // ═══ PLAYER DATABASE ═══
 async function fetchPlayerDB(allPlayerIds){
-  const cached=cache.get('hd_players');
+  const cached=cache.get('hd_players2');
   if(cached)return cached;
   const raw=await fetchJSON(`${CFG.sleeperBase}/players/nfl`);
   const db={};
@@ -1383,13 +1405,13 @@ async function fetchPlayerDB(allPlayerIds){
   for(const[id,p]of Object.entries(raw)){
     if(keep.has(id)||p.active){
       db[id]={
-        id,fn:p.full_name||`${p.first_name||''} ${p.last_name||''}`.trim(),
-        pos:p.position,tm:p.team,age:p.age,yrs:p.years_exp,
-        col:p.college,num:p.number,inj:p.injury_status,st:p.status
+        id,fn:esc(p.full_name||`${p.first_name||''} ${p.last_name||''}`.trim()),
+        pos:esc(p.position),tm:esc(p.team),age:p.age,yrs:p.years_exp,
+        col:esc(p.college),num:p.number,inj:esc(p.injury_status),st:esc(p.status)
       };
     }
   }
-  cache.set('hd_players',db,24*60*60*1000);
+  cache.set('hd_players2',db,24*60*60*1000);
   return db;
 }
 
@@ -1417,7 +1439,7 @@ async function fetchContracts(ktcMap){
     const csv=await fetchCSV(CFG.sheetCsvUrl);
     return parseContractCSV(csv,ktcMap||{});
   }catch(e){
-    const cached=cache.get('hd_contracts');
+    const cached=cache.get('hd_contracts2');
     return cached||{contracts:{},exemptions:{}};
   }
 }
@@ -1445,7 +1467,7 @@ function parseContractCSV(csv,ktcMap){
   for(let i=1;i<rows.length;i++){
     const r=rows[i];
     if(!r[nameIdx])continue;
-    const name=r[nameIdx];
+    const name=esc(r[nameIdx]);
     const sid=r[idIdx]||null;
     const ktcEntry=sid&&ktcMap[sid]?ktcMap[sid]:{};
     // Parse contract years: empty/blank = uncontracted (null), number = years remaining
@@ -1461,16 +1483,16 @@ function parseContractCSV(csv,ktcMap){
       sleeperId:sid,
       yrs:parsedYrs,
       contracted:parsedYrs!==null,
-      tag,
-      exm,
-      note:r[noteIdx]||'',
+      tag:esc(tag),
+      exm:esc(exm),
+      note:esc(r[noteIdx]||''),
       ktc:ktcEntry.val||0,
       rnk:ktcEntry.rnk||0,
       tier:ktcEntry.tier||0
     };
     if(sid)contracts['_id_'+sid]=contracts[name];
   }
-  cache.set('hd_contracts',{contracts,exemptions:{}},2*60*60*1000);
+  cache.set('hd_contracts2',{contracts,exemptions:{}},2*60*60*1000);
   return{contracts,exemptions:{}};
 }
 
@@ -1525,7 +1547,7 @@ function computeRecords(matchupWeeks){
   let highestScore={pts:0,roster_id:0,week:'-'};
   let lowestScore={pts:Infinity,roster_id:0,week:'-'};
   Object.entries(matchupWeeks).forEach(([wk,games])=>{
-    const week=parseInt(wk);
+    const week=parseInt(String(wk).split('_').pop());
     (games||[]).forEach(g=>{
       const a=g.team_a,b=g.team_b;
       const diff=parseFloat(Math.abs(a.points-b.points).toFixed(2));
@@ -1579,7 +1601,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   // ── League info ──
   const ls=league.settings||{};
   d.league={
-    name:league.name,
+    name:esc(league.name),
     season:league.season,
     status:league.status,
     num_teams:league.total_rosters||12,
@@ -1592,7 +1614,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
 
   // ── User map ──
   const userMap={};
-  (users||[]).forEach(u=>{userMap[u.user_id]={name:u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name,display_name:u.display_name,avatar:u.avatar};});
+  (users||[]).forEach(u=>{userMap[u.user_id]={name:esc(u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name),display_name:esc(u.display_name),avatar:u.avatar};});
 
   // ── rid_to_name ──
   d.rid_to_name={};
@@ -1813,13 +1835,6 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   d.most_traded=[];
   d.h2h={};
 
-  // ── Pre-draft fallback aliases ──
-  if(league.status==='pre_draft'){
-    d.standings_2025=d[standingsKey]||[];
-    d.standings_2024=d.standings_2024||[];
-    d.standings_2023=d.standings_2023||[];
-  }
-
   return d;
 }
 
@@ -1828,7 +1843,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
   // Build rid_to_name helper that may need updating per season
   function ridToNameForSeason(rosters,users){
     const uMap={};
-    (users||[]).forEach(u=>{uMap[u.user_id]=u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name;});
+    (users||[]).forEach(u=>{uMap[u.user_id]=esc(u.metadata&&u.metadata.team_name?u.metadata.team_name:u.display_name);});
     const map={};
     (rosters||[]).forEach(r=>{map[r.roster_id]=uMap[r.owner_id]||'Team '+r.roster_id;});
     return map;
@@ -1850,15 +1865,6 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       return{roster_id:r.roster_id,owner_id:r.owner_id,team_name:rtn[r.roster_id]||'?',wins:s.wins||0,losses:s.losses||0,ties:s.ties||0,fpts,fpts_against,total_moves:s.total_moves||0};
     }).sort((a,b)=>b.wins-a.wins||b.fpts-a.fpts);
     d[sk]=standings;
-
-    // standings_2024_full alias with rank
-    if(season==='2024'||season===2024){
-      d.standings_2024_full=standings.map((s,i)=>({...s,rank:i+1}));
-      d.standings_2024=d.standings_2024||standings;
-    }
-    if(season==='2023'||season===2023){
-      d.standings_2023=d.standings_2023||standings;
-    }
 
     // Build matchup weeks for this season
     const hsMatchupWeeks={};
@@ -2008,9 +2014,10 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
   }).sort((a,b)=>b.win_pct-a.win_pct);
   d.alltime_standings=d.franchise.map(f=>({name:f.name,w:f.total_wins,l:f.total_losses,pct:f.win_pct,pf:Math.round(f.total_pts),pa:0,mgr:f.name}));
 
-  // ── Luck — most recent completed season ──
+  // ── Luck — most recent completed season (merges arrive one season at a time; keep the newest) ──
   const completedSeason=historicalSeasons.length?historicalSeasons[historicalSeasons.length-1]:null;
-  if(completedSeason){
+  if(completedSeason&&(!d.luck_season||parseInt(completedSeason.season)>parseInt(d.luck_season))){
+    d.luck_season=String(completedSeason.season);
     const rtn=ridToNameForSeason(completedSeason.rosters,completedSeason.users);
     const pStart=completedSeason.playoffStart||15;
     // weekly scores per roster for regular season
@@ -2163,11 +2170,6 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
     d['retention_'+yr]={year:yr,total,rostered};
   });
 
-  // ── Ensure standings_2025 alias exists ──
-  if(!d.standings_2025)d.standings_2025=d['standings_'+Object.keys(d).filter(k=>/^standings_\d{4}$/.test(k)).sort().pop()]||[];
-  if(!d.standings_2024)d.standings_2024=[];
-  if(!d.standings_2023)d.standings_2023=[];
-
   // Sort champions by year ascending
   d.champions.sort((a,b)=>parseInt(a.year)-parseInt(b.year));
 
@@ -2298,11 +2300,11 @@ function conCard(p,opts){
   return h;
 }
 // ═══ DYNAMIC SEASON CONSTANTS ═══
-var SEASON_YEARS=[],CURRENT_YEAR='2025',FIRST_YEAR='2021',YEAR_RANGE='2021-2025',NUM_SEASONS=1,CUR_STANDINGS=[],TOTAL_GAMES=14;
+var SEASON_YEARS=[],CURRENT_YEAR=String(new Date().getFullYear()),FIRST_YEAR=CURRENT_YEAR,YEAR_RANGE=CURRENT_YEAR,NUM_SEASONS=1,CUR_STANDINGS=[],TOTAL_GAMES=14;
 function getStandings(yr){return D['standings_'+yr]||[];}
 function initSeasonConstants(){
   SEASON_YEARS=Object.keys(D).filter(function(k){return/^standings_\d{4}$/.test(k)&&k!=='standings_2024_full'}).map(function(k){return k.replace('standings_','')}).sort();
-  if(!SEASON_YEARS.length)SEASON_YEARS=[D.league?D.league.season:'2025'];
+  if(!SEASON_YEARS.length)SEASON_YEARS=[D.league&&D.league.season?D.league.season:CURRENT_YEAR];
   CURRENT_YEAR=SEASON_YEARS[SEASON_YEARS.length-1];
   FIRST_YEAR=SEASON_YEARS[0];
   YEAR_RANGE=FIRST_YEAR+(SEASON_YEARS.length>1?'\u2013'+CURRENT_YEAR:'');
@@ -2342,7 +2344,7 @@ async function init(){
     rebuildPlayerMap();
 
     // ── CACHE for fallback ──
-    cache.set('hd_cache_current',D);
+    cache.set('hd_cache_current2',D);
 
     // ── RENDER ──
     injectEmptyStates();
@@ -2368,7 +2370,7 @@ async function init(){
 
   }catch(e){
     console.error('Init failed:',e);
-    const cached=cache.get('hd_cache_current');
+    const cached=cache.get('hd_cache_current2');
     if(cached){
       D=cached;
       initSeasonConstants();
@@ -2396,17 +2398,30 @@ function renderTab(id){
 
 async function loadHistory(disc,playerDB){
   const historical=disc.chain.filter(c=>c.id!==disc.current.league_id).reverse();
+  const failed=[];
   for(const entry of historical){
     try{
       const hs=await fetchHistoricalSeason(entry.id,entry.season);
       mergeHistoricalData(D,[hs],playerDB);
+      initSeasonConstants();
       buildStats();buildTicker();
       ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
+      failed.push(entry.season);
     }
   }
+  if(failed.length)showHistoryNotice(failed);
+}
+
+function showHistoryNotice(seasons){
+  const div=document.createElement('div');
+  div.className='data-status';
+  div.style.cssText='color:var(--y);background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)';
+  div.textContent=seasons.join(', ')+' HISTORY UNAVAILABLE — SHOWING PARTIAL DATA';
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),8000);
 }
 
 function showCacheBanner(){
@@ -2419,7 +2434,7 @@ function showCacheBanner(){
 
 function updateCD(){
   const el=document.getElementById('nfl-cd');if(!el)return;
-  const diff=new Date('2026-09-10T20:20:00')-new Date();
+  const diff=new Date(SEASON_DATES.nflKickoff)-new Date();
   if(diff<=0){el.innerHTML='<span style="font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--ab)">NFL IN SEASON</span>';return}
   const d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4);
   const bx=(v,l)=>'<div class="nfl-cd-box"><div class="nfl-cd-num">'+String(v).padStart(2,'0')+'</div><div class="nfl-cd-lbl">'+l+'</div></div>';
@@ -2495,45 +2510,63 @@ function buildCast(){
   }).join('');
   document.getElementById('cast-strip').innerHTML='<div class="cast-in">'+h+'</div><div class="cast-line"></div>';
 }
-function buildHeroHist(){
-  const el=document.getElementById('hero-hist');if(!el)return;
+function champsDesc(){return(D.champions||[]).slice().sort((a,b)=>parseInt(b.year)-parseInt(a.year));}
+function isRepeatChamp(champs){return!!(champs[0]&&champs[1]&&champs[0].champion===champs[1].champion&&parseInt(champs[0].year)===parseInt(champs[1].year)+1);}
+function latestScoredSeason(){
+  for(let i=SEASON_YEARS.length-1;i>=0;i--){
+    const s=getStandings(SEASON_YEARS[i]);
+    if(s.length&&s.some(t=>t.fpts>0))return{yr:SEASON_YEARS[i],standings:s};
+  }
+  return{yr:CURRENT_YEAR,standings:CUR_STANDINGS||[]};
+}
+function heroFacts(){
+  const champs=champsDesc();
+  const latest=champs[0];
+  const r=D.records||{};
   const facts=[
-    D.champions[0]?'\u2605 '+D.champions[0].champion+' \u2014 2025 Champion, 3-peat eligible':'',
-    D.records.highest_score?'All-time high score: '+D.records.highest_score.pts+' pts by '+tn(D.records.highest_score.roster_id)+' (Wk '+D.records.highest_score.week+')':'',
-    D.records.closest_game?'Closest game ever: '+D.records.closest_game.diff+' pts — Wk '+D.records.closest_game.week:'',
-    D.records.biggest_blowout?'Biggest blowout: '+D.records.biggest_blowout.diff+' pts — Wk '+D.records.biggest_blowout.week:'',
-    D.trades.length+' total trades across 2024–2025',
-    D.champions[1]?'\u2605 '+D.champions[1].champion+' \u2014 2024 Champion over '+D.champions[1].runner_up:'',
-    D.champions[2]?'\u2605 '+D.champions[2].champion+' \u2014 2023 Champion over '+D.champions[2].runner_up:'',
+    latest?'★ '+latest.champion+' — '+latest.year+' Champion'+(isRepeatChamp(champs)?', 3-peat eligible':''):'',
+    r.highest_score&&r.highest_score.pts>0?'All-time high score: '+r.highest_score.pts+' pts by '+tn(r.highest_score.roster_id)+' (Wk '+r.highest_score.week+')':'',
+    r.closest_game&&r.closest_game.week!=='-'?'Closest game ever: '+r.closest_game.diff+' pts — Wk '+r.closest_game.week:'',
+    r.biggest_blowout&&r.biggest_blowout.diff>0?'Biggest blowout: '+r.biggest_blowout.diff+' pts — Wk '+r.biggest_blowout.week:'',
+    D.trades.length?D.trades.length+' total trades across '+YEAR_RANGE:'',
+    ...champs.slice(1).map(c=>'★ '+c.champion+' — '+c.year+' Champion over '+c.runner_up),
     (()=>{if(!D.franchise||!D.franchise.length)return'';const f=D.franchise.reduce((a,b)=>a.total_wins>b.total_wins?a:b);return 'All-time leader: '+f.name+' — '+f.total_wins+'-'+f.total_losses+' ('+Math.round(f.win_pct*100)+'% win rate)';})(),
   ].filter(Boolean);
-  let idx=0;
+  return facts.length?facts:[(D.league&&D.league.name?D.league.name:"Harambe's Dozen")+' — Dynasty HQ'];
+}
+let heroHistTimer=null;
+function buildHeroHist(){
+  const el=document.getElementById('hero-hist');if(!el)return;
+  let idx=1;
   function show(){
     const inner=el.querySelector('.hero-hist-txt');
     if(!inner)return;
+    const facts=heroFacts();
     inner.classList.add('fade');
     setTimeout(()=>{inner.textContent=facts[idx%facts.length];inner.classList.remove('fade');idx++;},350);
   }
-  el.innerHTML='<div class="hero-hist-inner"><span class="hero-hist-lbl">LEAGUE LORE</span><span class="hero-hist-txt">'+facts[0]+'</span></div>';
-  idx=1;
-  setInterval(show,4000);
+  el.innerHTML='<div class="hero-hist-inner"><span class="hero-hist-lbl">LEAGUE LORE</span><span class="hero-hist-txt">'+heroFacts()[0]+'</span></div>';
+  if(heroHistTimer)clearInterval(heroHistTimer);
+  heroHistTimer=setInterval(show,4000);
 }
 function buildStats(){
-  const champ=D.champions[0];
-  const best=CUR_STANDINGS&&CUR_STANDINGS.length?CUR_STANDINGS.reduce((a,b)=>a.fpts>b.fpts?a:b):{fpts:0,team_name:'—'};
-  const tot=CUR_STANDINGS?CUR_STANDINGS.reduce((s,t)=>s+t.fpts,0):0;
+  const champs=champsDesc();
+  const champ=champs[0];
+  const scored=latestScoredSeason();
+  const best=scored.standings.length?scored.standings.reduce((a,b)=>a.fpts>b.fpts?a:b):{fpts:0,team_name:'—'};
+  const tot=scored.standings.reduce((s,t)=>s+t.fpts,0);
   document.getElementById('sstrip').innerHTML=
-    '<div class="ss champ"><div class="ss-l">\u2605 2025 Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">3-peat eligible</div></div>'+
+    '<div class="ss champ"><div class="ss-l">★ '+(champ?champ.year:CURRENT_YEAR)+' Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">'+(isRepeatChamp(champs)?'3-peat eligible':'Defending')+'</div></div>'+
     '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+D.trades.length+'" data-decimals="0">0</span></div><div class="ss-sub">2024-2025</div></div>'+
-    '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+Math.round(tot/12)+'" data-decimals="0">0</span></div><div class="ss-sub">per team 2025</div></div>'+
+    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+D.trades.length+'" data-decimals="0">0</span></div><div class="ss-sub">'+YEAR_RANGE+'</div></div>'+
+    '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+Math.round(tot/(scored.standings.length||12))+'" data-decimals="0">0</span></div><div class="ss-sub">per team '+scored.yr+'</div></div>'+
     '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+(D.draft_picks[CURRENT_YEAR]?D.draft_picks[CURRENT_YEAR].length:0)+'" data-decimals="0">0</span></div><div class="ss-sub">'+CURRENT_YEAR+' class</div></div>';
 }
 function buildTicker(){
   let tk='';
   D.champions.forEach(c=>{tk+='<div class="tki">\u2605 <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
   CUR_STANDINGS.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
-  tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
+  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0)tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
   tk+='<div class="tki">'+D.trades.length+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
   if(D._loaded)tk+='<div class="tki" style="color:var(--t4)">Data as of '+D._loaded+'</div><div class="tks">\u25C6</div>';
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
@@ -2558,7 +2591,7 @@ function renderPower(){
   const tierN={1:'CONTENDERS',2:'PLAYOFF CONTENDERS',3:'BUBBLE TEAMS',4:'REBUILD MODE'};
   let cT=0,h='';
   var pwShareRows=teams.slice(0,5).map(function(t,i){return'<div style="font-family:var(--fd);font-size:13px;padding:4px 0;border-bottom:1px solid #24242e">'+(i+1)+'. '+t.team_name+' \u2014 '+t.pw+' power</div>';}).join('');
-  h+='<div class="bh"><h2 class="bh-tag">Power Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Composite Score \u2022 2026 Offseason</span></div><button class="share-btn" style="margin-left:12px;flex-shrink:0" id="pw-share-btn">SHARE</button></div>';
+  h+='<div class="bh"><h2 class="bh-tag">Power Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Composite Score \u2022 '+CURRENT_YEAR+(D.league&&D.league.status==='in_season'?' Season':' Offseason')+'</span></div><button class="share-btn" style="margin-left:12px;flex-shrink:0" id="pw-share-btn">SHARE</button></div>';
   var _pwRows=pwShareRows;
   // Narrative
   const youngest=teams.reduce((a,b)=>a.avgAge<b.avgAge?a:b);
@@ -2580,7 +2613,7 @@ function renderPower(){
     const champBadge=t.isChamp?' \u2605':'';
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF').slice(0,5);
     const rankClass=i>=9?' rank-low':'';
-    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+'" onclick="this.classList.toggle(\'open\')">';
+    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+(UI_OPEN.has('power:'+t.roster_id)?' open':'')+'" data-okey="power:'+t.roster_id+'" onclick="uiToggle(this)">';
     h+='<div class="prk'+rankClass+'"><div class="prk-n">'+(i+1)+'</div></div>';
     h+='<div class="pcbar" style="background:'+barC+'"></div>';
     h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
@@ -2620,7 +2653,7 @@ function renderPower(){
   // Draw race chart
   setTimeout(()=>{
     const cvs=document.getElementById('race-chart');
-    if(!cvs)return;
+    if(!cvs||!cvs.offsetWidth)return;
     const ctx=cvs.getContext('2d');
     const dpr=window.devicePixelRatio||1;
     cvs.width=cvs.offsetWidth*dpr;cvs.height=cvs.offsetHeight*dpr;
@@ -2716,7 +2749,7 @@ function renderRosters(){
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgA=ages.length?(ages.reduce((a,b)=>a+b,0)/ages.length).toFixed(1):'?';
     const badges=calcBadges(t.team_name);
-    h+='<div class="pcard" onclick="this.classList.toggle(\'open\')" style="grid-template-columns:auto 3px 1fr auto">';
+    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto">';
     h+='<div class="prk" style="padding:10px">'+av(t.roster_id,36)+'</div>';
     h+='<div class="pcbar" style="background:var(--a)"></div>';
     var cCount=0,cExp=0;
@@ -2829,7 +2862,7 @@ function renderTrophies(){
   h+='<div class="rec"><div class="rec-emoji">'+icon('arrowDown',24,'var(--red-t)')+'</div><div class="rec-lbl">Low Score</div><div class="rec-val">'+D.records.lowest_score.pts+'</div><div class="rec-sub">'+tn(D.records.lowest_score.roster_id)+'</div></div></div>';
   // ═══ ALL-TIME FRANCHISE RANKINGS ═══
   if(D.franchise&&D.franchise.length){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All-Time</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Franchise Rankings \u2022 3 Seasons (2023-2025)</span></div></div>';
+    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All-Time</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Franchise Rankings \u2022 '+NUM_SEASONS+' Season'+(NUM_SEASONS>1?'s':'')+' ('+YEAR_RANGE+')</span></div></div>';
     h+='<div class="fr-hdr">';
     h+='<span class="c">#</span>';
     h+='<span>FRANCHISE</span>';
@@ -2852,7 +2885,7 @@ function renderTrophies(){
   }
   // ═══ LUCK RATING ═══
   if(D.luck){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Luck</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Schedule-Adjusted Wins \u2022 2025 Season</span></div></div>';
+    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Luck</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Schedule-Adjusted Wins \u2022 '+(D.luck_season||latestScoredSeason().yr)+' Season</span></div></div>';
     h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">For each week, we calculate how many teams you <i>would have</i> beaten. The difference between actual wins and expected wins = your luck factor. Positive = lucky schedule, Negative = unlucky.</div></div></div>';
     
     const luckArr=Object.values(D.luck).sort(function(a,b){return b.luck-a.luck});
@@ -2883,7 +2916,7 @@ function renderTrophies(){
   }
   // ═══ MANAGER ACTIVITY ═══
   if(D.activity){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Activity</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Manager Tendencies \u2022 2024-2025</span></div></div>';
+    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Activity</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Manager Tendencies \u2022 '+YEAR_RANGE+'</span></div></div>';
     h+='<div style="display:flex;gap:10px;margin:8px 0"><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--a)">\u25A0 TRADES</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--y)">\u25A0 MOVES</span><span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--pur)">\u25A0 DRAFT PICKS</span></div>';
     
     const maxAct=Math.max(...Object.values(D.activity).map(function(a){return a.trades+a.moves+a.draft_picks}));
@@ -2967,7 +3000,7 @@ function renderTrades(){
   const trades=D.unified_trades||[];
   // Extract available years
   var tradeYears=[...new Set(trades.map(function(t){return t.yr}))].sort().reverse();
-  var currentYr=tradeYears[0]||'2025';
+  var currentYr=tradeYears[0]||CURRENT_YEAR;
   let h='<div class="bh"><h2 class="bh-tag">Trades</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+trades.length+' Trades \u2022 Complete History</span></div></div>';
   // Year filter
   h+='<div class="wk-sel" style="margin-bottom:12px">';
@@ -3183,7 +3216,7 @@ function renderTrades(){
     ktcRecord[b.name]=(ktcRecord[b.name]||0)+bNet;
   });
   // Trade grade leaderboard
-  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:4px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'record\')"><h2 class="bh-tag">Trade Record</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net KTC Value Won/Lost \u2022 Click to '+(secOpen('record')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('record')?'':'none')+'">';
   var krArr=Object.entries(ktcRecord).sort(function(a,b){return b[1]-a[1]});
   var maxKR=Math.max.apply(null,krArr.map(function(x){return Math.abs(x[1])}));
   krArr.forEach(function(entry){
@@ -3279,7 +3312,7 @@ function renderTrades(){
   h+='<button id="trades-show-more" class="wk-btn" style="display:none;margin:16px auto;padding:8px 24px" onclick="toggleTradeShowAll()">Show all trades</button>';
   // H2H Rivalries
   if(D.rivalries&&D.rivalries.length){
-    h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+    h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'rivalries\')"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to '+(secOpen('rivalries')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('rivalries')?'':'none')+'">';
     D.rivalries.filter(function(r){return r.total>=2}).forEach(function(r){
       const aName=tn(r.a),bName=tn(r.b);
       const aW=r.a_wins,bW=r.b_wins;
@@ -3290,7 +3323,7 @@ function renderTrades(){
     h+='</div></div>'; // close rivalries section body + wrapper
   }
   // Pick capital
-  h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'capital\')"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to '+(secOpen('capital')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('capital')?'':'none')+'">';
   const cap={};
   D.pick_trades.forEach(function(p){
     cap[p.current_owner]=cap[p.current_owner]||{g:0,l:0};cap[p.current_owner].g++;
@@ -3333,7 +3366,7 @@ function renderTrades(){
   }
   h+='</div></div>'; // close capital section body + wrapper
   // ── TRADE PARTNER MATRIX ──
-  h+='<div class="tc-section" style="margin-top:24px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this)"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to expand</span></div></div><div class="tc-section-body" style="display:none">';
+  h+='<div class="tc-section" style="margin-top:24px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'partners\')"><h2 class="bh-tag">Trade Partners</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Who Trades With Who \u2022 Click to '+(secOpen('partners')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('partners')?'':'none')+'">';
   const tpMap={};
   (D.unified_trades||[]).forEach(function(tr){
     if(tr.sides.length===2){
@@ -3363,12 +3396,16 @@ function renderTrades(){
       wrap.classList.toggle('flipped');
     });
   });
-  // Default: show current year only
-  filterTradeYear(currentYr);
-  var yrBtn=document.querySelector('.wk-sel .wk-btn:not(:first-child)');
-  if(yrBtn){document.querySelectorAll('.wk-sel .wk-btn').forEach(function(b){b.classList.remove('active')});yrBtn.classList.add('active');}
+  // Default: show current year only; keep the user's filter across re-renders
+  var selYr=_tradeYearSel&&(_tradeYearSel==='all'||tradeYears.indexOf(_tradeYearSel)>=0)?_tradeYearSel:currentYr;
+  filterTradeYear(selYr);
+  document.querySelectorAll('#tab-trades .wk-sel .wk-btn').forEach(function(b){
+    var t=b.textContent.trim();
+    b.classList.toggle('active',(selYr==='all'&&t==='ALL')||t===selYr);
+  });
 }
 var _tradeShowAll=false;
+var _tradeYearSel=null;
 function fixTradeCardHeights(){
   document.querySelectorAll('.tc-wrap').forEach(function(wrap){
     if(wrap.style.display==='none')return;
@@ -3377,6 +3414,7 @@ function fixTradeCardHeights(){
   });
 }
 function filterTradeYear(yr){
+  _tradeYearSel=yr;
   _tradeShowAll=false;
   var cards=document.querySelectorAll('.tc-wrap');
   var shown=0;
@@ -3405,16 +3443,24 @@ function toggleTradeShowAll(){
   if(btn)btn.style.display='none';
   requestAnimationFrame(fixTradeCardHeights);
 }
-function toggleSection(hdr){
+function toggleSection(hdr,key){
   var body=hdr.nextElementSibling;
-  if(body)body.style.display=body.style.display==='none'?'':'none';
+  if(!body)return;
+  var open=body.style.display==='none';
+  body.style.display=open?'':'none';
+  if(key){if(open)UI_OPEN.add('sec:'+key);else UI_OPEN.delete('sec:'+key);}
   var sub=hdr.querySelector('.bh-sub');
-  if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(body.style.display==='none'?'expand':'collapse');
+  if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(open?'collapse':'expand');
 }
 // ═══ MATCHUPS ═══
 function renderMatchups(){
   const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
-  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">2025 \u2022 Week '+selWk+'</span></div></div>';
+  if(!wks.length){
+    document.getElementById('tab-matchups').innerHTML='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season</span></div></div>'
+      +'<div class="empty-state"><div class="empty-state-icon">\u25a0</div><div class="empty-state-text">NO MATCHUPS YET</div><div class="empty-state-sub">The '+CURRENT_YEAR+' season kicks off '+fmtSeasonDate(SEASON_DATES.nflKickoff)+'</div></div>';
+    return;
+  }
+  let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Week '+selWk+'</span></div></div>';
   h+='<div class="wk-sel">';
   wks.forEach(w=>{h+='<button class="wk-btn'+(w===selWk?' active':'')+'" onclick="selWk='+w+';renderMatchups()">'+w+'</button>'});
   h+='</div>';
@@ -3589,7 +3635,7 @@ function renderDraft(){
   draftYears.forEach(yr=>{h+='<button class="tab-sub-btn'+(selDraft===yr?' active':'')+'" onclick="selDraft=\''+yr+'\';renderDraft()">'+yr+'</button>';});
   h+='</div>';
   var picks=D.draft_picks[selDraft]||[];
-  if(!picks.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No draft data</div>';document.getElementById('tab-draft').innerHTML=h;return;}
+  if(!picks.length){h+='<div class="empty-state"><div class="empty-state-icon">■</div><div class="empty-state-text">DRAFT BOARD</div><div class="empty-state-sub">'+(selDraft?'No picks for '+selDraft+' yet':'The '+CURRENT_YEAR+' rookie draft hasn\'t happened yet')+'</div></div>';document.getElementById('tab-draft').innerHTML=h;return;}
   var maxRd=Math.max.apply(null,picks.map(function(p){return p.rd}));
   var hits=D.draft_hits&&D.draft_hits[selDraft]?D.draft_hits[selDraft]:[];
   var hitMap={};hits.forEach(function(h2){hitMap[h2.pid]=h2;});
@@ -3834,7 +3880,7 @@ function renderScoring(){
     const std=wk.length?Math.sqrt(wk.reduce(function(s,p){return s+Math.pow(p-avg,2)},0)/wk.length).toFixed(1):0;
     return Object.assign({},s,{wk:wk,avg:avg,mx:mx,mn:mn,std:std});
   }).sort(function(a,b){return b.fpts-a.fpts});
-  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">2025 Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
   // ═══ HEAT MAP ═══
   h+='<div class="hm-wrap">';
   h+='<div class="hm-grid" style="grid-template-columns:100px repeat(17,1fr);min-width:520px">';
@@ -3947,7 +3993,7 @@ function renderAwards(){
   const draftGuru=Object.entries(drafterCounts).sort((a,b)=>b[1]-a[1])[0];
   // Champ check
   const latestChamp=D.champions[D.champions.length-1];
-  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 2025 Season</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 '+CURRENT_YEAR+' Season</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Awards are automatically computed from league data. No voting, no bias \u2014 the numbers decide everything.</div></div></div>';
   h+='<div class="award-grid stagger">';
   // Dynasty Champion
@@ -3980,7 +4026,7 @@ function renderAwards(){
 // ═══ ANALYTICS ═══
 function toAbbr(n){var w=n.replace(/[^a-zA-Z0-9\s]/g,' ').trim().split(/\s+/).filter(function(s){return s.length>0;});if(!w.length)return n.substring(0,4).toUpperCase();if(w.length===1)return w[0].substring(0,4).toUpperCase();if(w.length===2)return(w[0].substring(0,2)+w[1].substring(0,2)).toUpperCase();return w.slice(0,3).map(function(x){return x[0].toUpperCase();}).join('');}
 function renderAnalytics(){
-  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 2025 Season</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 '+CURRENT_YEAR+' Season</span></div></div>';
   // ── H2H MATRIX ──
   h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Record \u2022 All Matchups</span></div></div>';
   const rids=Object.keys(D.rid_to_name).map(Number).sort((a,b)=>a-b);
@@ -4423,7 +4469,7 @@ function renderRivals(){
 // ═══ CONTRACTS ═══
 function renderContracts(){
   if(!D.contracts){document.getElementById('tab-contracts').innerHTML='<div style="text-align:center;padding:40px;color:var(--t4)">No contract data</div>';return;}
-  var curSeason=parseInt(D.league.season)||2026;
+  var curSeason=parseInt(D.league.season)||parseInt(CURRENT_YEAR);
   // Strip helper for scroll sections
   function stripWrap(labelBg,tag,num,numCol,sub,cards){
     if(!cards)return'';
@@ -4652,7 +4698,7 @@ function renderConstitution(){
   function sec(num,title,body){return'<div class="const-section"><div class="const-num">'+num+'</div><div class="const-title">'+title+'</div><div class="const-body">'+body+'</div></div>';}
   function kv(label,val){return'<li><span class="cl-label">'+label+'</span><span class="cl-value">'+val+'</span></li>';}
   // Article I
-  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',lg.type||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season','2026')+kv('Platform','Sleeper')+kv('Status','Pre-Draft / Offseason')+'</ul>');
+  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',lg.type||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
   // Article II
   h+=sec('ARTICLE II','Roster Configuration','<ul class="const-list">'+kv('Total Roster',lg.roster_spots||'10 starters, 15 bench, 1 IR')+kv('Starters',lg.starters||'QB, 2RB, 3WR, TE, 2FLEX, DEF')+kv('Bench','15 spots')+kv('IR Slots','1 spot')+kv('Keeper Limit','15 players')+'</ul>');
   // Article III
@@ -4679,14 +4725,14 @@ function renderConstitution(){
 // ═══ WAR ROOM ═══
 function renderWarRoom(){
   var now=new Date();
-  var h='<div class="bh"><h2 class="bh-tag">War Room</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Offseason Command Center \u2022 2026</span></div></div>';
+  var h='<div class="bh"><h2 class="bh-tag">War Room</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Offseason Command Center \u2022 '+CURRENT_YEAR+'</span></div></div>';
   // Countdown timers
   h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag" style="background:var(--pur);color:white">Deadlines</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Key Offseason Dates</span></div></div>';
   h+='<div class="wr-countdown">';
   var events=[
-    {label:'Exemption Deadline',date:'2026-05-26',note:'Memorial Day \u2022 May 26, 2026'},
+    {label:'Exemption Deadline',date:SEASON_DATES.exemptionDeadline,note:'Memorial Day \u2022 '+fmtSeasonDate(SEASON_DATES.exemptionDeadline)},
     {label:'Rookie Draft',date:null,note:'Date TBD \u2022 Post-NFL Draft'},
-    {label:'NFL Kickoff',date:'2026-09-10',note:'Season Opener \u2022 Sep 10, 2026'},
+    {label:'NFL Kickoff',date:SEASON_DATES.nflKickoff,note:'Season Opener \u2022 '+fmtSeasonDate(SEASON_DATES.nflKickoff)},
   ];
   events.forEach(function(ev){
     var days=null,urgency='future';
@@ -4710,7 +4756,7 @@ function renderWarRoom(){
   });
   h+='</div>';
   // Exemption Status Board
-  var curSznNum=parseInt(D.league.season)||2026;
+  var curSznNum=parseInt(D.league.season)||parseInt(CURRENT_YEAR);
   var prevSzn=String(curSznNum-1);
   h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Exemption Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+curSznNum+' Exemption Ownership</span></div></div>';
   h+='<div class="wr-checklist">';
@@ -4798,7 +4844,7 @@ function renderPulse(){
   // Power movement
   var pw=D.teams.map(function(t){var s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,fpts:0};var wPct=s25.wins/(s25.wins+(s25.losses||0)||1);var maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}));var pPct=s25.fpts/maxP;return{name:t.team_name,pw:Math.round((wPct*40+pPct*60)*10)/10};}).sort(function(a,b){return b.pw-a.pw});
   if(pw.length>=2){
-    cards.push({type:'power',priority:7,icon:'\u25A0',tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering 2026, ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:'2026 OFFSEASON POWER INDEX'});
+    cards.push({type:'power',priority:7,icon:'\u25A0',tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering '+CURRENT_YEAR+', ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:CURRENT_YEAR+' OFFSEASON POWER INDEX'});
   }
   // Trade stories
   (D.unified_trades||[]).slice(0,6).forEach(function(t){
@@ -4872,7 +4918,7 @@ function renderChronicle(){
   var years={};
   events.forEach(function(ev){years[ev.year]=years[ev.year]||[];years[ev.year].push(ev);});
   var yearList=Object.keys(years).map(Number).sort(function(a,b){return a-b});
-  var h='<div class="bh"><h2 class="bh-tag">Chronicle</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">League History \u2022 2016\u20132026</span></div></div>';
+  var h='<div class="bh"><h2 class="bh-tag">Chronicle</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">League History \u2022 2016\u2013'+CURRENT_YEAR+'</span></div></div>';
   h+='<div class="chronicle-nav">';
   yearList.forEach(function(yr){
     h+='<button class="tab-sub-btn" onclick="document.getElementById(\'chr-'+yr+'\')&&document.getElementById(\'chr-'+yr+'\').scrollIntoView({behavior:\'smooth\',block:\'nearest\',inline:\'start\'})">'+yr+'</button>';
@@ -4908,7 +4954,7 @@ function showShareCard(title,content){
     modal=document.createElement('div');
     modal.id='share-modal';
     modal.className='share-modal';
-    modal.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:12px;max-width:520px;width:90%"><div class="share-preview" id="share-preview"><div id="share-content"></div><div class="share-watermark">HARAMBE\'S DOZEN \u2022 DYNASTY HQ \u2022 2026</div></div><div style="display:flex;gap:8px"><button class="share-btn" id="share-dl-btn">SAVE IMAGE</button><button class="share-btn" onclick="document.getElementById(\'share-modal\').classList.remove(\'open\')">\u2715 CLOSE</button></div></div>';
+    modal.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:12px;max-width:520px;width:90%"><div class="share-preview" id="share-preview"><div id="share-content"></div><div class="share-watermark">HARAMBE\'S DOZEN \u2022 DYNASTY HQ \u2022 '+CURRENT_YEAR+'</div></div><div style="display:flex;gap:8px"><button class="share-btn" id="share-dl-btn">SAVE IMAGE</button><button class="share-btn" onclick="document.getElementById(\'share-modal\').classList.remove(\'open\')">\u2715 CLOSE</button></div></div>';
     modal.addEventListener('click',function(e){if(e.target===modal)modal.classList.remove('open');});
     document.body.appendChild(modal);
     var dlBtn=document.getElementById('share-dl-btn');
@@ -4935,8 +4981,8 @@ window.addEventListener('DOMContentLoaded',init);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
-      .then(reg => { console.log('SW registered'); reg.update(); })
-      .catch(err => console.log('SW failed:', err));
+      .then(reg => { reg.update(); })
+      .catch(err => console.warn('SW failed:', err));
   });
 }
 
@@ -4968,7 +5014,7 @@ if ('serviceWorker' in navigator) {
     banner.className = 'install-banner';
 
     if (type === 'ios') {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Tap the ' + shareIconSVG + ' <b>Share</b> button above, then <b>\u201cAdd to Home Screen\u201d</b></div>'
@@ -4981,7 +5027,7 @@ if ('serviceWorker' in navigator) {
         + '<path d="M8 28 L20 12 L32 28" stroke="var(--a, #cc0000)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
         + '</svg></div>';
     } else if (type === 'chrome') {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Get instant access like a native app</div>'
@@ -4989,7 +5035,7 @@ if ('serviceWorker' in navigator) {
         + '<button class="install-banner-btn" id="pwa-install-btn">Install</button>'
         + '<button class="install-banner-close" id="pwa-close-btn">&times;</button>';
     } else {
-      banner.innerHTML = '<img class="install-banner-icon" src="/apple-touch-icon.png" alt="App">'
+      banner.innerHTML = '<img class="install-banner-icon" src="harambe-logo.png" alt="App">'
         + '<div class="install-banner-text">'
         + '<div class="install-banner-title">Add Harambe\'s Dozen to Home Screen</div>'
         + '<div class="install-banner-sub">Tap &#8942; menu then <b>\u201cAdd to Home Screen\u201d</b></div>'
