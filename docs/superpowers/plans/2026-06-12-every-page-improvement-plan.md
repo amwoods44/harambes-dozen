@@ -1,6 +1,6 @@
 # Every-Page Improvement Plan
 
-**Date:** 2026-06-12 · **Status:** Proposed
+**Date:** 2026-06-12 · **Status:** Implemented (all three phases shipped in this PR; verified with the dev/audit harness in offseason desktop+mobile and midseason desktop — zero console errors)
 **Evidence:** full-page screenshots of all 18 tabs (desktop + mobile, offseason + midseason states) captured with the mock-API harness — `dev/audit/screens/`. Re-generate with `node dev/audit/capture.js` (see `dev/audit/README.md`).
 
 ## The headline finding
