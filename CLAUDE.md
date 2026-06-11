@@ -11,7 +11,7 @@ Fantasy football dynasty league dashboard for a 12-team PPR league. Single-file 
 - **Storage:** Browser localStorage with TTL-based cache
 - **PWA:** Service worker (`sw.js`) + manifest for installable app
 - **Charts:** Custom canvas rendering (no D3, no charting library)
-- **Dependencies:** Zero runtime. html2canvas loaded via CDN for share cards only
+- **Dependencies:** Zero runtime. html2canvas loaded from cdn.jsdelivr.net for share cards only
 - **Build:** None. Ship `index.html` as-is
 - **Hosting:** GitHub Pages (static)
 
@@ -54,7 +54,7 @@ Every visual element must feel like a broadcast graphic or magazine editorial �
 - If a design looks like "a styled div with smaller styled divs inside it," it's not done
 - Go bold first, pull back if needed — don't iterate timidly
 
-After any UI change, run `/visual-verify` before considering the task done.
+After any UI change, run `/visual-verify` before considering the task done. In remote sessions where the network policy blocks the live APIs, use the mock-API harness instead: `dev/audit/` (see its README) screenshots every tab against generated fixture data in offseason and midseason states.
 
 ## Design System
 
@@ -69,7 +69,7 @@ After any UI change, run `/visual-verify` before considering the task done.
 - Vanilla JS only. No framework, no build tools, no npm
 - CSS custom properties for all colors, spacing, typography, shadows
 - Inline styles in render functions are common (tech debt, not preference)
-- Global `D` object is the single source of truth for all data
+- Global `D` object is the single source of truth for all data. It's declared with `let`, so it is a global lexical binding, NOT `window.D` — probe it from devtools/Playwright with `typeof D!=='undefined'`
 - Functions are flat — no classes, no modules, no imports
 - `var` and `function` declarations mixed with `const`/`let` — legacy from iterative development
 
