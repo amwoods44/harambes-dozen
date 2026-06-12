@@ -19,8 +19,11 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Harambe's Dozen — Dynasty HQ">
 <meta name="twitter:description" content="12-team PPR dynasty league dashboard. Power rankings, trade history, player profiles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap');
+/* fonts loaded via <link> in <head> for an earlier, parallel fetch */
 .loading-screen{position:fixed;inset:0;z-index:9999;background:var(--g1);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s}
 .loading-screen.fade-out{opacity:0;visibility:hidden;pointer-events:none}
 .loading-gorilla{font-size:72px;margin-bottom:12px;animation:loadPulse 1.8s ease-in-out infinite}
@@ -69,7 +72,8 @@
   --team-MA:#512888;--team-TM:#0076B6;--team-HF:#003594;--team-EC:#A5ACAF;
   --team-AM:#203731;--team-DN:#311D00;--team-CH:#7A0019;--team-TP:#241773;
 }
-*{margin:0;padding:0;box-sizing:border-box;transition:background var(--transition-fast),border-color var(--transition-fast),box-shadow var(--transition-fast),opacity var(--transition-fast)}
+*{margin:0;padding:0;box-sizing:border-box}
+button,a,select,.h-row,.fr-row,.hm-cell,.bracket-slot,.wr-card,.rvi-row{transition:background var(--transition-fast),border-color var(--transition-fast),box-shadow var(--transition-fast),opacity var(--transition-fast)}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 body{font-family:var(--fb);background:var(--g1);color:var(--t1);min-height:100vh;overflow-x:hidden;padding-bottom:48px;line-height:1.4}
 h1,h2,h3,h4{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit}
@@ -783,6 +787,17 @@ body{padding-bottom:48px}
 .rival-bar-a{height:100%;display:flex;align-items:center;justify-content:flex-start;padding-left:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;transition:width .6s}
 .rival-bar-b{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;flex:1}
 .rival-badge{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+/* Compact masthead: interior tabs hide the hero/cast/stat band — every page
+   gets its own dominant element instead of replaying the show open */
+body.compact .hero,body.compact .cast,body.compact .sstrip{display:none}
+/* My-team accents */
+.my-ring{box-shadow:0 0 0 2px rgba(255,204,0,.45),0 0 18px rgba(255,204,0,.15)!important;border-color:rgba(255,204,0,.55)!important}
+.gm-link{cursor:pointer}
+.gm-link:hover{color:var(--y)!important;text-decoration:underline}
+/* Home front page */
+.home-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:12px}
+.home-card{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
+@media(max-width:768px){.home-grid{grid-template-columns:1fr}}
 /* Rivalry marquee — tale of the tape */
 .rvq-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--g4);margin-bottom:14px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
 .rvq-rank{position:absolute;top:0;left:0;font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:2px;color:#000;background:var(--y);padding:3px 10px 3px 8px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%);z-index:2}
@@ -1268,7 +1283,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
   <div class="loading-spinner"></div>
 </div>
 <header class="hdr" role="banner"><div class="hdr-in">
-  <div style="display:flex;align-items:center;gap:10px"><img src="./harambe-logo.png" alt="Harambe's Dozen" style="height:44px;width:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><span class="hdr-div"></span><span class="hdr-sub">Dynasty HQ</span></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="./harambe-logo.png" alt="Harambe's Dozen" style="height:44px;width:44px;border-radius:50%;object-fit:cover;flex-shrink:0"><span class="hdr-div"></span><span class="hdr-sub" id="hdr-sub">Dynasty HQ</span></div>
   <div class="hdr-right"><div class="nfl-cd" id="nfl-cd"></div><div class="live-badge" aria-label="Live data indicator"><span class="live-dot" aria-hidden="true"></span><span class="live-txt">LIVE</span></div></div>
 </div></header>
 <div class="data-status ok" id="ds">DYNASTY DATA LOADED</div>
@@ -1283,7 +1298,8 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 <div class="sstrip" id="sstrip"></div>
 <nav class="nav-bar" id="nav-bar"><button class="nav-arrow left" aria-label="Scroll tabs left">&#x25C0;</button><div class="nav-in" id="nav"></div><button class="nav-arrow right" aria-label="Scroll tabs right">&#x25B6;</button></nav>
 <main class="main" id="main">
-  <section class="panel active" id="tab-power"></section>
+  <section class="panel active" id="tab-home"></section>
+  <section class="panel" id="tab-power"></section>
   <section class="panel" id="tab-rosters"></section>
   <section class="panel" id="tab-trophies"></section>
   
@@ -1421,12 +1437,18 @@ async function discoverLeague(){
   const leagues=await fetchJSON(`${CFG.sleeperBase}/user/${CFG.userId}/leagues/nfl/${season}`);
   const league=leagues.find(l=>l.name===CFG.leagueName);
   if(!league)throw new Error('League not found for season '+season);
-  const chain=[{id:league.league_id,season}];
-  let prev=league.previous_league_id;
-  while(prev&&prev!=='0'){
-    const lg=await fetchJSON(`${CFG.sleeperBase}/league/${prev}`);
-    chain.unshift({id:lg.league_id,season:lg.season});
-    prev=lg.previous_league_id;
+  // previous_league_id links are immutable — cache the chain per league id
+  const chainKey='hd_chain_'+league.league_id;
+  let chain=cache.get(chainKey);
+  if(!chain){
+    chain=[{id:league.league_id,season}];
+    let prev=league.previous_league_id;
+    while(prev&&prev!=='0'){
+      const lg=await fetchJSON(`${CFG.sleeperBase}/league/${prev}`);
+      chain.unshift({id:lg.league_id,season:lg.season});
+      prev=lg.previous_league_id;
+    }
+    cache.set(chainKey,chain);
   }
   return{current:league,chain,state};
 }
@@ -1460,10 +1482,14 @@ async function fetchCurrentSeason(leagueId){
 }
 
 // ═══ PLAYER DATABASE ═══
-async function fetchPlayerDB(allPlayerIds){
+async function fetchPlayerDBRaw(){
   const cached=await bigCache.get('hd_players2');
-  if(cached)return cached;
-  const raw=await fetchJSON(`${CFG.sleeperBase}/players/nfl`);
+  if(cached)return{db:cached};
+  return{raw:await fetchJSON(`${CFG.sleeperBase}/players/nfl`)};
+}
+function prunePlayerDB(res,allPlayerIds){
+  if(res.db)return res.db;
+  const raw=res.raw;
   const db={};
   const keep=new Set(allPlayerIds);
   for(const[id,p]of Object.entries(raw)){
@@ -2247,6 +2273,7 @@ const PI=id=>`https://sleepercdn.com/content/nfl/players/thumb/${id}.jpg`;
 const PIF=id=>`https://sleepercdn.com/content/nfl/players/${id}.jpg`;
 const TL=tm=>tm&&tm!=='FA'?`https://sleepercdn.com/images/team_logos/nfl/${tm.toLowerCase()}.png`:'';
 const TABS=[
+  {id:'home',label:'HQ'},
   {id:'power',label:'Rankings'},
   {id:'rosters',label:'Rosters'},
   {id:'trophies',label:'The Rafters'},
@@ -2266,7 +2293,7 @@ const TABS=[
   {id:'pulse',label:'Pulse'},
   {id:'chronicle',label:'Chronicle'},
 ];
-let aTab='power',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null,selMovesYr=null;
+let aTab='home',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null,selMovesYr=null;
 const dirtyTabs=new Set();
 const tn=r=>D.rid_to_name[r]||'?';
 const isDefaultAvatar=url=>!url||url.includes('/avatars/thumbs/')||url.includes('default');
@@ -2384,6 +2411,12 @@ async function init(){
   // Global image error safety net
   document.addEventListener('error',function(e){if(e.target.tagName==='IMG'&&!e.target.dataset.errHandled){e.target.dataset.errHandled='1';e.target.style.display='none';}},true);
   try{
+    // Independent fetches start immediately and overlap league discovery —
+    // the player DB download is the longest pole and needs nothing from it
+    const playerDBPromise=fetchPlayerDBRaw();
+    const valuesPromise=fetchDynastyValues();
+    const csvPromise=fetchCSV(CFG.sheetCsvUrl).catch(()=>null);
+
     // ── DISCOVER ──
     setLoadingStatus('DISCOVERING LEAGUE...');
     const disc=await discoverLeague();
@@ -2393,16 +2426,13 @@ async function init(){
     setLoadingStatus('LOADING ROSTERS...');
     const cur=await fetchCurrentSeason(currentLeagueId);
 
-    // ── FETCH PLAYER DB ──
+    // ── PLAYERS / VALUES / CONTRACTS (already in flight) ──
     setLoadingStatus('LOADING PLAYERS...');
     const allIds=cur.rosters.flatMap(r=>(r.players||[]));
-    const playerDB=await fetchPlayerDB(allIds);
-
-    // ── FETCH DYNASTY VALUES + CONTRACTS ──
-    setLoadingStatus('LOADING VALUES...');
-    const ktcMap=await fetchDynastyValues();
-    setLoadingStatus('LOADING CONTRACTS...');
-    const contractData=await fetchContracts(ktcMap);
+    const playerDB=prunePlayerDB(await playerDBPromise,allIds);
+    const ktcMap=await valuesPromise;
+    const csvText=await csvPromise;
+    const contractData=csvText?parseContractCSV(csvText,ktcMap||{}):(cache.get('hd_contracts2')||{contracts:{},exemptions:{}});
 
     // ── BUILD D ──
     setLoadingStatus('BUILDING DASHBOARD...');
@@ -2416,13 +2446,11 @@ async function init(){
     // ── CACHE for fallback ──
     cache.set('hd_cache_current2',D);
 
-    // ── RENDER ──
+    // ── RENDER — landing tab only; the other 17 render on first visit ──
     injectEmptyStates();
     buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
-    renderPower();renderRosters();renderTrophies();renderTrades();
-    renderMatchups();renderDraft();renderAge();renderScoring();
-    renderAwards();renderAnalytics();renderMoves();renderGM();renderRivals();renderContracts();
-    renderConstitution();renderWarRoom();renderPulse();renderChronicle();
+    Object.keys(TAB_RENDERERS).forEach(t=>dirtyTabs.add(t));
+    window._showTab(resolveTab(location.hash.slice(1))||'home');
     updateCD();setInterval(updateCD,60000);
 
     // ── HIDE LOADING SCREEN ──
@@ -2432,10 +2460,7 @@ async function init(){
     setTimeout(()=>{const ds=document.getElementById('ds');if(ds)ds.classList.add('fade-away')},4000);
 
     // ── HASH ROUTING ──
-    const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups'};
-    const resolveTab=h=>{h=(h||'').toLowerCase();return document.getElementById('tab-'+h)?h:HASH_ALIASES[h]||null;};
     window.addEventListener('hashchange',()=>{const t=resolveTab(location.hash.slice(1));if(t&&window._showTab)window._showTab(t);});
-    const initTab=resolveTab(location.hash.slice(1));if(initTab&&window._showTab)window._showTab(initTab);
 
     // ── TIER 3: HISTORICAL (background) ──
     loadHistory(disc,playerDB);
@@ -2449,10 +2474,8 @@ async function init(){
       rebuildPlayerMap();
       injectEmptyStates();
       buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
-      renderPower();renderRosters();renderTrophies();renderTrades();
-      renderMatchups();renderDraft();renderAge();renderScoring();
-      renderAwards();renderAnalytics();renderMoves();renderGM();renderRivals();renderContracts();
-      renderConstitution();renderWarRoom();renderPulse();renderChronicle();
+      Object.keys(TAB_RENDERERS).forEach(t=>dirtyTabs.add(t));
+      window._showTab(resolveTab(location.hash.slice(1))||'home');
       updateCD();setInterval(updateCD,60000);
       document.getElementById('ls').classList.add('fade-out');
       setTimeout(animateCounters,600);
@@ -2463,10 +2486,10 @@ async function init(){
   }
 }
 
-function renderTab(id){
-  const map={power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
-  if(map[id])map[id]();
-}
+const TAB_RENDERERS={home:renderHome,power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
+function renderTab(id){const f=TAB_RENDERERS[id];if(f)f();}
+const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups',hq:'home'};
+function resolveTab(h){h=(h||'').toLowerCase();return document.getElementById('tab-'+h)?h:HASH_ALIASES[h]||null;}
 
 async function loadHistory(disc,playerDB){
   const historical=disc.chain.filter(c=>c.id!==disc.current.league_id).reverse();
@@ -2477,7 +2500,7 @@ async function loadHistory(disc,playerDB){
       mergeHistoricalData(D,[hs],playerDB);
       initSeasonConstants();
       buildStats();buildTicker();
-      ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft','moves','gm','awards','scoring','age','rosters','matchups'].forEach(t=>dirtyTabs.add(t));
+      ['home','trophies','rivals','pulse','chronicle','power','analytics','trades','draft','moves','gm','awards','scoring','age','rosters','matchups'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
@@ -2514,7 +2537,7 @@ function updateCD(){
 }
 function buildNav(){
   const n=document.getElementById('nav');
-  const PRIMARY=['power','rosters','matchups','draft','trades'];
+  const PRIMARY=['home','power','rosters','matchups','draft','trades'];
   const GROUPS=[
     {label:'INTEL',tabs:['analytics','age','gm','rivals']},
     {label:'HISTORY',tabs:['trophies','awards','chronicle','pulse']},
@@ -2525,7 +2548,7 @@ function buildNav(){
     aTab=id;
     if(dirtyTabs.has(id)){renderTab(id);dirtyTabs.delete(id);}
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active','wipe-in'));
-    const tp=document.getElementById('tab-'+id);if(tp){tp.classList.add('active','wipe-in');tp.querySelectorAll('.stagger > *').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});tp.querySelectorAll('.count-up').forEach(el=>{el.textContent='0';});animateCounters(tp);}
+    const tp=document.getElementById('tab-'+id);if(tp){tp.classList.add('active','wipe-in');const _stg=[...tp.querySelectorAll('.stagger > *')];_stg.forEach(el=>el.style.animation='none');tp.offsetHeight;_stg.forEach(el=>el.style.animation='');tp.querySelectorAll('.count-up').forEach(el=>{el.textContent='0';});animateCounters(tp);}
     n.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.t===id));
     n.querySelectorAll('.nav-drop-item').forEach(b=>b.classList.toggle('active',b.dataset.t===id));
     n.querySelectorAll('.nav-group').forEach(g=>{
@@ -2535,6 +2558,8 @@ function buildNav(){
     });
     const nb=document.querySelector('.nav-bar');if(nb){const nTop=nb.getBoundingClientRect().top+window.scrollY-59;if(window.scrollY>nTop+80)window.scrollTo({top:nTop,behavior:'smooth'});}
     history.replaceState(null,'','#'+id);
+    document.body.classList.toggle('compact',id!=='home');
+    const hsub=document.getElementById('hdr-sub');if(hsub)hsub.textContent=id==='home'?'Dynasty HQ':tabLabel(id);
     document.title=tabLabel(id)+" \u2014 Harambe's Dozen";
     window._showTab=showTab;window.__showTab=showTab;
   }
@@ -2648,6 +2673,99 @@ function buildTicker(){
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
 }
 // ═══ POWER RANKINGS ═══
+// ═══ HOME — THE FRONT PAGE ═══
+function myTeamRid(){
+  let v=null;try{v=localStorage.getItem('hd_my_team')}catch(e){}
+  if(v)return parseInt(v);
+  const t=(D.teams||[]).find(x=>x.owner_id===CFG.userId);
+  return t?t.roster_id:null;
+}
+function setMyTeam(rid){try{localStorage.setItem('hd_my_team',rid)}catch(e){}
+  ['power','matchups'].forEach(t=>dirtyTabs.add(t));renderHome();}
+function clearMyTeam(){try{localStorage.removeItem('hd_my_team')}catch(e){}
+  ['power','matchups'].forEach(t=>dirtyTabs.add(t));renderHome();}
+function renderHome(){
+  const my=myTeamRid();
+  const pwAll=computePowerTeams();
+  const teams=pwAll.teams;
+  const champ=champsDesc()[0];
+  const now=new Date();
+  let h='';
+  // ── LEAD STORY: my game / game of the week in-season, reigning champ in the offseason ──
+  const wkKeys=Object.keys(D.matchup_weeks||{}).map(Number);
+  if(wkKeys.length){
+    const wk=Math.max.apply(null,wkKeys);
+    const games=D.matchup_weeks[wk]||[];
+    let lead=null;
+    if(my)lead=games.find(g=>g.team_a.roster_id===my||g.team_b.roster_id===my);
+    if(!lead)lead=games.slice().sort((a,b)=>a.diff-b.diff)[0];
+    if(lead){
+      const tcA=TC[lead.team_a.roster_id]||{},tcB=TC[lead.team_b.roster_id]||{};
+      const mine=my&&(lead.team_a.roster_id===my||lead.team_b.roster_id===my);
+      h+='<div class="rvq-card" style="margin-top:14px;background:linear-gradient(105deg,'+(tcA.p||'#cc0000')+'2e 0%,transparent 40%,transparent 60%,'+(tcB.p||'#3b82f6')+'2e 100%),var(--g2)">';
+      h+='<div class="rvq-rank">WEEK '+wk+(mine?' · YOUR GAME':' · GAME OF THE WEEK')+'</div>';
+      h+='<div class="rvq-split">';
+      h+='<div class="rvq-side">'+av(lead.team_a.roster_id,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+lead.team_a.roster_id+'">'+lead.team_a.name+'</div></div></div>';
+      h+='<div class="rvq-center"><div class="rvq-score">'+lead.team_a.points.toFixed(1)+'–'+lead.team_b.points.toFixed(1)+'</div><div class="rvq-vs">FINAL · WK '+wk+'</div></div>';
+      h+='<div class="rvq-side right">'+av(lead.team_b.roster_id,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+lead.team_b.roster_id+'">'+lead.team_b.name+'</div></div></div>';
+      h+='</div><div style="height:10px"></div></div>';
+    }
+  }else if(champ){
+    const tcC=TC[champ.champ_rid]||{};
+    const kickDays=Math.max(0,Math.floor((new Date(SEASON_DATES.nflKickoff)-now)/864e5));
+    h+='<div class="rvq-card" style="margin-top:14px;background:linear-gradient(120deg,rgba(255,204,0,.14),transparent 55%),linear-gradient(105deg,'+(tcC.p||'#cc0000')+'2e,transparent 50%),var(--g2)">';
+    h+='<div class="rvq-rank">★ REIGNING CHAMPION</div>';
+    h+='<div style="display:flex;align-items:center;gap:16px;padding:28px 18px 18px;flex-wrap:wrap">';
+    h+=av(champ.champ_rid,64);
+    h+='<div style="flex:1;min-width:200px"><div class="gm-link" data-rid="'+champ.champ_rid+'" style="font-family:var(--fd);font-size:clamp(26px,4.5vw,46px);font-weight:900;text-transform:uppercase;line-height:1;color:var(--t1)">'+champ.champion+'</div>';
+    h+='<div style="font-family:var(--fb);font-size:13px;color:var(--t3);margin-top:6px">'+champ.year+' Dynasty Champion · defeated '+champ.runner_up+'</div></div>';
+    h+='<div style="text-align:right"><div style="font-family:var(--fm);font-size:10px;letter-spacing:2px;color:var(--t4)">KICKOFF IN</div><div style="font-family:var(--fd);font-size:34px;font-weight:900;color:var(--y);line-height:1">'+kickDays+' DAYS</div></div>';
+    h+='</div></div>';
+  }
+  // ── MY FRANCHISE (or the picker) + side column ──
+  let left='';
+  if(!my){
+    left='<div class="home-card"><div style="font-family:var(--fd);font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Whose franchise is yours?</div>';
+    left+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-bottom:12px">Pick your team and the HQ becomes your companion — your game, your contracts, your picks, front and center.</div>';
+    left+='<div style="display:flex;gap:6px;flex-wrap:wrap">'+(D.teams||[]).map(t=>'<button class="tab-sub-btn" style="display:flex;align-items:center;gap:6px" onclick="setMyTeam('+t.roster_id+')">'+av(t.roster_id,20)+t.team_name+'</button>').join('')+'</div></div>';
+  }else{
+    const t=(D.teams||[]).find(x=>x.roster_id===my);
+    if(t){
+      const me=teams.find(x=>x.roster_id===my);
+      const rank=me?teams.indexOf(me)+1:'—';
+      const tcM=TC[my]||{};
+      const totKtc=t.players.reduce((s2,p)=>s2+(p.ktc||0),0);
+      const exp=[];t.players.forEach(p=>{const c=D.contracts&&D.contracts[p.name];if(c&&c.yrs===0)exp.push(p.name);});
+      const gained=(D.pick_trades||[]).filter(p=>p.current_owner_roster_id===my&&p.original_roster_id!==my);
+      const lost=(D.pick_trades||[]).filter(p=>p.original_roster_id===my&&p.current_owner_roster_id!==my);
+      const net=gained.length-lost.length;
+      left='<div class="home-card" style="border-top:3px solid '+(tcM.p||'#cc0000')+';background:linear-gradient(135deg,'+(tcM.p||'#cc0000')+'12,transparent 45%),var(--g2)">';
+      left+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'+av(my,52)+'<div style="flex:1;min-width:0"><div style="font-family:var(--fd);font-size:clamp(18px,3vw,26px);font-weight:900;text-transform:uppercase;line-height:1">'+t.team_name+'</div>';
+      left+='<div style="font-family:var(--fm);font-size:11px;color:var(--t3);margin-top:3px">'+(pwAll.basis.live?'':'’'+String(pwAll.basis.year).slice(2)+': ')+(me?me.s25.wins+'-'+me.s25.losses+' · ':'')+'POWER #'+rank+'</div></div>';
+      left+='<span style="font-family:var(--fd);font-size:9px;letter-spacing:1px;color:var(--t4);cursor:pointer;text-decoration:underline" onclick="clearMyTeam()">CHANGE</span></div>';
+      left+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-bottom:12px">';
+      left+='<div><div style="font-family:var(--fm);font-size:22px;font-weight:800;color:'+(tcM.p||'var(--a)')+'">'+(totKtc>=1000?(totKtc/1000).toFixed(1)+'K':totKtc||'—')+'</div><div style="font-family:var(--fd);font-size:9px;letter-spacing:1.5px;color:var(--t4)">ROSTER VALUE</div></div>';
+      left+='<div><div style="font-family:var(--fm);font-size:22px;font-weight:800;color:'+(exp.length?'var(--red-t)':'var(--t2)')+'">'+exp.length+'</div><div style="font-family:var(--fd);font-size:9px;letter-spacing:1.5px;color:var(--t4)">EXPIRING</div></div>';
+      left+='<div><div style="font-family:var(--fm);font-size:22px;font-weight:800;color:'+(net>=0?'#17b169':'var(--red-t)')+'">'+(net>0?'+':'')+net+'</div><div style="font-family:var(--fd);font-size:9px;letter-spacing:1.5px;color:var(--t4)">NET PICKS</div></div>';
+      left+='</div>';
+      if(exp.length)left+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);border-top:1px solid var(--g3);padding-top:8px"><b style="color:var(--red-t)">Expiring:</b> '+exp.slice(0,4).join(' · ')+(exp.length>4?' +'+(exp.length-4):'')+'</div>';
+      const acq2=gained.map(p=>p.season+' Rd'+p.round);
+      if(acq2.length)left+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:6px"><b style="color:var(--y)">Acquired picks:</b> '+acq2.slice(0,5).join(' · ')+(acq2.length>5?' +'+(acq2.length-5):'')+'</div>';
+      left+='<div style="margin-top:12px"><button class="wk-btn" onclick="showGM('+my+')">FULL FRANCHISE PROFILE →</button></div>';
+      left+='</div>';
+    }
+  }
+  let side='';
+  const evs=[['Exemption Deadline',SEASON_DATES.exemptionDeadline],['NFL Kickoff',SEASON_DATES.nflKickoff]].map(ev=>({l:ev[0],dt:ev[1],days:Math.floor((new Date(ev[1])-now)/864e5)})).filter(ev=>ev.days>=0).sort((a,b)=>a.days-b.days);
+  if(evs.length){side+='<div class="home-card" style="display:flex;align-items:center;gap:14px"><div style="font-family:var(--fd);font-size:36px;font-weight:900;color:var(--y);line-height:1">'+evs[0].days+'</div><div><div style="font-family:var(--fd);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase">'+evs[0].l+'</div><div style="font-family:var(--fm);font-size:10px;color:var(--t4)">'+fmtSeasonDate(evs[0].dt)+' · days away</div></div></div>';}
+  side+='<div class="home-card"><div style="font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:2px;color:var(--a);margin-bottom:8px">POWER TOP 3</div>';
+  teams.slice(0,3).forEach((tt,i)=>{side+='<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--g3)"><span style="font-family:var(--fm);font-size:12px;font-weight:800;color:var(--y);width:14px">'+(i+1)+'</span>'+av(tt.roster_id,24)+'<span class="gm-link" data-rid="'+tt.roster_id+'" style="flex:1;min-width:0;font-family:var(--fd);font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tt.team_name+(tt.roster_id===my?' ★':'')+'</span><span style="font-family:var(--fm);font-size:12px;font-weight:800;color:var(--t3)">'+tt.pw+'</span></div>';});
+  side+='<div style="margin-top:8px"><button class="wk-btn" onclick="window._showTab(\'power\')">FULL RANKINGS →</button></div></div>';
+  const lastTr=(D.unified_trades||[]).slice().sort((a,b)=>(parseInt(b.yr)-parseInt(a.yr))||(b.wk-a.wk))[0];
+  if(lastTr){side+='<div class="home-card"><div style="font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:2px;color:var(--y);margin-bottom:8px">LATEST TRADE</div><div style="font-family:var(--fd);font-size:14px;font-weight:800">'+lastTr.sides[0].name+' ⇄ '+lastTr.sides[1].name+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:4px">'+lastTr.sides.map(sd=>'<b>'+sd.name+'</b>: '+(sd.assets.slice(0,2).join(', ')||'—')).join(' · ')+'</div><div style="font-family:var(--fm);font-size:10px;color:var(--t4);margin-top:4px">'+lastTr.yr+' · WEEK '+lastTr.wk+'</div><div style="margin-top:8px"><button class="wk-btn" onclick="window._showTab(\'trades\')">TRADE CENTER →</button></div></div>';}
+  h+='<div class="home-grid">'+ '<div>'+left+'</div>' +'<div style="display:flex;flex-direction:column;gap:14px">'+side+'</div></div>';
+  document.getElementById('tab-home').innerHTML=h;
+}
 // ═══ POWER COMPOSITE (shared by Power, Age Map, Pulse) ═══
 // Per-season data accessors — CURRENT_YEAR lives on D directly, history is
 // stored as weekly_scores_/matchup_weeks_<year> by mergeHistoricalData.
@@ -2714,7 +2832,7 @@ function renderPower(){
     const champBadge=t.isChamp?' \u2605':'';
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF').slice(0,5);
     const rankClass=i>=9?' rank-low':'';
-    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+(UI_OPEN.has('power:'+t.roster_id)?' open':'')+'" data-okey="power:'+t.roster_id+'" onclick="uiToggle(this)">';
+    h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+(UI_OPEN.has('power:'+t.roster_id)?' open':'')+(myTeamRid()===t.roster_id?' my-ring':'')+'" data-okey="power:'+t.roster_id+'" onclick="uiToggle(this)">';
     h+='<div class="prk'+rankClass+'"><div class="prk-n">'+(i+1)+'</div></div>';
     h+='<div class="pcbar" style="background:'+barC+'"></div>';
     h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+(basis.live?'':yy+': ')+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
@@ -2813,8 +2931,8 @@ function renderPower(){
       ch+='</div>';
       res.innerHTML=ch;
     }
-    selA.addEventListener('change',updateCmp);
-    selB.addEventListener('change',updateCmp);
+    selA.onchange=updateCmp;
+    selB.onchange=updateCmp;
     updateCmp();
   },150);
 }
@@ -3643,9 +3761,11 @@ function renderMatchups(){
     h+='<div style="text-align:center"><div style="font:700 var(--text-2xs)/1 var(--fd);letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-bottom:var(--sp-1)">LOW</div><div style="font:700 var(--text-lg)/1 var(--fd);color:var(--red-t)"><span class="count-up" data-target="'+wkLow+'" data-decimals="2">0</span></div></div>';
     h+='</div>';
   }
-  // Broadcast scoreboard cards
+  // Broadcast scoreboard cards — my game leads
+  const myRid=myTeamRid();
+  const ordered=myRid?wkGames.slice().sort((a,b)=>((b.team_a.roster_id===myRid||b.team_b.roster_id===myRid)?1:0)-((a.team_a.roster_id===myRid||a.team_b.roster_id===myRid)?1:0)):wkGames;
   h+='<div class="stagger">';
-  wkGames.forEach(g=>{
+  ordered.forEach(g=>{
     const aW=g.team_a.points>g.team_b.points;
     const diff=Math.abs(g.team_a.points-g.team_b.points).toFixed(2);
     const isClose=diff<5;const isBlowout=diff>40;
@@ -3656,7 +3776,7 @@ function renderMatchups(){
     const total=g.team_a.points+g.team_b.points;
     const tugA=total>0?Math.round(g.team_a.points/total*100):50;
     const tugB=100-tugA;
-    h+='<div class="mu-card">';
+    h+='<div class="mu-card'+(myRid&&(g.team_a.roster_id===myRid||g.team_b.roster_id===myRid)?' my-ring':'')+'">';
     h+='<div class="mu-accent" style="background:linear-gradient(90deg,'+pA+' 0%,'+pA+' 48%,transparent 50%,'+pB+' 52%,'+pB+' 100%)"></div>';
     h+='<div class="mu-body">';
     // Left team
@@ -5202,6 +5322,8 @@ function renderChronicle(){
   document.getElementById('tab-chronicle').innerHTML=h;
 }
 // ═══ SHARE CARDS ═══
+// html2canvas loads on first share tap, not on every page load
+function ensureH2C(){return new Promise(function(res){if(typeof html2canvas!=='undefined')return res(true);var sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';sc.onload=function(){res(true)};sc.onerror=function(){res(false)};document.head.appendChild(sc);});}
 function showShareCard(title,content){
   var modal=document.getElementById('share-modal');
   if(!modal){
@@ -5215,20 +5337,24 @@ function showShareCard(title,content){
     if(dlBtn)dlBtn.onclick=function(){
       var preview=document.getElementById('share-preview');
       if(!preview)return;
-      if(typeof html2canvas==='undefined'){var orig=dlBtn.innerHTML;dlBtn.textContent='Not available';setTimeout(function(){dlBtn.innerHTML=orig;},2000);return;}
       dlBtn.textContent='Generating...';
-      html2canvas(preview,{backgroundColor:'#0d0d14',scale:2,useCORS:true,allowTaint:true,logging:false}).then(function(canvas){
-        var link=document.createElement('a');
-        link.download='harambes-dozen.png';
-        link.href=canvas.toDataURL('image/png');
-        link.click();
-        dlBtn.innerHTML='SAVE IMAGE';
-      }).catch(function(){dlBtn.innerHTML='SAVE IMAGE';});
+      ensureH2C().then(function(ok){
+        if(!ok){dlBtn.textContent='Not available';setTimeout(function(){dlBtn.textContent='SAVE IMAGE';},2000);return;}
+        html2canvas(preview,{backgroundColor:'#0d0d14',scale:2,useCORS:true,allowTaint:true,logging:false}).then(function(canvas){
+          var link=document.createElement('a');
+          link.download='harambes-dozen.png';
+          link.href=canvas.toDataURL('image/png');
+          link.click();
+          dlBtn.innerHTML='SAVE IMAGE';
+        }).catch(function(){dlBtn.innerHTML='SAVE IMAGE';});
+      });
     };
   }
   document.getElementById('share-content').innerHTML='<div style="font-family:var(--fd);font-size:18px;font-weight:800;color:var(--t1);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">'+title+'</div>'+content;
   modal.classList.add('open');
 }
+// Team names with .gm-link + data-rid open that franchise's GM profile
+document.addEventListener('click',function(e){var g=e.target.closest('.gm-link');if(g&&g.dataset.rid)showGM(parseInt(g.dataset.rid));});
 window.addEventListener('DOMContentLoaded',init);
 
 // ═══ SERVICE WORKER REGISTRATION ═══
@@ -5314,7 +5440,6 @@ if ('serviceWorker' in navigator) {
   }
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
 <script>
 // ═══ PLAYER PROFILE MODAL ═══
 function openPP(playerId) {
