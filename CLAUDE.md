@@ -60,8 +60,8 @@ After any UI change, run `/visual-verify` before considering the task done. In r
 ## Design System
 
 **Palette:** Dark warm theme. Base `#120e0c`, accent red `#cc0000`, gold `#ffcc00`
-**Fonts:** Oswald (display/headings), Inter (body), JetBrains Mono (stats/numbers)
-**Font weights:** 600-900 on headings is intentional — broadcast aesthetic, not a bug
+**Fonts:** Two-tier type system (2026-06): Oswald is DISPLAY-ONLY (hero, section tags, card titles, big numerals, nav, tier labels — `--fd`); everything ≤13px (labels, sublines, chips, buttons, data rows) uses Inter via `--fu`. Inter body (`--fb`), JetBrains Mono stats (`--fm`)
+**Font weights:** 600-900 on display headings is intentional — broadcast aesthetic, not a bug. Don't put Oswald on small text — the owner flagged it as too decorative
 **Spacing:** 4px base unit (`--sp-1` through `--sp-10`)
 **Component identity:** Broadcast headers (`.bh`) with angled clip-path, team-colored accents throughout
 
