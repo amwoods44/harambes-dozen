@@ -787,6 +787,29 @@ body{padding-bottom:48px}
 .rival-bar-a{height:100%;display:flex;align-items:center;justify-content:flex-start;padding-left:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;transition:width .6s}
 .rival-bar-b{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;flex:1}
 .rival-badge{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+/* Matchup box score (tap a card) — mirrored lineups, Sleeper-style */
+.mu-card{cursor:pointer}
+.mu-box{display:none;border-top:1px solid var(--g4);background:rgba(0,0,0,.25);padding:8px 14px 12px;cursor:default}
+.mu-card.open .mu-box{display:block;animation:wipeIn .25s var(--ease-out)}
+.mu-box-hdr{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;font-family:var(--fd);font-size:9px;font-weight:800;letter-spacing:2px;color:var(--t4);text-transform:uppercase;padding:8px 0}
+.mu-box-hdr span:nth-child(2){color:var(--a)}
+.mu-box-hdr span:last-child{text-align:right}
+.mu-box-row{display:grid;grid-template-columns:1fr 54px 1fr;gap:8px;align-items:center;padding:3px 2px;border-bottom:1px solid rgba(255,255,255,.04)}
+.mu-box-row.mu-box-top{background:linear-gradient(90deg,rgba(255,204,0,.08),transparent 30%,transparent 70%,rgba(255,204,0,.08));border-radius:6px}
+.mu-box-side{display:flex;align-items:center;gap:8px;min-width:0}
+.mu-box-side.l{justify-content:flex-end}
+.mu-box-side.r{justify-content:flex-start}
+.mu-box-nm{font-family:var(--fd);font-size:12px;font-weight:600;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.mu-box-nm:hover{color:var(--y)}
+.mu-box-side.won .mu-box-nm{color:var(--t1);font-weight:800}
+.mu-box-pts{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t4);min-width:42px}
+.mu-box-side.r .mu-box-pts{text-align:right}
+.mu-box-side.won .mu-box-pts{color:var(--y)}
+.mu-box-slot{font-family:var(--fd);font-size:9px;font-weight:800;letter-spacing:1px;text-align:center;color:var(--t4);background:var(--g3);border-radius:4px;padding:3px 0}
+.mu-box-star{font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--y);text-align:center;margin-top:9px}
+.mu-box-hint{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--t4)}
+.mu-card.open .mu-box-hint{color:var(--y)}
+@media(max-width:600px){.mu-box-nm{font-size:10px}.mu-box-pts{font-size:11px;min-width:32px}.mu-box-row{grid-template-columns:1fr 38px 1fr;gap:4px}}
 /* Compact masthead: interior tabs hide the hero/cast/stat band — every page
    gets its own dominant element instead of replaying the show open */
 body.compact .hero,body.compact .cast,body.compact .sstrip{display:none}
@@ -1693,6 +1716,8 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
 
   // ── League info ──
   const ls=league.settings||{};
+  d.lineup_slots=(league.roster_positions||[]).filter(p=>p!=='BN'&&p!=='IR');
+  d['lineup_slots_'+currentSeason]=d.lineup_slots;
   d.league={
     name:esc(league.name),
     season:league.season,
@@ -1833,14 +1858,15 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
       byMatchup[mid].push(e);
     });
     const games=[];
+    const lineupOf=e=>(e.starters||[]).map(pid=>({pid,pts:e.players_points&&e.players_points[pid]!=null?Math.round(parseFloat(e.players_points[pid])*10)/10:null}));
     Object.values(byMatchup).forEach(pair=>{
       if(pair.length<2)return;
       const[ea,eb]=pair;
       const aRid=ea.roster_id,bRid=eb.roster_id;
       const aPts=parseFloat(ea.points)||0,bPts=parseFloat(eb.points)||0;
       games.push({
-        team_a:{roster_id:aRid,points:aPts,name:d.rid_to_name[aRid]||'?'},
-        team_b:{roster_id:bRid,points:bPts,name:d.rid_to_name[bRid]||'?'},
+        team_a:{roster_id:aRid,points:aPts,name:d.rid_to_name[aRid]||'?',lineup:lineupOf(ea)},
+        team_b:{roster_id:bRid,points:bPts,name:d.rid_to_name[bRid]||'?',lineup:lineupOf(eb)},
         diff:parseFloat(Math.abs(aPts-bPts).toFixed(2)),
         winner:aPts>=bPts?{roster_id:aRid,points:aPts}:{roster_id:bRid,points:bPts},
         loser:aPts<bPts?{roster_id:aRid,points:aPts}:{roster_id:bRid,points:bPts}
@@ -1982,14 +2008,15 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       const byMatchup={};
       wkData.forEach(e=>{const mid=e.matchup_id;if(!mid)return;if(!byMatchup[mid])byMatchup[mid]=[];byMatchup[mid].push(e);});
       const games=[];
+      const lineupOf=e=>(e.starters||[]).map(pid=>({pid,pts:e.players_points&&e.players_points[pid]!=null?Math.round(parseFloat(e.players_points[pid])*10)/10:null}));
       Object.values(byMatchup).forEach(pair=>{
         if(pair.length<2)return;
         const[ea,eb]=pair;
         const aRid=ea.roster_id,bRid=eb.roster_id;
         const aPts=parseFloat(ea.points)||0,bPts=parseFloat(eb.points)||0;
         games.push({
-          team_a:{roster_id:aRid,points:aPts,name:rtn[aRid]||'?'},
-          team_b:{roster_id:bRid,points:bPts,name:rtn[bRid]||'?'},
+          team_a:{roster_id:aRid,points:aPts,name:rtn[aRid]||'?',lineup:lineupOf(ea)},
+          team_b:{roster_id:bRid,points:bPts,name:rtn[bRid]||'?',lineup:lineupOf(eb)},
           diff:parseFloat(Math.abs(aPts-bPts).toFixed(2)),
           winner:aPts>=bPts?{roster_id:aRid,points:aPts}:{roster_id:bRid,points:bPts},
           loser:aPts<bPts?{roster_id:aRid,points:aPts}:{roster_id:bRid,points:bPts}
@@ -2007,6 +2034,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
     d['matchup_weeks_'+season]=hsMatchupWeeks;
     d['weekly_scores_'+season]=hsWeeklyScores;
     d['playoff_start_'+season]=playoffStart||15;
+    d['lineup_slots_'+season]=(league&&league.roster_positions||[]).filter(p=>p!=='BN'&&p!=='IR');
 
     // H2H — regular season only (pre-playoff weeks)
     const pStart=playoffStart||15;
@@ -3114,7 +3142,7 @@ function renderTrophies(){
       const isChamp=f.championships>0;
       h+='<div class="fr-row'+(isChamp?' champ':'')+'">';
       h+='<span class="fr-rk">'+(i+1)+'</span>';
-      h+='<span class="fr-name">'+f.name+'</span>';
+      h+='<span class="fr-name gm-link" data-rid="'+f.roster_id+'">'+f.name+'</span>';
       h+='<span class="fr-stat">'+f.total_wins+'-'+f.total_losses+'</span>';
       h+='<span class="fr-stat fr-pct">'+(f.win_pct*100).toFixed(1)+'%</span>';
       h+='<span class="fr-stat">'+f.total_pts.toLocaleString()+'</span>';
@@ -3178,7 +3206,7 @@ function renderTrophies(){
     h+='<div class="tc-section" style="margin-top:14px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\''+key+'\')"><h2 class="bh-tag">'+yr+'</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+(champ?'\u2605 '+champ.champion:'Final Standings')+' \u2022 Click to '+(open?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(open?'':'none')+'">';
     st.forEach(function(s,i){
       const isC=champ&&champ.champion===s.team_name;
-      h+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team">'+(isC?'\u2605 ':i<6?'\u2705 ':'')+s.team_name+'</span><span class="h-rec">'+s.wins+'-'+s.losses+'</span><span class="h-pts">'+s.fpts+' PF</span></div>';
+      h+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team gm-link" data-rid="'+s.roster_id+'">'+(isC?'\u2605 ':i<6?'\u2705 ':'')+s.team_name+'</span><span class="h-rec">'+s.wins+'-'+s.losses+'</span><span class="h-pts">'+s.fpts+' PF</span></div>';
     });
     // Playoff bracket for this year
     if(champ){
@@ -3706,6 +3734,33 @@ function toggleSection(hdr,key){
   if(sub)sub.textContent=sub.textContent.replace(/ \u2022 Click to (expand|collapse)/,'')+' \u2022 Click to '+(open?'collapse':'expand');
 }
 // ═══ MATCHUPS ═══
+// Mirrored box score for one game — every player opens the dossier popup
+function muBoxScore(g,yr){
+  const la=(g.team_a&&g.team_a.lineup)||[],lb=(g.team_b&&g.team_b.lineup)||[];
+  if(!la.length&&!lb.length)return'';
+  const slots=D['lineup_slots_'+(yr||CURRENT_YEAR)]||D.lineup_slots||[];
+  const n=Math.max(la.length,lb.length);
+  let top=null;
+  la.concat(lb).forEach(p=>{if(p&&p.pts!=null&&(!top||p.pts>top.pts))top=p;});
+  const nameOf=pid=>(playerMap[pid]||{}).name||pid;
+  const posOf=pid=>(playerMap[pid]||{}).pos||'';
+  let b='<div class="mu-box" onclick="event.stopPropagation()">';
+  b+='<div class="mu-box-hdr"><span>'+g.team_a.name+'</span><span>BOX SCORE</span><span>'+g.team_b.name+'</span></div>';
+  for(let i=0;i<n;i++){
+    const pa=la[i],pb=lb[i];
+    const slot=slots[i]||posOf(pa&&pa.pid)||'—';
+    const isTop=top&&((pa&&pa.pid===top.pid)||(pb&&pb.pid===top.pid));
+    const aWin=pa&&pb&&pa.pts!=null&&pb.pts!=null?pa.pts>pb.pts:null;
+    b+='<div class="mu-box-row'+(isTop?' mu-box-top':'')+'">';
+    b+='<div class="mu-box-side l'+(aWin===true?' won':'')+'">'+(pa?'<span class="mu-box-nm pp-trigger" data-pid="'+pa.pid+'">'+nameOf(pa.pid)+'</span>'+pimg(pa.pid,26)+'<span class="mu-box-pts">'+(pa.pts!=null?pa.pts.toFixed(1):'—')+'</span>':'<span class="mu-box-nm" style="cursor:default">—</span>')+'</div>';
+    b+='<div class="mu-box-slot pos-'+slot+'">'+slot+'</div>';
+    b+='<div class="mu-box-side r'+(aWin===false?' won':'')+'">'+(pb?'<span class="mu-box-pts">'+(pb.pts!=null?pb.pts.toFixed(1):'—')+'</span>'+pimg(pb.pid,26)+'<span class="mu-box-nm pp-trigger" data-pid="'+pb.pid+'">'+nameOf(pb.pid)+'</span>':'<span class="mu-box-nm" style="cursor:default">—</span>')+'</div>';
+    b+='</div>';
+  }
+  if(top)b+='<div class="mu-box-star">★ TOP SCORER · <span class="pp-trigger" data-pid="'+top.pid+'" style="cursor:pointer">'+nameOf(top.pid)+'</span> · '+top.pts.toFixed(1)+' PTS</div>';
+  b+='</div>';
+  return b;
+}
 function renderMatchups(){
   const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
   if(!wks.length){
@@ -3731,15 +3786,18 @@ function renderMatchups(){
       eh+='<div class="rvq-card" style="background:linear-gradient(105deg,'+(tcA.p||'#cc0000')+'2e 0%,transparent 40%,transparent 60%,'+(tcB.p||'#3b82f6')+'2e 100%),var(--g2)">';
       eh+='<div class="rvq-rank" style="background:var(--y)">\u2605 '+lastChamp.year+' FINAL</div>';
       eh+='<div class="rvq-split">';
-      eh+='<div class="rvq-side">'+av(aRid,52)+'<div style="min-width:0"><div class="rvq-name">'+lastChamp.champion+'</div><div class="rvq-sub" style="color:var(--y)">CHAMPION</div></div></div>';
+      eh+='<div class="rvq-side">'+av(aRid,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+aRid+'">'+lastChamp.champion+'</div><div class="rvq-sub" style="color:var(--y)">CHAMPION</div></div></div>';
       eh+='<div class="rvq-center"><div class="rvq-score">'+(finalGame?finalGame.winner.points.toFixed(1)+'\u2013'+finalGame.loser.points.toFixed(1):'W')+'</div><div class="rvq-vs">TITLE GAME</div></div>';
-      eh+='<div class="rvq-side right">'+av(bRid,52)+'<div style="min-width:0"><div class="rvq-name">'+lastChamp.runner_up+'</div><div class="rvq-sub">RUNNER-UP</div></div></div>';
+      eh+='<div class="rvq-side right">'+av(bRid,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+bRid+'">'+lastChamp.runner_up+'</div><div class="rvq-sub">RUNNER-UP</div></div></div>';
       eh+='</div><div style="height:10px"></div></div>';
+      if(finalGame&&((finalGame.team_a.lineup&&finalGame.team_a.lineup.length)||(finalGame.team_b.lineup&&finalGame.team_b.lineup.length))){
+        eh+='<div class="mu-card open" style="cursor:default;margin-top:10px">'+muBoxScore(finalGame,lastChamp.year)+'</div>';
+      }
       if(scored.standings.length){
         eh+='<div class="bh" style="margin-top:14px"><h2 class="bh-tag">'+scored.yr+' Final</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Last Season\u2019s Standings</span></div></div>';
         scored.standings.forEach(function(st,i){
           const isC=lastChamp&&lastChamp.champion===st.team_name;
-          eh+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team">'+(isC?'\u2605 ':'')+st.team_name+'</span><span class="h-rec">'+st.wins+'-'+st.losses+'</span><span class="h-pts">'+st.fpts+' PF</span></div>';
+          eh+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team gm-link" data-rid="'+st.roster_id+'">'+(isC?'\u2605 ':'')+st.team_name+'</span><span class="h-rec">'+st.wins+'-'+st.losses+'</span><span class="h-pts">'+st.fpts+' PF</span></div>';
         });
       }
     }
@@ -3776,13 +3834,14 @@ function renderMatchups(){
     const total=g.team_a.points+g.team_b.points;
     const tugA=total>0?Math.round(g.team_a.points/total*100):50;
     const tugB=100-tugA;
-    h+='<div class="mu-card'+(myRid&&(g.team_a.roster_id===myRid||g.team_b.roster_id===myRid)?' my-ring':'')+'">';
+    const muKey='mu:'+CURRENT_YEAR+':'+selWk+':'+g.team_a.roster_id;
+    h+='<div class="mu-card'+(myRid&&(g.team_a.roster_id===myRid||g.team_b.roster_id===myRid)?' my-ring':'')+(UI_OPEN.has(muKey)?' open':'')+'" data-okey="'+muKey+'" onclick="if(!event.target.closest(\'.pp-trigger,.gm-link,.mu-share-btn,.mu-box\'))uiToggle(this)">';
     h+='<div class="mu-accent" style="background:linear-gradient(90deg,'+pA+' 0%,'+pA+' 48%,transparent 50%,'+pB+' 52%,'+pB+' 100%)"></div>';
     h+='<div class="mu-body">';
     // Left team
     h+='<div class="mu-team">';
     h+=av(g.team_a.roster_id,48);
-    h+='<div class="mu-tn">'+tn(g.team_a.roster_id)+'</div>';
+    h+='<div class="mu-tn gm-link" data-rid="'+g.team_a.roster_id+'">'+tn(g.team_a.roster_id)+'</div>';
     if(aW)h+='<div class="mu-w-badge">W</div>';
     h+='</div>';
     // Center scoreboard
@@ -3797,15 +3856,17 @@ function renderMatchups(){
     // Right team
     h+='<div class="mu-team">';
     h+=av(g.team_b.roster_id,48);
-    h+='<div class="mu-tn">'+tn(g.team_b.roster_id)+'</div>';
+    h+='<div class="mu-tn gm-link" data-rid="'+g.team_b.roster_id+'">'+tn(g.team_b.roster_id)+'</div>';
     if(!aW)h+='<div class="mu-w-badge">W</div>';
     h+='</div>';
     h+='</div>';
     // Footer
     h+='<div class="mu-footer">';
     h+='<div style="display:flex;align-items:center;gap:var(--sp-2)"><span class="mu-margin">'+diff+' pt margin</span>'+(badgeLabel?'<span class="mu-chyron '+badgeClass+'">'+badgeLabel+'</span>':'')+'</div>';
-    h+='<button class="btn-primary mu-share-btn" data-a="'+g.team_a.roster_id+'" data-b="'+g.team_b.roster_id+'" data-ap="'+g.team_a.points+'" data-bp="'+g.team_b.points+'" style="padding:var(--sp-1) var(--sp-3);font-size:10px">SHARE</button>';
+    h+='<div style="display:flex;align-items:center;gap:var(--sp-3)"><span class="mu-box-hint">▾ BOX SCORE</span>';
+    h+='<button class="btn-primary mu-share-btn" data-a="'+g.team_a.roster_id+'" data-b="'+g.team_b.roster_id+'" data-ap="'+g.team_a.points+'" data-bp="'+g.team_b.points+'" style="padding:var(--sp-1) var(--sp-3);font-size:10px">SHARE</button></div>';
     h+='</div>';
+    h+=muBoxScore(g,CURRENT_YEAR);
     h+='</div>';
   });
   h+='</div>';
@@ -3828,7 +3889,7 @@ function renderMatchups(){
         content+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:#1a1a24;border-radius:8px;border-left:3px solid '+((!aW)?'var(--a)':'var(--red-t)')+'">';
         content+='<span style="font-size:14px;font-weight:800;color:'+((!aW)?'var(--a)':'var(--t2)')+'">'+bName+((!aW)?' \u2605':'')+'</span>';
         content+='<span style="font-size:20px;font-weight:900;color:'+((!aW)?'var(--a)':'var(--t3)')+'">'+bPts+'</span></div>';
-        content+='<div style="text-align:center;font-size:11px;color:var(--t4)">Margin: '+diff+' pts | Week '+selWk+' 2025</div>';
+        content+='<div style="text-align:center;font-size:11px;color:var(--t4)">Margin: '+diff+' pts | Week '+selWk+' '+CURRENT_YEAR+'</div>';
         content+='</div>';
         showShareCard('Week '+selWk+' Matchup',content);
       };
@@ -4090,11 +4151,11 @@ function renderAge(){
     const ps=t.players.filter(p=>p.age&&p.pos!=='DEF');const ages=ps.map(p=>p.age);
     const avg=ages.length?ages.reduce((a,b)=>a+b,0)/ages.length:0;
     const y=ages.filter(a=>a<=24).length,p=ages.filter(a=>a>=25&&a<=28).length,v=ages.filter(a=>a>=29).length,tot=ages.length||1;
-    return{name:t.team_name,avg:Math.round(avg*10)/10,yP:(y/tot*100).toFixed(0),pP:(p/tot*100).toFixed(0),vP:(v/tot*100).toFixed(0)};
+    return{name:t.team_name,rid:t.roster_id,avg:Math.round(avg*10)/10,yP:(y/tot*100).toFixed(0),pP:(p/tot*100).toFixed(0),vP:(v/tot*100).toFixed(0)};
   }).sort((a,b)=>a.avg-b.avg);
   ageData.forEach(t=>{
     const col=t.avg<=25?'var(--a)':t.avg<=27?'var(--y)':'var(--red-t)';
-    h+='<div class="age-row"><span class="age-name">'+t.name+'</span><div class="age-track"><div class="age-seg age-y" style="width:'+t.yP+'%"></div><div class="age-seg age-p" style="width:'+t.pP+'%"></div><div class="age-seg age-v" style="width:'+t.vP+'%"></div></div><span class="age-avg" style="color:'+col+'">'+t.avg+'</span></div>';
+    h+='<div class="age-row"><span class="age-name gm-link" data-rid="'+t.rid+'">'+t.name+'</span><div class="age-track"><div class="age-seg age-y" style="width:'+t.yP+'%"></div><div class="age-seg age-p" style="width:'+t.pP+'%"></div><div class="age-seg age-v" style="width:'+t.vP+'%"></div></div><span class="age-avg" style="color:'+col+'">'+t.avg+'</span></div>';
   });
   // Item 18: Dynasty scatter plot
   h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Dynasty Scatter</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Age vs Power \u2022 Where Every Team Sits</span></div></div>';
@@ -4102,7 +4163,7 @@ function renderAge(){
   h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Windows</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Championship Window</span></div></div>';
   ageData.forEach(t=>{
     const w=t.avg<=25?['Wide Open','var(--a)']:t.avg<=26.5?['Building','var(--blu)']:t.avg<=27.5?['Win Now','var(--y)']:['Closing','var(--red-t)'];
-    h+='<div class="h-row"><span class="h-team">'+t.name+'</span><span style="font-family:var(--fd);font-size:12px;font-weight:700;color:'+w[1]+'">'+w[0]+'</span></div>';
+    h+='<div class="h-row"><span class="h-team gm-link" data-rid="'+t.rid+'">'+t.name+'</span><span style="font-family:var(--fd);font-size:12px;font-weight:700;color:'+w[1]+'">'+w[0]+'</span></div>';
   });
   document.getElementById('tab-age').innerHTML=h;
   // Draw dynasty scatter
@@ -4220,7 +4281,7 @@ function renderScoring(){
     var lgAvgPx=Math.max(2,Math.min(34,(lgAvg/mxP)*36));
     var avgLines='<div style="position:absolute;left:0;right:0;bottom:'+teamAvgPx+'px;height:1px;border-top:1px dashed rgba(255,255,255,.25);pointer-events:none;z-index:1"><span style="position:absolute;right:0;bottom:2px;font-family:var(--fm);font-size:10px;font-weight:700;color:rgba(255,255,255,.4)">AVG</span></div>';
     avgLines+='<div style="position:absolute;left:0;right:0;bottom:'+lgAvgPx+'px;height:1px;border-top:1px solid rgba(204,0,0,.3);pointer-events:none;z-index:1"></div>';
-    h+='<div class="sc-card"><div class="sc-hdr"><div><span class="sc-rank">#'+(i+1)+'</span> <span class="sc-name">'+t.team_name+'</span></div><span class="sc-pts">'+t.fpts+'</span></div><div class="spark" style="position:relative">'+sparkH+avgLines+'</div><div class="sc-meta"><span>Avg '+t.avg+'/wk</span><span>High '+t.mx+' \u00b7 Low '+t.mn+'</span><span>\u03C3 '+t.std+'</span></div></div>';
+    h+='<div class="sc-card"><div class="sc-hdr"><div><span class="sc-rank">#'+(i+1)+'</span> <span class="sc-name gm-link" data-rid="'+t.roster_id+'">'+t.team_name+'</span></div><span class="sc-pts">'+t.fpts+'</span></div><div class="spark" style="position:relative">'+sparkH+avgLines+'</div><div class="sc-meta"><span>Avg '+t.avg+'/wk</span><span>High '+t.mx+' \u00b7 Low '+t.mn+'</span><span>\u03C3 '+t.std+'</span></div></div>';
   });
   // ═══ DRAFT HIT RATE ═══
   Object.keys(D.draft_hits||{}).sort().reverse().forEach(function(yr){
@@ -4376,7 +4437,7 @@ function renderAnalytics(){
   h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>#</th><th>Team</th><th>Actual</th><th>All-Play</th><th>AP%</th><th>Luck</th></tr></thead><tbody>';
   allPlay.forEach((t,i)=>{
     const lCls=t.luckDiff>0?'ap-luck-pos':t.luckDiff<0?'ap-luck-neg':'';
-    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:700">'+t.name+'</td><td>'+t.actW+'-'+t.actL+'</td><td>'+t.apW+'-'+t.apL+'</td><td style="font-family:var(--fm);font-weight:700;color:var(--a)"><span class="count-up" data-target="'+t.apPct+'" data-decimals="1">0</span>%</td><td class="'+lCls+'">'+(t.luckDiff>0?'+':'')+t.luckDiff+'</td></tr>';
+    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:700"><span class="gm-link" data-rid="'+t.rid+'">'+t.name+'</span></td><td>'+t.actW+'-'+t.actL+'</td><td>'+t.apW+'-'+t.apL+'</td><td style="font-family:var(--fm);font-weight:700;color:var(--a)"><span class="count-up" data-target="'+t.apPct+'" data-decimals="1">0</span>%</td><td class="'+lCls+'">'+(t.luckDiff>0?'+':'')+t.luckDiff+'</td></tr>';
   });
   h+='</tbody></table></div>';
   // ── CONSISTENCY SCATTER ──
@@ -4405,12 +4466,12 @@ function renderAnalytics(){
     const pyth=Math.pow(s.fpts,exp)/(Math.pow(s.fpts,exp)+Math.pow(pa,exp));
     const expWins=Math.round(pyth*games*10)/10;
     const diff=s.wins-expWins;
-    return{name:D.rid_to_name[rid],pf:s.fpts,pa:Math.round(pa),actW:s.wins,expW:expWins,diff:Math.round(diff*10)/10};
+    return{rid,name:D.rid_to_name[rid],pf:s.fpts,pa:Math.round(pa),actW:s.wins,expW:expWins,diff:Math.round(diff*10)/10};
   }).sort((a,b)=>b.diff-a.diff);
   h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>#</th><th>Team</th><th>PF</th><th>PA</th><th>Actual W</th><th>Expected W</th><th>Diff</th></tr></thead><tbody>';
   pythData.forEach((t,i)=>{
     const cls=t.diff>0?'ap-luck-pos':t.diff<0?'ap-luck-neg':'';
-    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:700">'+t.name+'</td><td>'+t.pf+'</td><td>'+t.pa+'</td><td>'+t.actW+'</td><td style="font-family:var(--fm)">'+t.expW+'</td><td class="'+cls+'">'+(t.diff>0?'+':'')+t.diff+'</td></tr>';
+    h+='<tr><td>'+(i+1)+'</td><td style="font-weight:700"><span class="gm-link" data-rid="'+t.rid+'">'+t.name+'</span></td><td>'+t.pf+'</td><td>'+t.pa+'</td><td>'+t.actW+'</td><td style="font-family:var(--fm)">'+t.expW+'</td><td class="'+cls+'">'+(t.diff>0?'+':'')+t.diff+'</td></tr>';
   });
   h+='</tbody></table></div>';
   // ── STRENGTH OF SCHEDULE ──
@@ -4430,12 +4491,12 @@ function renderAnalytics(){
       });
     });
     const sos=oppGames>0?(oppWins/oppGames*100).toFixed(1):50;
-    return{name:D.rid_to_name[rid],sos:parseFloat(sos),oppWins,oppGames};
+    return{rid,name:D.rid_to_name[rid],sos:parseFloat(sos),oppWins,oppGames};
   }).sort((a,b)=>b.sos-a.sos);
   sosData.forEach(t=>{
     const col=t.sos>=55?'var(--red-t)':t.sos>=50?'var(--y)':'var(--a)';
     const label=t.sos>=55?'HARD':t.sos>=50?'AVERAGE':'EASY';
-    h+='<div class="h-row"><span class="h-rk" style="color:'+col+'">'+label+'</span><span class="h-team">'+t.name+'</span><span style="font-family:var(--fm);font-size:14px;font-weight:700;color:'+col+'">'+t.sos+'%</span></div>';
+    h+='<div class="h-row"><span class="h-rk" style="color:'+col+'">'+label+'</span><span class="h-team gm-link" data-rid="'+t.rid+'">'+t.name+'</span><span style="font-family:var(--fm);font-size:14px;font-weight:700;color:'+col+'">'+t.sos+'%</span></div>';
   });
   document.getElementById('tab-analytics').innerHTML=h;
   // Draw scatter chart
@@ -4515,7 +4576,7 @@ function renderMoves(){
       const pc=TC[m.rid]?TC[m.rid].p:'#444';
       h+='<div class="move-card" style="--mc-color:'+pc+';background:linear-gradient(90deg,'+pc+'08,transparent 40%)">';
       h+='<div class="move-wk"><span class="move-type '+m.tp+'">'+m.tp.replace('_',' ')+'</span></div>';
-      h+='<div class="move-body"><div class="move-team">'+av(m.rid,28)+' '+D.rid_to_name[m.rid]+'</div><div class="move-detail">';
+      h+='<div class="move-body"><div class="move-team">'+av(m.rid,28)+' <span class="gm-link" data-rid="'+m.rid+'">'+D.rid_to_name[m.rid]+'</span></div><div class="move-detail">';
       if(m.add){h+='<span class="move-player move-add">'+(m.aid?pimg(m.aid,28):'')+' '+m.add+(m.apos?' <span class="pos-badge pos-'+m.apos+'">'+m.apos+'</span>':'')+'</span>';}
       if(m.drop){h+='<span class="move-player move-drop">'+(m.did?pimg(m.did,28):'')+' '+m.drop+(m.dpos?' <span class="pos-badge pos-'+m.dpos+'">'+m.dpos+'</span>':'')+'</span>';}
       h+='</div></div></div>';
@@ -4801,9 +4862,9 @@ function renderRivals(){
     h+='<div class="rvq-card" style="background:linear-gradient(105deg,'+aCol+'2e 0%,transparent 40%,transparent 60%,'+bCol+'2e 100%),var(--g2)">';
     h+='<div class="rvq-rank">RIVALRY #'+(mi+1)+'</div>';
     h+='<div class="rvq-split">';
-    h+='<div class="rvq-side">'+av(r.a_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.a+'</div><div class="rvq-sub">'+Math.round(r.aPct)+'% of series</div></div></div>';
+    h+='<div class="rvq-side">'+av(r.a_rid,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+r.a_rid+'">'+r.a+'</div><div class="rvq-sub">'+Math.round(r.aPct)+'% of series</div></div></div>';
     h+='<div class="rvq-center"><div class="rvq-score">'+r.a_wins+'\u2013'+r.b_wins+'</div><div class="rvq-vs">ALL-TIME SERIES</div></div>';
-    h+='<div class="rvq-side right">'+av(r.b_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.b+'</div><div class="rvq-sub">'+Math.round(100-r.aPct)+'% of series</div></div></div>';
+    h+='<div class="rvq-side right">'+av(r.b_rid,52)+'<div style="min-width:0"><div class="rvq-name gm-link" data-rid="'+r.b_rid+'">'+r.b+'</div><div class="rvq-sub">'+Math.round(100-r.aPct)+'% of series</div></div></div>';
     h+='</div>';
     h+='<div class="rvq-bar"><div style="width:'+r.aPct+'%;background:'+aCol+'"></div><div style="flex:1;background:'+bCol+'"></div></div>';
     h+='<div class="rvq-chips">';
@@ -5171,7 +5232,7 @@ function renderWarRoom(){
     var t=sc.t,tc=TC[t.roster_id]||{},tcP=tc.p||'#cc0000';
     var netCol=sc.net>0?'#17b169':sc.net<0?'var(--red-t)':'var(--t4)';
     h+='<div class="wr-card" style="border-top:3px solid '+tcP+'">';
-    h+='<div class="wr-card-hdr">'+av(t.roster_id,34)+'<div style="min-width:0;flex:1"><div class="wr-card-name">'+t.team_name+'</div>';
+    h+='<div class="wr-card-hdr">'+av(t.roster_id,34)+'<div style="min-width:0;flex:1"><div class="wr-card-name gm-link" data-rid="'+t.roster_id+'">'+t.team_name+'</div>';
     h+='<div class="wr-card-exm" style="color:'+sc.exmColor+'"><span class="wr-ind-dot" style="background:'+sc.exmColor+'"></span>'+sc.exmLabel+'</div></div></div>';
     h+='<div class="wr-card-stats">';
     h+='<div class="wr-cs"><div class="wr-csv" style="color:'+(sc.exp.length?'var(--red-t)':'var(--t4)')+'">'+sc.exp.length+'</div><div class="wr-csl">EXPIRING</div></div>';
