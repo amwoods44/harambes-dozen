@@ -633,10 +633,12 @@ body{padding-bottom:48px}
 /* ═══ PWA INSTALL BANNER ═══ */
 .install-banner {
   position: fixed;
-  bottom: 80px;
+  bottom: 56px;
   left: 12px;
   right: 12px;
-  z-index: 2000;
+  z-index: 900; /* below header(1000)/nav dropdowns - banner must never eat menu clicks */
+  max-width: 520px;
+  margin: 0 auto;
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   border: 1px solid rgba(204,0,0,.4);
   border-radius: 12px;
@@ -1577,25 +1579,28 @@ function setLoadingStatus(msg){
 }
 
 // ═══ COMPUTE RECORDS ═══
-function computeRecords(matchupWeeks){
+function computeRecords(matchupWeeks,defaultYear){
   const _et={roster_id:0,points:0,name:'—'};
-  let biggestBlowout={diff:0,week:'-',winner:_et,loser:_et};
-  let closestGame={diff:Infinity,week:'-',winner:_et,loser:_et};
-  let highestScore={pts:0,roster_id:0,week:'-'};
-  let lowestScore={pts:Infinity,roster_id:0,week:'-'};
+  let biggestBlowout={diff:0,week:'-',year:null,winner:_et,loser:_et};
+  let closestGame={diff:Infinity,week:'-',year:null,winner:_et,loser:_et};
+  let highestScore={pts:0,roster_id:0,week:'-',year:null};
+  let lowestScore={pts:Infinity,roster_id:0,week:'-',year:null};
   Object.entries(matchupWeeks).forEach(([wk,games])=>{
-    const week=parseInt(String(wk).split('_').pop());
+    // Keys are either plain week numbers (current season) or 'hist_<year>_<wk>'
+    const parts=String(wk).split('_');
+    const week=parseInt(parts[parts.length-1]);
+    const year=parts.length>=3?parts[1]:(defaultYear||null);
     (games||[]).forEach(g=>{
       const a=g.team_a,b=g.team_b;
       const diff=parseFloat(Math.abs(a.points-b.points).toFixed(2));
       const winner=a.points>=b.points?a:b;
       const loser=a.points<b.points?a:b;
-      if(diff>biggestBlowout.diff)biggestBlowout={diff,week,winner,loser};
-      if(diff<closestGame.diff)closestGame={diff,week,winner,loser};
-      if(a.points>highestScore.pts)highestScore={pts:a.points,roster_id:a.roster_id,week};
-      if(b.points>highestScore.pts)highestScore={pts:b.points,roster_id:b.roster_id,week};
-      if(a.points>0&&a.points<lowestScore.pts)lowestScore={pts:a.points,roster_id:a.roster_id,week};
-      if(b.points>0&&b.points<lowestScore.pts)lowestScore={pts:b.points,roster_id:b.roster_id,week};
+      if(diff>biggestBlowout.diff)biggestBlowout={diff,week,year,winner,loser};
+      if(diff<closestGame.diff)closestGame={diff,week,year,winner,loser};
+      if(a.points>highestScore.pts)highestScore={pts:a.points,roster_id:a.roster_id,week,year};
+      if(b.points>highestScore.pts)highestScore={pts:b.points,roster_id:b.roster_id,week,year};
+      if(a.points>0&&a.points<lowestScore.pts)lowestScore={pts:a.points,roster_id:a.roster_id,week,year};
+      if(b.points>0&&b.points<lowestScore.pts)lowestScore={pts:b.points,roster_id:b.roster_id,week,year};
     });
   });
   if(closestGame.diff===Infinity)closestGame.diff=0;
@@ -1799,7 +1804,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   d.matchup_weeks=matchupWeeks;
 
   // ── Records ──
-  d.records=computeRecords(matchupWeeks);
+  d.records=computeRecords(matchupWeeks,currentSeason);
 
   // ── Heat map meta ──
   d.heat_map_meta=Object.entries(matchupWeeks).map(([wk,games])=>{
@@ -1942,12 +1947,8 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       games.forEach(g=>{
         const aRid=g.team_a.roster_id,bRid=g.team_b.roster_id;
         const winner=g.winner.roster_id;
-        const[lo,hi]=aRid<bRid?[aRid,bRid]:[bRid,aRid];
-        const key=lo+'-'+hi;
-        if(!d.h2h[key])d.h2h[key]={w:0,l:0,total:0};
-        if(winner===lo){d.h2h[key].w++;d.h2h[key].total++;}
-        else{d.h2h[key].l++;d.h2h[key].total++;}
-        // Also store both directions
+        // Directional keys only — writing a canonical lo-hi key here as well
+        // double-counts the game (one directional key IS the canonical key)
         const keyAB=aRid+'-'+bRid;
         const keyBA=bRid+'-'+aRid;
         if(!d.h2h[keyAB])d.h2h[keyAB]={w:0,l:0,total:0};
@@ -2030,7 +2031,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       if(games.length)allMatchupWeeks['hist_'+hs.season+'_'+wk]=games;
     });
   });
-  d.records=computeRecords(allMatchupWeeks);
+  d.records=computeRecords(allMatchupWeeks,d.league&&d.league.season);
 
   // ── Franchise all-time aggregates ──
   const franchiseMap={};
@@ -2402,8 +2403,10 @@ async function init(){
     setTimeout(()=>{const ds=document.getElementById('ds');if(ds)ds.classList.add('fade-away')},4000);
 
     // ── HASH ROUTING ──
-    window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('tab-'+h)&&window._showTab)window._showTab(h);});
-    const initHash=location.hash.slice(1);if(initHash&&document.getElementById('tab-'+initHash)&&window._showTab)window._showTab(initHash);
+    const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups'};
+    const resolveTab=h=>{h=(h||'').toLowerCase();return document.getElementById('tab-'+h)?h:HASH_ALIASES[h]||null;};
+    window.addEventListener('hashchange',()=>{const t=resolveTab(location.hash.slice(1));if(t&&window._showTab)window._showTab(t);});
+    const initTab=resolveTab(location.hash.slice(1));if(initTab&&window._showTab)window._showTab(initTab);
 
     // ── TIER 3: HISTORICAL (background) ──
     loadHistory(disc,playerDB);
@@ -2503,6 +2506,7 @@ function buildNav(){
     });
     const nb=document.querySelector('.nav-bar');if(nb){const nTop=nb.getBoundingClientRect().top+window.scrollY-59;if(window.scrollY>nTop+80)window.scrollTo({top:nTop,behavior:'smooth'});}
     history.replaceState(null,'','#'+id);
+    document.title=tabLabel(id)+" \u2014 Harambe's Dozen";
     window._showTab=showTab;window.__showTab=showTab;
   }
   let html='';
@@ -2598,7 +2602,7 @@ function buildStats(){
   document.getElementById('sstrip').innerHTML=
     '<div class="ss champ"><div class="ss-l">★ '+(champ?champ.year:CURRENT_YEAR)+' Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">'+(isRepeatChamp(champs)?'3-peat eligible':'Defending')+'</div></div>'+
     '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+D.trades.length+'" data-decimals="0">0</span></div><div class="ss-sub">'+YEAR_RANGE+'</div></div>'+
+    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+((D.unified_trades&&D.unified_trades.length)||D.trades.length)+'" data-decimals="0">0</span></div><div class="ss-sub">'+YEAR_RANGE+'</div></div>'+
     '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+Math.round(tot/(scored.standings.length||12))+'" data-decimals="0">0</span></div><div class="ss-sub">per team '+scored.yr+'</div></div>'+
     '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+(D.draft_picks[CURRENT_YEAR]?D.draft_picks[CURRENT_YEAR].length:0)+'" data-decimals="0">0</span></div><div class="ss-sub">'+CURRENT_YEAR+' class</div></div>';
   if(buildStats._animated)animateCounters(document.getElementById('sstrip'));
@@ -2609,8 +2613,8 @@ function buildTicker(){
   D.champions.forEach(c=>{tk+='<div class="tki">\u2605 <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
   const tkScored=latestScoredSeason();
   tkScored.standings.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' ('+tkScored.yr+') \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
-  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0)tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
-  tk+='<div class="tki">'+D.trades.length+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
+  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0)tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+(D.records.biggest_blowout.year?' \u2019'+String(D.records.biggest_blowout.year).slice(2):'')+'</div><div class="tks">\u25C6</div>';
+  tk+='<div class="tki">'+((D.unified_trades&&D.unified_trades.length)||D.trades.length)+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
   if(D._loaded)tk+='<div class="tki" style="color:var(--t4)">Data as of '+D._loaded+'</div><div class="tks">\u25C6</div>';
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
 }
@@ -2860,7 +2864,7 @@ function renderRosters(){
         const ac=!p.age?'':p.age<=24?'age-y':p.age<=28?'age-p':'age-v';
         var con=D.contracts?D.contracts[p.name]:null;
         var ct='';
-        if(con){
+        if(con&&con.contracted){ // uncontracted players have yrs:null — no pill, never 'nullyr'
           var yc=con.yrs>=4?'var(--a)':con.yrs>=2?'var(--y)':'var(--red-t)';
           var bw=Math.max(8,con.yrs/7*100);
           ct='<span style="display:inline-flex;align-items:center;gap:3px;margin-left:auto;flex-shrink:0">';
@@ -3885,7 +3889,7 @@ function renderDraft(){
   });
   h+='</div>';
   // Best steal and biggest bust
-  var starters=hits.filter(function(h2){return h2.status==='starter'}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
+  var starters=hits.filter(function(h2){return h2.status==='starter'&&h2.pos!=='DEF'&&!/^[A-Z]{2,3}$/.test(String(h2.pid))}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
   var cuts=hits.filter(function(h2){return h2.status==='cut'});
   if(starters.length||cuts.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">';
@@ -4908,7 +4912,7 @@ function renderConstitution(){
   function sec(num,title,body){return'<div class="const-section"><div class="const-num">'+num+'</div><div class="const-title">'+title+'</div><div class="const-body">'+body+'</div></div>';}
   function kv(label,val){return'<li><span class="cl-label">'+label+'</span><span class="cl-value">'+val+'</span></li>';}
   // Article I
-  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',lg.type||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
+  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',({0:'Redraft',1:'Keeper',2:'Dynasty'})[lg.type]||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
   // Article II
   h+=sec('ARTICLE II','Roster Configuration','<ul class="const-list">'+kv('Total Roster',lg.roster_spots||'10 starters, 15 bench, 1 IR')+kv('Starters',lg.starters||'QB, 2RB, 3WR, TE, 2FLEX, DEF')+kv('Bench','15 spots')+kv('IR Slots','1 spot')+kv('Keeper Limit','15 players')+'</ul>');
   // Article III
@@ -5108,7 +5112,7 @@ function renderChronicle(){
     tradesByYear[y].sort(function(a,b){return tradeHeat(b)-tradeHeat(a)}).slice(0,3).forEach(function(t){
       var yr=parseInt(t.yr);
       var sideA=t.sides[0],sideB=t.sides[1];
-      var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks].slice(0,2).join(', ')||'picks';
+      var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks.map(function(pk){return String(pk).replace(/\s*\((\?|Unknown)\)/g,'').trim()})].slice(0,2).join(', ')||'picks';
       events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Blockbuster: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
     });
   });
