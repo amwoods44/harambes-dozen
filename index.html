@@ -113,7 +113,7 @@ button{min-height:36px}
 .cast::before,.cast::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
 .cast::before{left:0;background:linear-gradient(90deg,var(--g1),transparent)}
 .cast::after{right:0;background:linear-gradient(270deg,var(--g1),transparent)}
-.cast-in{display:flex;align-items:center;justify-content:center;gap:0;padding:0 30px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cast-in{display:flex;align-items:center;justify-content:center;gap:0;padding:0 30px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
 .cast-in::-webkit-scrollbar{display:none}
 .cast-fig{flex-shrink:0;position:relative;width:96px;height:96px;border-radius:50%;overflow:hidden;border:2px solid var(--g5);background:var(--g3);transition:all .3s cubic-bezier(.22,1,.36,1);cursor:pointer;margin:0 -8px;display:flex;align-items:center;justify-content:center}
 .cast-fig:hover{transform:scale(1.2);z-index:10;border-color:var(--a);box-shadow:0 0 28px rgba(204,0,0,.45)}
@@ -379,6 +379,7 @@ button{min-height:36px}
   .pcard{grid-template-columns:50px 4px 1fr auto}
   .prk-n{font-size:22px}
   .pnums{gap:10px;padding:12px 12px}
+  .roster-faces{display:none!important}
   .pnv.w{font-size:26px}
   .pk-grid{grid-template-columns:1fr}
   .banner-pn-wrap,.banner-pn-outer{width:140px}
@@ -632,10 +633,12 @@ body{padding-bottom:48px}
 /* ═══ PWA INSTALL BANNER ═══ */
 .install-banner {
   position: fixed;
-  bottom: 80px;
+  bottom: 56px;
   left: 12px;
   right: 12px;
-  z-index: 2000;
+  z-index: 900; /* below header(1000)/nav dropdowns - banner must never eat menu clicks */
+  max-width: 520px;
+  margin: 0 auto;
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   border: 1px solid rgba(204,0,0,.4);
   border-radius: 12px;
@@ -780,6 +783,27 @@ body{padding-bottom:48px}
 .rival-bar-a{height:100%;display:flex;align-items:center;justify-content:flex-start;padding-left:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;transition:width .6s}
 .rival-bar-b{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--fd);font-size:12px;font-weight:700;color:#fff;flex:1}
 .rival-badge{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+/* Rivalry marquee — tale of the tape */
+.rvq-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--g4);margin-bottom:14px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
+.rvq-rank{position:absolute;top:0;left:0;font-family:var(--fd);font-size:10px;font-weight:800;letter-spacing:2px;color:#000;background:var(--y);padding:3px 10px 3px 8px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%);z-index:2}
+.rvq-split{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:22px 16px 14px;gap:10px;position:relative}
+.rvq-side{display:flex;align-items:center;gap:12px;min-width:0}
+.rvq-side.right{flex-direction:row-reverse;text-align:right}
+.rvq-name{font-family:var(--fd);font-size:clamp(14px,2vw,20px);font-weight:800;color:var(--t1);text-transform:uppercase;line-height:1.05;overflow:hidden;text-overflow:ellipsis}
+.rvq-sub{font-family:var(--fm);font-size:10px;color:var(--t4);margin-top:3px}
+.rvq-center{text-align:center;padding:0 10px;flex-shrink:0}
+.rvq-score{font-family:var(--fd);font-size:clamp(26px,3vw,38px);font-weight:900;color:var(--t1);letter-spacing:1px;line-height:1;white-space:nowrap}
+.rvq-vs{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:3px;color:var(--a);margin-top:3px}
+.rvq-bar{height:7px;display:flex;overflow:hidden}
+.rvq-chips{display:flex;gap:6px;flex-wrap:wrap;padding:11px 16px 14px;position:relative}
+.rvq-chip{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(0,0,0,.3);color:var(--t3);border:1px solid var(--g4);text-transform:uppercase}
+.rvq-chip b{color:var(--t1)}
+.rvi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:8px}
+.rvi-row{display:flex;align-items:center;gap:8px;background:var(--g2);border:1px solid var(--g3);border-radius:8px;padding:8px 10px}
+.rvi-names{flex:1;min-width:0;font-family:var(--fd);font-size:11px;font-weight:700;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rvi-rec{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--y);flex-shrink:0}
+.rvi-bar{width:46px;height:5px;border-radius:3px;overflow:hidden;display:flex;flex-shrink:0;background:var(--g4)}
+@media(max-width:600px){.rvq-split{grid-template-columns:1fr auto 1fr;padding:20px 10px 10px}.rvq-side{flex-direction:column;text-align:center;gap:6px}.rvq-side.right{flex-direction:column;text-align:center}.rvq-name{font-size:12px}}
 /* ═══ PLAYOFF BRACKET ═══ */
 .bracket-wrap{margin:16px 0}
 .bracket-yr-sel{display:flex;gap:4px;margin-bottom:12px}
@@ -874,6 +898,17 @@ body{padding-bottom:48px}
 /* ═══ WAR ROOM ═══ */
 .wr-countdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:16px 0}
 .wr-timer{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:20px;text-align:center;position:relative;overflow:hidden}
+/* War Room status grid */
+.wr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:4px}
+.wr-card{background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:12px 14px;box-shadow:0 2px 14px rgba(0,0,0,.38)}
+.wr-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.wr-card-name{font-family:var(--fd);font-size:13px;font-weight:800;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr-card-exm{font-family:var(--fd);font-size:9px;font-weight:700;letter-spacing:1.5px;display:flex;align-items:center;gap:5px;margin-top:3px}
+.wr-ind-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.wr-card-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center}
+.wr-csv{font-family:var(--fm);font-size:18px;font-weight:800;line-height:1}
+.wr-csl{font-family:var(--fd);font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--t4);margin-top:3px}
+.wr-card-exp{font-family:var(--fb);font-size:10px;color:var(--t3);margin-top:9px;padding-top:8px;border-top:1px solid var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wr-timer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
 .wr-timer.urgent::before{background:var(--red-t);animation:pulse 1.4s infinite}
 .wr-timer.soon::before{background:var(--y)}
@@ -893,6 +928,8 @@ body{padding-bottom:48px}
 .wr-ind.red{background:var(--red-t);box-shadow:0 0 6px rgba(239,68,68,.4)}
 /* ═══ PULSE FEED ═══ */
 .pulse-card{background:var(--g2);border:1px solid var(--g4);border-radius:12px;padding:16px 20px;margin-bottom:12px;border-left:3px solid var(--a);transition:border-color .2s}
+.pulse-card.pulse-feature{background:linear-gradient(135deg,rgba(255,204,0,.08),transparent 55%),var(--g2);border-color:rgba(255,204,0,.35);border-left:4px solid var(--y);padding:22px 24px}
+.pulse-card.pulse-feature .pulse-headline{font-size:clamp(20px,3vw,28px);font-weight:900;text-transform:uppercase;letter-spacing:.5px}
 .pulse-card:hover{border-color:var(--a)}
 .pulse-card.trade{border-left-color:var(--y)}
 .pulse-card.record{border-left-color:var(--red-t)}
@@ -921,6 +958,8 @@ body{padding-bottom:48px}
 .chronicle-dot.record{background:var(--red-t);box-shadow:0 0 8px rgba(239,68,68,.4)}
 .chronicle-dot.exemption{background:var(--pur);box-shadow:0 0 8px rgba(139,92,246,.4)}
 .chronicle-event{background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:12px 16px;margin-top:100px;margin-bottom:12px;width:260px;transition:border-color .2s,transform .2s}
+.chronicle-event.feat{background:linear-gradient(150deg,rgba(255,204,0,.1),transparent 60%),var(--g2);border-color:rgba(255,204,0,.4);width:300px}
+.chronicle-event.feat .chronicle-event-title{font-size:17px;font-weight:900;text-transform:uppercase;color:var(--y)}
 .chronicle-event:hover{border-color:var(--g5);transform:translateY(-2px)}
 .chronicle-event-icon{font-size:24px;margin-bottom:6px}
 .chronicle-event-title{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px}
@@ -1540,25 +1579,28 @@ function setLoadingStatus(msg){
 }
 
 // ═══ COMPUTE RECORDS ═══
-function computeRecords(matchupWeeks){
+function computeRecords(matchupWeeks,defaultYear){
   const _et={roster_id:0,points:0,name:'—'};
-  let biggestBlowout={diff:0,week:'-',winner:_et,loser:_et};
-  let closestGame={diff:Infinity,week:'-',winner:_et,loser:_et};
-  let highestScore={pts:0,roster_id:0,week:'-'};
-  let lowestScore={pts:Infinity,roster_id:0,week:'-'};
+  let biggestBlowout={diff:0,week:'-',year:null,winner:_et,loser:_et};
+  let closestGame={diff:Infinity,week:'-',year:null,winner:_et,loser:_et};
+  let highestScore={pts:0,roster_id:0,week:'-',year:null};
+  let lowestScore={pts:Infinity,roster_id:0,week:'-',year:null};
   Object.entries(matchupWeeks).forEach(([wk,games])=>{
-    const week=parseInt(String(wk).split('_').pop());
+    // Keys are either plain week numbers (current season) or 'hist_<year>_<wk>'
+    const parts=String(wk).split('_');
+    const week=parseInt(parts[parts.length-1]);
+    const year=parts.length>=3?parts[1]:(defaultYear||null);
     (games||[]).forEach(g=>{
       const a=g.team_a,b=g.team_b;
       const diff=parseFloat(Math.abs(a.points-b.points).toFixed(2));
       const winner=a.points>=b.points?a:b;
       const loser=a.points<b.points?a:b;
-      if(diff>biggestBlowout.diff)biggestBlowout={diff,week,winner,loser};
-      if(diff<closestGame.diff)closestGame={diff,week,winner,loser};
-      if(a.points>highestScore.pts)highestScore={pts:a.points,roster_id:a.roster_id,week};
-      if(b.points>highestScore.pts)highestScore={pts:b.points,roster_id:b.roster_id,week};
-      if(a.points>0&&a.points<lowestScore.pts)lowestScore={pts:a.points,roster_id:a.roster_id,week};
-      if(b.points>0&&b.points<lowestScore.pts)lowestScore={pts:b.points,roster_id:b.roster_id,week};
+      if(diff>biggestBlowout.diff)biggestBlowout={diff,week,year,winner,loser};
+      if(diff<closestGame.diff)closestGame={diff,week,year,winner,loser};
+      if(a.points>highestScore.pts)highestScore={pts:a.points,roster_id:a.roster_id,week,year};
+      if(b.points>highestScore.pts)highestScore={pts:b.points,roster_id:b.roster_id,week,year};
+      if(a.points>0&&a.points<lowestScore.pts)lowestScore={pts:a.points,roster_id:a.roster_id,week,year};
+      if(b.points>0&&b.points<lowestScore.pts)lowestScore={pts:b.points,roster_id:b.roster_id,week,year};
     });
   });
   if(closestGame.diff===Infinity)closestGame.diff=0;
@@ -1762,7 +1804,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
   d.matchup_weeks=matchupWeeks;
 
   // ── Records ──
-  d.records=computeRecords(matchupWeeks);
+  d.records=computeRecords(matchupWeeks,currentSeason);
 
   // ── Heat map meta ──
   d.heat_map_meta=Object.entries(matchupWeeks).map(([wk,games])=>{
@@ -1894,6 +1936,9 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       });
       if(games.length)hsMatchupWeeks[wk]=games;
     });
+    // Keep per-season weekly data so stat tabs can render any season
+    d['matchup_weeks_'+season]=hsMatchupWeeks;
+    d['weekly_scores_'+season]=hsWeeklyScores;
 
     // H2H — regular season only (pre-playoff weeks)
     const pStart=playoffStart||15;
@@ -1902,12 +1947,8 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       games.forEach(g=>{
         const aRid=g.team_a.roster_id,bRid=g.team_b.roster_id;
         const winner=g.winner.roster_id;
-        const[lo,hi]=aRid<bRid?[aRid,bRid]:[bRid,aRid];
-        const key=lo+'-'+hi;
-        if(!d.h2h[key])d.h2h[key]={w:0,l:0,total:0};
-        if(winner===lo){d.h2h[key].w++;d.h2h[key].total++;}
-        else{d.h2h[key].l++;d.h2h[key].total++;}
-        // Also store both directions
+        // Directional keys only — writing a canonical lo-hi key here as well
+        // double-counts the game (one directional key IS the canonical key)
         const keyAB=aRid+'-'+bRid;
         const keyBA=bRid+'-'+aRid;
         if(!d.h2h[keyAB])d.h2h[keyAB]={w:0,l:0,total:0};
@@ -1990,7 +2031,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       if(games.length)allMatchupWeeks['hist_'+hs.season+'_'+wk]=games;
     });
   });
-  d.records=computeRecords(allMatchupWeeks);
+  d.records=computeRecords(allMatchupWeeks,d.league&&d.league.season);
 
   // ── Franchise all-time aggregates ──
   const franchiseMap={};
@@ -2198,7 +2239,7 @@ const TABS=[
   {id:'pulse',label:'Pulse'},
   {id:'chronicle',label:'Chronicle'},
 ];
-let aTab='power',selWk=1,selDraft=null;
+let aTab='power',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null,selMovesYr=null;
 const dirtyTabs=new Set();
 const tn=r=>D.rid_to_name[r]||'?';
 const isDefaultAvatar=url=>!url||url.includes('/avatars/thumbs/')||url.includes('default');
@@ -2362,8 +2403,10 @@ async function init(){
     setTimeout(()=>{const ds=document.getElementById('ds');if(ds)ds.classList.add('fade-away')},4000);
 
     // ── HASH ROUTING ──
-    window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&document.getElementById('tab-'+h)&&window._showTab)window._showTab(h);});
-    const initHash=location.hash.slice(1);if(initHash&&document.getElementById('tab-'+initHash)&&window._showTab)window._showTab(initHash);
+    const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups'};
+    const resolveTab=h=>{h=(h||'').toLowerCase();return document.getElementById('tab-'+h)?h:HASH_ALIASES[h]||null;};
+    window.addEventListener('hashchange',()=>{const t=resolveTab(location.hash.slice(1));if(t&&window._showTab)window._showTab(t);});
+    const initTab=resolveTab(location.hash.slice(1));if(initTab&&window._showTab)window._showTab(initTab);
 
     // ── TIER 3: HISTORICAL (background) ──
     loadHistory(disc,playerDB);
@@ -2405,7 +2448,7 @@ async function loadHistory(disc,playerDB){
       mergeHistoricalData(D,[hs],playerDB);
       initSeasonConstants();
       buildStats();buildTicker();
-      ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft'].forEach(t=>dirtyTabs.add(t));
+      ['trophies','rivals','pulse','chronicle','power','analytics','trades','draft','moves','gm','awards','scoring','age','rosters','matchups'].forEach(t=>dirtyTabs.add(t));
       if(aTab&&dirtyTabs.has(aTab)){renderTab(aTab);dirtyTabs.delete(aTab);}
     }catch(e){
       console.warn('Failed to load season',entry.season,e);
@@ -2463,6 +2506,7 @@ function buildNav(){
     });
     const nb=document.querySelector('.nav-bar');if(nb){const nTop=nb.getBoundingClientRect().top+window.scrollY-59;if(window.scrollY>nTop+80)window.scrollTo({top:nTop,behavior:'smooth'});}
     history.replaceState(null,'','#'+id);
+    document.title=tabLabel(id)+" \u2014 Harambe's Dozen";
     window._showTab=showTab;window.__showTab=showTab;
   }
   let html='';
@@ -2558,40 +2602,67 @@ function buildStats(){
   document.getElementById('sstrip').innerHTML=
     '<div class="ss champ"><div class="ss-l">★ '+(champ?champ.year:CURRENT_YEAR)+' Champ</div><div class="ss-v">'+(champ?champ.champion.split(' ')[0]:'?')+'</div><div class="ss-sub">'+(isRepeatChamp(champs)?'3-peat eligible':'Defending')+'</div></div>'+
     '<div class="ss"><div class="ss-l">Most Points</div><div class="ss-v"><span class="count-up" data-target="'+best.fpts+'" data-decimals="0">0</span></div><div class="ss-sub">'+(best.team_name||'—').split(' ')[0]+'</div></div>'+
-    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+D.trades.length+'" data-decimals="0">0</span></div><div class="ss-sub">'+YEAR_RANGE+'</div></div>'+
+    '<div class="ss"><div class="ss-l">Total Trades</div><div class="ss-v"><span class="count-up" data-target="'+((D.unified_trades&&D.unified_trades.length)||D.trades.length)+'" data-decimals="0">0</span></div><div class="ss-sub">'+YEAR_RANGE+'</div></div>'+
     '<div class="ss"><div class="ss-l">Avg PF</div><div class="ss-v"><span class="count-up" data-target="'+Math.round(tot/(scored.standings.length||12))+'" data-decimals="0">0</span></div><div class="ss-sub">per team '+scored.yr+'</div></div>'+
     '<div class="ss"><div class="ss-l">Rookies Drafted</div><div class="ss-v"><span class="count-up" data-target="'+(D.draft_picks[CURRENT_YEAR]?D.draft_picks[CURRENT_YEAR].length:0)+'" data-decimals="0">0</span></div><div class="ss-sub">'+CURRENT_YEAR+' class</div></div>';
+  if(buildStats._animated)animateCounters(document.getElementById('sstrip'));
+  buildStats._animated=true;
 }
 function buildTicker(){
   let tk='';
   D.champions.forEach(c=>{tk+='<div class="tki">\u2605 <b>'+c.champion+'</b> '+c.year+' CHAMPION over '+c.runner_up+'</div><div class="tks">\u25C6</div>'});
-  CUR_STANDINGS.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
-  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0)tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+'</div><div class="tks">\u25C6</div>';
-  tk+='<div class="tki">'+D.trades.length+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
+  const tkScored=latestScoredSeason();
+  tkScored.standings.slice(0,6).forEach(s=>{tk+='<div class="tki"><b>'+s.team_name+'</b> '+s.wins+'-'+s.losses+' ('+tkScored.yr+') \u2022 <span class="hl">'+s.fpts+'</span> PF</div><div class="tks">\u25C6</div>'});
+  if(D.records&&D.records.biggest_blowout&&D.records.biggest_blowout.diff>0)tk+='<div class="tki">BIGGEST BLOWOUT \u2022 <b>'+tn(D.records.biggest_blowout.winner.roster_id)+'</b> by <span class="hl">'+D.records.biggest_blowout.diff+'</span> Wk'+D.records.biggest_blowout.week+(D.records.biggest_blowout.year?' \u2019'+String(D.records.biggest_blowout.year).slice(2):'')+'</div><div class="tks">\u25C6</div>';
+  tk+='<div class="tki">'+((D.unified_trades&&D.unified_trades.length)||D.trades.length)+' TRADES completed \u2022 All Seasons</div><div class="tks">\u25C6</div>';
   if(D._loaded)tk+='<div class="tki" style="color:var(--t4)">Data as of '+D._loaded+'</div><div class="tks">\u25C6</div>';
   document.getElementById('bl').innerHTML='<div class="bl-tag">DYNASTY</div><div class="bl-sw"><div class="bl-s" style="--td1:110s">'+tk+tk+'</div></div>';
 }
 // ═══ POWER RANKINGS ═══
-function renderPower(){
+// ═══ POWER COMPOSITE (shared by Power, Age Map, Pulse) ═══
+// Per-season data accessors — CURRENT_YEAR lives on D directly, history is
+// stored as weekly_scores_/matchup_weeks_<year> by mergeHistoricalData.
+function seasonScores(yr){return yr===CURRENT_YEAR?(D.weekly_scores||{}):(D['weekly_scores_'+yr]||{});}
+function seasonMatchupWeeks(yr){return yr===CURRENT_YEAR?(D.matchup_weeks||{}):(D['matchup_weeks_'+yr]||{});}
+// In-season: 40% record + 30% points + 20% youth + 10% draft capital.
+// Offseason (no games yet): the OFFSEASON POWER INDEX — roster dynasty value
+// becomes the lead component and last season's results stand in for record.
+function computePowerTeams(){
+  const live=CUR_STANDINGS.some(s=>s.wins+s.losses+(s.ties||0)>0);
+  const basis=live?{live:true,year:CURRENT_YEAR,standings:CUR_STANDINGS}:(()=>{const l=latestScoredSeason();return{live:false,year:l.yr,standings:l.standings};})();
+  const st=basis.standings;
+  const maxP=Math.max(...st.map(s=>s.fpts),1);
+  const ktcTotals={};
+  D.teams.forEach(t=>{ktcTotals[t.roster_id]=t.players.reduce((s,p)=>s+(p.ktc||0),0);});
+  const maxK=Math.max(...Object.values(ktcTotals),1);
   const teams=D.teams.map(t=>{
-    const s25=CUR_STANDINGS.find(s=>s.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
+    const s25=st.find(s=>s.roster_id===t.roster_id)||{wins:0,losses:0,ties:0,fpts:0};
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgAge=ages.length?ages.reduce((a,b)=>a+b,0)/ages.length:27;
-    const wPct=s25.wins/(s25.wins+s25.losses)||0;
-    const maxP=Math.max(...CUR_STANDINGS.map(s=>s.fpts));
+    const wPct=s25.wins/((s25.wins+s25.losses)||1);
     const pPct=s25.fpts/maxP;
-    const youth=1-(avgAge-22)/12;
+    const youth=Math.max(0,Math.min(1,1-(avgAge-22)/12));
     const acq=D.pick_trades.filter(p=>p.current_owner_roster_id===t.roster_id).length;
-    const pw=Math.round((wPct*40+pPct*30+youth*20+Math.min((2+acq)/4,1)*10)*10)/10;
+    const capital=Math.min((2+acq)/4,1);
+    const value=ktcTotals[t.roster_id]/maxK;
+    const raw=basis.live
+      ?(wPct*40+pPct*30+youth*20+capital*10)
+      :(value*30+wPct*25+pPct*15+youth*20+capital*10);
+    const pw=Math.round(raw*10)/10;
     const tier=pw>=70?1:pw>=55?2:pw>=40?3:4;
     const isChamp=D.champions.some(c=>c.champion===t.team_name);
     return{...t,pw,tier,s25,avgAge:Math.round(avgAge*10)/10,isChamp};
   }).sort((a,b)=>b.pw-a.pw);
+  return{teams,basis};
+}
+function renderPower(){
+  const{teams,basis}=computePowerTeams();
   const mx=Math.max(...teams.map(t=>t.pw));
   const tierN={1:'CONTENDERS',2:'PLAYOFF CONTENDERS',3:'BUBBLE TEAMS',4:'REBUILD MODE'};
   let cT=0,h='';
   var pwShareRows=teams.slice(0,5).map(function(t,i){return'<div style="font-family:var(--fd);font-size:13px;padding:4px 0;border-bottom:1px solid #24242e">'+(i+1)+'. '+t.team_name+' \u2014 '+t.pw+' power</div>';}).join('');
-  h+='<div class="bh"><h2 class="bh-tag">Power Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Composite Score \u2022 '+CURRENT_YEAR+(D.league&&D.league.status==='in_season'?' Season':' Offseason')+'</span></div><button class="share-btn" style="margin-left:12px;flex-shrink:0" id="pw-share-btn">SHARE</button></div>';
+  const basisSub=basis.live?'Composite Score \u2022 '+CURRENT_YEAR+' Season':'Offseason Power Index \u2022 Roster Value + \u2019'+String(basis.year).slice(2)+' Results';
+  h+='<div class="bh"><h2 class="bh-tag">Power Rankings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+basisSub+'</span></div><button class="share-btn" style="margin-left:12px;flex-shrink:0" id="pw-share-btn">SHARE</button></div>';
   var _pwRows=pwShareRows;
   // Narrative
   const youngest=teams.reduce((a,b)=>a.avgAge<b.avgAge?a:b);
@@ -2600,11 +2671,12 @@ function renderPower(){
   h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text"><b>'+youngest.team_name+'</b> has the youngest roster at <b>'+youngest.avgAge+'</b> avg \u2014 dynasty gold with a wide championship window.</div></div>';
   h+='<div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text"><b>'+teams[teams.length-1].team_name+'</b> at <b>'+teams[teams.length-1].pw+'</b> \u2014 deep rebuild. '+D.pick_trades.filter(p=>p.current_owner_roster_id===teams[teams.length-1].roster_id).length+' extra picks acquired.</div></div>';
   h+='</div>';
+  const yy='’'+String(basis.year).slice(2);
+  const pills=basis.live
+    ?[['40% RECORD','204,0,0','var(--a)'],['30% POINTS','59,130,246','var(--blu)'],['20% YOUTH','23,177,105','var(--grn)'],['10% DRAFT CAPITAL','245,158,11','var(--y)']]
+    :[['30% ROSTER VALUE','204,0,0','var(--a)'],['25% '+yy+' RECORD','59,130,246','var(--blu)'],['15% '+yy+' POINTS','139,92,246','var(--pur)'],['20% YOUTH','23,177,105','var(--grn)'],['10% DRAFT CAPITAL','245,158,11','var(--y)']];
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 6px">'
-    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(204,0,0,.1);color:var(--a);border:1px solid rgba(204,0,0,.2)">40% RECORD</span>'
-    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(59,130,246,.08);color:var(--blu);border:1px solid rgba(59,130,246,.2)">30% POINTS</span>'
-    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(23,177,105,.08);color:var(--grn);border:1px solid rgba(23,177,105,.2)">20% YOUTH</span>'
-    +'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba(245,158,11,.08);color:var(--y);border:1px solid rgba(245,158,11,.2)">10% DRAFT CAPITAL</span>'
+    +pills.map(p=>'<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;background:rgba('+p[1]+',.1);color:'+p[2]+';border:1px solid rgba('+p[1]+',.2)">'+p[0]+'</span>').join('')
     +'</div>';
   h+='<div class="plist stagger">';
   teams.forEach((t,i)=>{
@@ -2616,7 +2688,7 @@ function renderPower(){
     h+='<div class="pcard tilt-card'+(i<3?' r'+(i+1):'')+(UI_OPEN.has('power:'+t.roster_id)?' open':'')+'" data-okey="power:'+t.roster_id+'" onclick="uiToggle(this)">';
     h+='<div class="prk'+rankClass+'"><div class="prk-n">'+(i+1)+'</div></div>';
     h+='<div class="pcbar" style="background:'+barC+'"></div>';
-    h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
+    h+='<div class="pinfo">'+av(t.roster_id)+'<div style="min-width:0"><div class="pname">'+t.team_name+champBadge+'</div><div class="psub">'+(basis.live?'':yy+': ')+t.s25.wins+'-'+t.s25.losses+' \u00b7 '+t.s25.fpts+' PF \u00b7 Age '+t.avgAge+'</div></div></div>';
     const pwPct=Math.round(t.pw/mx*100)+'%';
     h+='<div class="pnums"><div class="pnb"><div class="pw-gauge" style="--pw-pct:'+pwPct+';--pw-color:'+barC+'"><div class="pnv w" style="color:'+barC+'"><span class="count-up" data-target="'+t.pw+'" data-decimals="1">0</span></div></div><div class="pnl">Power</div></div></div>';
     h+='<div class="parr">\u25BE</div>';
@@ -2685,8 +2757,7 @@ function renderPower(){
       const a=teams.find(t=>t.roster_id==selA.value);
       const b=teams.find(t=>t.roster_id==selB.value);
       if(!a||!b){res.innerHTML='';return;}
-      const aS=CUR_STANDINGS.find(x=>x.roster_id===a.roster_id)||{wins:0,losses:0,fpts:0};
-      const bS=CUR_STANDINGS.find(x=>x.roster_id===b.roster_id)||{wins:0,losses:0,fpts:0};
+      const aS=a.s25,bS=b.s25;
       const metrics=[
         ['Power',a.pw,b.pw],
         ['Wins',aS.wins,bS.wins],
@@ -2749,15 +2820,36 @@ function renderRosters(){
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
     const avgA=ages.length?(ages.reduce((a,b)=>a+b,0)/ages.length).toFixed(1):'?';
     const badges=calcBadges(t.team_name);
-    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto">';
-    h+='<div class="prk" style="padding:10px">'+av(t.roster_id,36)+'</div>';
-    h+='<div class="pcbar" style="background:var(--a)"></div>';
-    var cCount=0,cExp=0;
-    if(D.contracts){t.players.forEach(function(p){var c=D.contracts[p.name];if(c){cCount++;if(c.yrs===0)cExp++;}});}
-    h+='<div class="pinfo"><div style="min-width:0"><div class="pname" style="font-size:16px">'+t.team_name+'</div><div class="psub">'+t.num_players+' players \u00b7 Avg '+avgA+(cCount?' \u00b7 '+cCount+' contracts'+(cExp?' \u00b7 <span style="color:var(--red-t)">'+cExp+' expiring</span>':''):'')+'</div>';
+    const tcR=TC[t.roster_id]||{};
+    const tcP=tcR.p||'#cc0000';
+    var cCount=0,cExp=0,cLong=0,cMid=0;
+    if(D.contracts){t.players.forEach(function(p){var c=D.contracts[p.name];if(c&&c.contracted){cCount++;if(c.yrs===0)cExp++;else if(c.yrs>=4)cLong++;else if(c.yrs>=2)cMid++;}});}
+    const cShort=Math.max(0,cCount-cExp-cLong-cMid);
+    const cNone=Math.max(0,t.num_players-cCount);
+    const totKtc=t.players.reduce((s2,p)=>s2+(p.ktc||0),0);
+    const rosterStarters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
+    h+='<div class="pcard'+(UI_OPEN.has('roster:'+t.roster_id)?' open':'')+'" data-okey="roster:'+t.roster_id+'" onclick="uiToggle(this)" style="grid-template-columns:auto 3px 1fr auto;background:linear-gradient(100deg,'+tcP+'14,transparent 35%),var(--g2)">';
+    h+='<div class="prk" style="padding:10px">'+av(t.roster_id,40)+'</div>';
+    h+='<div class="pcbar" style="background:'+tcP+'"></div>';
+    h+='<div class="pinfo"><div style="min-width:0;flex:1">';
+    h+='<div class="pname" style="font-size:17px">'+t.team_name+'</div>';
+    h+='<div class="psub">'+t.num_players+' players \u00b7 Avg '+avgA+(cCount?' \u00b7 '+cCount+' contracts'+(cExp?' \u00b7 <span style="color:var(--red-t)">'+cExp+' expiring</span>':''):'')+'</div>';
+    // Contract heat strip: long (green) / mid (gold) / short (orange) / expiring (red) / uncontracted (gray)
+    if(t.num_players){
+      h+='<div style="display:flex;height:5px;border-radius:3px;overflow:hidden;margin-top:6px;max-width:300px">';
+      [[cLong,'#17b169'],[cMid,'var(--y)'],[cShort,'#f97316'],[cExp,'var(--red-t)'],[cNone,'var(--g4)']].forEach(function(seg){
+        if(seg[0]>0)h+='<span style="flex:'+seg[0]+';background:'+seg[1]+'"></span>';
+      });
+      h+='</div>';
+    }
     if(badges.length){h+='<div class="badge-row">';badges.forEach(b=>{h+='<span class="mgr-badge" style="background:'+b.bg+';color:'+b.color+'">'+b.label+'</span>'});h+='</div>';}
-    h+='</div></div>';
-    h+='<div class="pnums"><div class="parr">\u25BE</div></div>';
+    h+='</div>';
+    // Collapsed starter face strip
+    h+='<div class="roster-faces" style="display:flex;align-items:center;margin-left:12px">';
+    rosterStarters.slice(0,5).forEach(function(p,fi){h+='<span style="display:inline-block;margin-left:'+(fi?'-10px':'0')+';border-radius:50%;border:2px solid '+tcP+'55;line-height:0;background:var(--g3)">'+pimg(p.id,34)+'</span>';});
+    h+='</div>';
+    h+='</div>';
+    h+='<div class="pnums"><div class="pnb"><div class="pnv w" style="color:'+tcP+'">'+(totKtc>=1000?(totKtc/1000).toFixed(1)+'K':totKtc||'\u2014')+'</div><div class="pnl">Roster Value</div></div><div class="parr">\u25BE</div></div>';
     h+='<div class="pdet"><div class="pdet-in">';
     // Headshot row for starters
     const starters=t.players.filter(p=>p.is_starter&&p.pos!=='DEF');
@@ -2772,7 +2864,7 @@ function renderRosters(){
         const ac=!p.age?'':p.age<=24?'age-y':p.age<=28?'age-p':'age-v';
         var con=D.contracts?D.contracts[p.name]:null;
         var ct='';
-        if(con){
+        if(con&&con.contracted){ // uncontracted players have yrs:null — no pill, never 'nullyr'
           var yc=con.yrs>=4?'var(--a)':con.yrs>=2?'var(--y)':'var(--red-t)';
           var bw=Math.max(8,con.yrs/7*100);
           ct='<span style="display:inline-flex;align-items:center;gap:3px;margin-left:auto;flex-shrink:0">';
@@ -2928,60 +3020,55 @@ function renderTrophies(){
       h+='<div class="act-row"><span class="act-name">'+name+'</span><div class="act-bars"><div class="act-seg" style="width:'+tPct+'%;background:var(--a)"></div><div class="act-seg" style="width:'+mPct+'%;background:var(--y)"></div><div class="act-seg" style="width:'+dPct+'%;background:var(--pur)"></div></div><span class="act-val">'+total+'</span></div>';
     });
   }
-  // Season standings — dynamic from all available years
+  // Season-by-season chapters — standings + bracket per year, accordion (latest open)
+  if(!UI_OPEN.has('rafters-seeded')&&SEASON_YEARS.length){UI_OPEN.add('rafters-seeded');UI_OPEN.add('sec:rafters-'+SEASON_YEARS[SEASON_YEARS.length-1]);}
   SEASON_YEARS.slice().reverse().forEach(function(yr){
     var st=getStandings(yr);
     if(!st||!st.length)return;
     const champ=D.champions.find(function(c){return c.year===yr});
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">'+yr+'</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+(champ?'\u2605 '+champ.champion:'Final Standings')+'</span></div></div>';
+    var key='rafters-'+yr;
+    var open=secOpen(key);
+    h+='<div class="tc-section" style="margin-top:14px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\''+key+'\')"><h2 class="bh-tag">'+yr+'</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+(champ?'\u2605 '+champ.champion:'Final Standings')+' \u2022 Click to '+(open?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(open?'':'none')+'">';
     st.forEach(function(s,i){
       const isC=champ&&champ.champion===s.team_name;
       h+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team">'+(isC?'\u2605 ':i<6?'\u2705 ':'')+s.team_name+'</span><span class="h-rec">'+s.wins+'-'+s.losses+'</span><span class="h-pts">'+s.fpts+' PF</span></div>';
     });
-  });
-  // ── PLAYOFF BRACKET ──
-  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Playoffs</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Championship Bracket \u2022 Top 6 Seeds</span></div></div>';
-  SEASON_YEARS.slice().reverse().forEach(function(yr){
-    const stData=getStandings(yr);
-    const champ=D.champions.find(function(c){return c.year===yr});
-    if(!stData||!stData.length||!champ)return;
-    const top6=stData.slice(0,6);
-    h+='<div style="font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--y);margin:16px 0 8px">\u2605 '+yr+' PLAYOFFS</div>';
-    var s3=top6[2]?top6[2].team_name:'?',s4=top6[3]?top6[3].team_name:'?',s5=top6[4]?top6[4].team_name:'?',s6=top6[5]?top6[5].team_name:'?';
-    var s1=top6[0]?top6[0].team_name:'?',s2=top6[1]?top6[1].team_name:'?';
-    var arrow='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--g5);font-size:14px;padding-top:22px">&#x25B6;</div>';
-    h+='<div class="bracket-grid" style="grid-template-columns:1fr 20px 1fr 20px 1fr">';
-    // QF column
-    h+='<div><div class="bracket-round">Quarterfinals</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#3</span><span class="b-name">'+s3+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#6</span><span class="b-name">'+s6+'</span></div>';
-    h+='<div style="height:12px"></div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#4</span><span class="b-name">'+s4+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#5</span><span class="b-name">'+s5+'</span></div>';
-    h+='</div>';
-    // Connector QF→Semi
-    h+='<div>'+arrow+'</div>';
-    // Semi column
-    h+='<div><div class="bracket-round">Semifinals</div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#1</span><span class="b-name">'+s1+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s3+' / '+s6+'</span></div>';
-    h+='<div style="height:12px"></div>';
-    h+='<div class="bracket-slot"><span class="b-seed">#2</span><span class="b-name">'+s2+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
-    h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s4+' / '+s5+'</span></div>';
-    h+='</div>';
-    // Connector Semi→Final
-    h+='<div>'+arrow+'</div>';
-    // Finals column
-    h+='<div><div class="bracket-round">Championship</div>';
-    h+='<div class="bracket-slot winner"><span class="b-name">\u2605 '+champ.champion+'</span></div>';
-    h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">defeated</div>';
-    h+='<div class="bracket-slot"><span class="b-name">'+champ.runner_up+'</span></div>';
-    h+='</div>';
-    h+='</div>';
+    // Playoff bracket for this year
+    if(champ){
+      const top6=st.slice(0,6);
+      var s3=top6[2]?top6[2].team_name:'?',s4=top6[3]?top6[3].team_name:'?',s5=top6[4]?top6[4].team_name:'?',s6=top6[5]?top6[5].team_name:'?';
+      var s1=top6[0]?top6[0].team_name:'?',s2=top6[1]?top6[1].team_name:'?';
+      var arrow='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--g5);font-size:14px;padding-top:22px">&#x25B6;</div>';
+      h+='<div style="font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--y);margin:16px 0 8px">\u2605 '+yr+' PLAYOFFS</div>';
+      h+='<div class="bracket-grid" style="grid-template-columns:1fr 20px 1fr 20px 1fr">';
+      h+='<div><div class="bracket-round">Quarterfinals</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#3</span><span class="b-name">'+s3+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#6</span><span class="b-name">'+s6+'</span></div>';
+      h+='<div style="height:12px"></div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#4</span><span class="b-name">'+s4+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#5</span><span class="b-name">'+s5+'</span></div>';
+      h+='</div>';
+      h+='<div>'+arrow+'</div>';
+      h+='<div><div class="bracket-round">Semifinals</div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#1</span><span class="b-name">'+s1+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s3+' / '+s6+'</span></div>';
+      h+='<div style="height:12px"></div>';
+      h+='<div class="bracket-slot"><span class="b-seed">#2</span><span class="b-name">'+s2+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">vs</div>';
+      h+='<div class="bracket-slot" style="opacity:.75"><span class="b-seed" style="opacity:.6">?</span><span class="b-name" style="font-size:9px;color:var(--t4)">'+s4+' / '+s5+'</span></div>';
+      h+='</div>';
+      h+='<div>'+arrow+'</div>';
+      h+='<div><div class="bracket-round">Championship</div>';
+      h+='<div class="bracket-slot winner"><span class="b-name">\u2605 '+champ.champion+'</span></div>';
+      h+='<div style="font-family:var(--fd);font-size:10px;color:var(--t4);text-align:center;padding:2px">defeated</div>';
+      h+='<div class="bracket-slot"><span class="b-name">'+champ.runner_up+'</span></div>';
+      h+='</div>';
+      h+='</div>';
+    }
+    h+='</div></div>';
   });
   // ── ALL-TIME STANDINGS (CBS Era 2016-2020) ──
   if(D.alltime_standings&&D.alltime_standings.length){
@@ -3234,6 +3321,25 @@ function renderTrades(){
     h+='</div>';
   });
   h+='</div></div>'; // close trade record section body + wrapper
+  // ═══ HEIST OF THE YEAR — most lopsided deal on the board ═══
+  var heist=null,heistNet=0;
+  trades.forEach(function(t){
+    if(t.sides.length<2)return;
+    var aK=ktcVal(t.sides[0].players,t.sides[0].picks),bK=ktcVal(t.sides[1].players,t.sides[1].picks);
+    if(!aK&&!bK)return;
+    var net=Math.abs(aK-bK);
+    if(net>heistNet){heistNet=net;heist={t:t,winner:aK>bK?t.sides[0]:t.sides[1],loser:aK>bK?t.sides[1]:t.sides[0]};}
+  });
+  if(heist&&heistNet>500){
+    var hw=heist.winner,hl=heist.loser;
+    var hwGot=[...hw.players.map(function(p){return p.nm}),...hw.picks.map(cleanPick)].slice(0,3).join(', ');
+    h+='<div class="pulse-card pulse-feature" style="margin-top:16px">';
+    h+='<span class="pulse-tag championship">HEIST OF THE BOARD</span>';
+    h+='<div class="pulse-headline">'+hw.name+' robs '+hl.name+' blind</div>';
+    h+='<div class="pulse-body">'+hw.name+' walks away with '+hwGot+' \u2014 a <b style="color:var(--y)">+'+heistNet.toLocaleString()+' KTC</b> swing, the most lopsided deal on the board.</div>';
+    h+='<div class="pulse-meta">'+heist.t.yr+' \u2022 WEEK '+heist.t.wk+' \u2022 GRADE '+gradeLabel(heistNet)+' vs '+gradeLabel(-heistNet)+'</div>';
+    h+='</div>';
+  }
   // ═══ BROADCAST TRADE CARDS ═══
   h+='<div class="trade-grid stagger">';
   trades.forEach(function(t,ti){
@@ -3456,8 +3562,41 @@ function toggleSection(hdr,key){
 function renderMatchups(){
   const wks=Object.keys(D.matchup_weeks).map(Number).sort((a,b)=>a-b);
   if(!wks.length){
-    document.getElementById('tab-matchups').innerHTML='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season</span></div></div>'
+    // Offseason: lead with the countdown, then replay last season's finale
+    let eh='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season</span></div></div>'
       +'<div class="empty-state"><div class="empty-state-icon">\u25a0</div><div class="empty-state-text">NO MATCHUPS YET</div><div class="empty-state-sub">The '+CURRENT_YEAR+' season kicks off '+fmtSeasonDate(SEASON_DATES.nflKickoff)+'</div></div>';
+    const lastChamp=champsDesc()[0];
+    const scored=latestScoredSeason();
+    if(lastChamp){
+      const aRid=lastChamp.champ_rid,bRid=lastChamp.runner_up_rid;
+      const tcA=TC[aRid]||{},tcB=TC[bRid]||{};
+      // Title-game score from the final playoff week, if we have it
+      let finalGame=null;
+      const mw=seasonMatchupWeeks(lastChamp.year);
+      Object.keys(mw).map(Number).sort((a,b)=>b-a).some(function(w){
+        return(mw[w]||[]).some(function(g){
+          const r=[g.team_a.roster_id,g.team_b.roster_id];
+          if(r.indexOf(aRid)>=0&&r.indexOf(bRid)>=0){finalGame=g;return true;}
+          return false;
+        });
+      });
+      eh+='<div class="bh" style="margin-top:18px"><h2 class="bh-tag">Last Season</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+lastChamp.year+' Championship Game</span></div></div>';
+      eh+='<div class="rvq-card" style="background:linear-gradient(105deg,'+(tcA.p||'#cc0000')+'2e 0%,transparent 40%,transparent 60%,'+(tcB.p||'#3b82f6')+'2e 100%),var(--g2)">';
+      eh+='<div class="rvq-rank" style="background:var(--y)">\u2605 '+lastChamp.year+' FINAL</div>';
+      eh+='<div class="rvq-split">';
+      eh+='<div class="rvq-side">'+av(aRid,52)+'<div style="min-width:0"><div class="rvq-name">'+lastChamp.champion+'</div><div class="rvq-sub" style="color:var(--y)">CHAMPION</div></div></div>';
+      eh+='<div class="rvq-center"><div class="rvq-score">'+(finalGame?finalGame.winner.points.toFixed(1)+'\u2013'+finalGame.loser.points.toFixed(1):'W')+'</div><div class="rvq-vs">TITLE GAME</div></div>';
+      eh+='<div class="rvq-side right">'+av(bRid,52)+'<div style="min-width:0"><div class="rvq-name">'+lastChamp.runner_up+'</div><div class="rvq-sub">RUNNER-UP</div></div></div>';
+      eh+='</div><div style="height:10px"></div></div>';
+      if(scored.standings.length){
+        eh+='<div class="bh" style="margin-top:14px"><h2 class="bh-tag">'+scored.yr+' Final</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Last Season\u2019s Standings</span></div></div>';
+        scored.standings.forEach(function(st,i){
+          const isC=lastChamp&&lastChamp.champion===st.team_name;
+          eh+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team">'+(isC?'\u2605 ':'')+st.team_name+'</span><span class="h-rec">'+st.wins+'-'+st.losses+'</span><span class="h-pts">'+st.fpts+' PF</span></div>';
+        });
+      }
+    }
+    document.getElementById('tab-matchups').innerHTML=eh;
     return;
   }
   let h='<div class="bh"><h2 class="bh-tag">Matchups</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' \u2022 Week '+selWk+'</span></div></div>';
@@ -3750,7 +3889,7 @@ function renderDraft(){
   });
   h+='</div>';
   // Best steal and biggest bust
-  var starters=hits.filter(function(h2){return h2.status==='starter'}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
+  var starters=hits.filter(function(h2){return h2.status==='starter'&&h2.pos!=='DEF'&&!/^[A-Z]{2,3}$/.test(String(h2.pid))}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
   var cuts=hits.filter(function(h2){return h2.status==='cut'});
   if(starters.length||cuts.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">';
@@ -3781,8 +3920,10 @@ function renderDraft(){
     entries.forEach(function(entry){
       if(entry.isIntersecting){entry.target.classList.add('revealed');draftObserver.unobserve(entry.target);}
     });
-  },{threshold:0.2});
+  },{threshold:0.05,rootMargin:'200px 0px'});
   document.querySelectorAll('.draft-round').forEach(function(round){draftObserver.observe(round);});
+  // Fallback: never leave a round blank if the observer misses (fast scroll, print, capture)
+  setTimeout(function(){document.querySelectorAll('.draft-round:not(.revealed)').forEach(function(r){r.classList.add('revealed');});},2500);
   // ── Timeline click → scroll to round ──
   document.querySelectorAll('.draft-timeline-dot').forEach(function(dot){
     dot.addEventListener('click',function(){
@@ -3821,24 +3962,14 @@ function renderAge(){
     const ctx=canvas.getContext('2d');
     canvas.width=canvas.offsetWidth||600;canvas.height=320;
     const w=canvas.width,ht=320,pad={l:50,r:24,t:28,b:40};
-    // Gather age+power data
-    const teams=D.teams.map(function(t){
-      const ps=t.players.filter(function(p){return p.age&&p.pos!=='DEF'});
-      const ages=ps.map(function(p){return p.age});
-      const avg=ages.length?ages.reduce(function(a,b){return a+b},0)/ages.length:27;
-      const s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,losses:0,fpts:0};
-      const wPct=s25.wins/(s25.wins+s25.losses)||0;
-      const maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}));
-      const pPct=s25.fpts/maxP;
-      const youth=1-(avg-22)/12;
-      const acq=D.pick_trades.filter(function(p){return p.current_owner_roster_id===t.roster_id}).length;
-      const pw=Math.round((wPct*40+pPct*30+youth*20+Math.min((2+acq)/4,1)*10)*10)/10;
-      return{name:t.team_name.split(' ').pop(),age:Math.round(avg*10)/10,pw:pw,rid:t.roster_id};
+    // Gather age+power data (same composite as the Power tab, offseason-safe)
+    const teams=computePowerTeams().teams.map(function(t){
+      return{name:t.team_name.split(' ').pop(),age:t.avgAge,pw:t.pw,rid:t.roster_id};
     });
     const ages=teams.map(function(t){return t.age});
     const pws=teams.map(function(t){return t.pw});
     const minAge=Math.floor(Math.min.apply(null,ages))-1,maxAge=Math.ceil(Math.max.apply(null,ages))+1;
-    const minPw=0,maxPw=Math.ceil(Math.max.apply(null,pws)/10)*10+5;
+    const minPw=0,maxPw=Math.max(10,Math.ceil(Math.max.apply(null,pws)/10)*10+5);
     const medAge=(Math.min.apply(null,ages)+Math.max.apply(null,ages))/2;
     const medPw=(Math.min.apply(null,pws)+Math.max.apply(null,pws))/2;
     const sx=function(a){return pad.l+(a-minAge)/(maxAge-minAge)*(w-pad.l-pad.r);};
@@ -3873,14 +4004,22 @@ function renderAge(){
 }
 // ═══ SCORING ═══
 function renderScoring(){
-  const sd=CUR_STANDINGS.map(function(s){
-    const wk=D.weekly_scores[s.roster_id]||[];
+  // Season picker \u2014 default to the most recent season that actually has scores
+  const scoredYrs=SEASON_YEARS.filter(function(y){const ws=seasonScores(y);return Object.values(ws).some(function(a){return a&&a.length});});
+  const yrOpts=scoredYrs.length?scoredYrs:[CURRENT_YEAR];
+  if(!selScoreYr||yrOpts.indexOf(selScoreYr)<0)selScoreYr=yrOpts[yrOpts.length-1];
+  const scYr=selScoreYr,scScores=seasonScores(scYr);
+  const sd=getStandings(scYr).map(function(s){
+    const wk=scScores[s.roster_id]||[];
     const avg=wk.length?(wk.reduce(function(a,b){return a+b},0)/wk.length).toFixed(1):0;
     const mx=wk.length?Math.max.apply(null,wk):0,mn=wk.length?Math.min.apply(null,wk):0;
     const std=wk.length?Math.sqrt(wk.reduce(function(s,p){return s+Math.pow(p-avg,2)},0)/wk.length).toFixed(1):0;
     return Object.assign({},s,{wk:wk,avg:avg,mx:mx,mn:mn,std:std});
   }).sort(function(a,b){return b.fpts-a.fpts});
-  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+CURRENT_YEAR+' Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+scYr+' Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
+  if(yrOpts.length>1){
+    h+='<div class="tab-sub">'+yrOpts.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===scYr?' active':'')+'" onclick="selScoreYr=\''+y+'\';renderScoring()">'+y+'</button>';}).join('')+'</div>';
+  }
   // ═══ HEAT MAP ═══
   h+='<div class="hm-wrap">';
   h+='<div class="hm-grid" style="grid-template-columns:100px repeat(17,1fr);min-width:520px">';
@@ -3891,12 +4030,12 @@ function renderScoring(){
   // Find global min/max for color scaling
   var allPts=[];
   sd.forEach(function(t){t.wk.forEach(function(p){allPts.push(p)})});
-  var gMin=Math.min.apply(null,allPts),gMax=Math.max.apply(null,allPts);
-  
+  var gMin=allPts.length?Math.min.apply(null,allPts):0,gMax=allPts.length?Math.max.apply(null,allPts):0;
+  var gSpan=(gMax-gMin)||1;
   sd.forEach(function(t){
     h+='<div class="hm-label">'+t.team_name.substring(0,22)+'</div>';
     t.wk.forEach(function(pts){
-      var pct=(pts-gMin)/(gMax-gMin);
+      var pct=(pts-gMin)/gSpan;
       var r,g,b;
       if(pct<0.25){r=239;g=68;b=68;} // red
       else if(pct<0.5){r=245;g=158;b=11;} // yellow
@@ -3960,13 +4099,17 @@ function renderScoring(){
 }
 // ═══ AWARDS ═══
 function renderAwards(){
-  const sd=CUR_STANDINGS.slice().sort((a,b)=>b.fpts-a.fpts);
+  // Season awards come from the latest season with actual games (current if live)
+  const awLive=CUR_STANDINGS.some(s=>s.wins+s.losses+(s.ties||0)>0);
+  const awBasis=awLive?{yr:CURRENT_YEAR,standings:CUR_STANDINGS}:latestScoredSeason();
+  const awYr=awBasis.yr,awScores=seasonScores(awYr);
+  const sd=awBasis.standings.slice().sort((a,b)=>b.fpts-a.fpts);
   const luckArr=D.luck?Object.values(D.luck).sort((a,b)=>b.luck-a.luck):[];
   const actArr=Object.entries(D.activity||{}).map(([n,a])=>({name:n,...a,total:a.trades+a.moves+a.draft_picks})).sort((a,b)=>b.total-a.total);
   // Compute per-team stats
   const teamStats=D.teams.map(t=>{
-    const s=CUR_STANDINGS.find(x=>x.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
-    const wk=D.weekly_scores[t.roster_id]||[];
+    const s=awBasis.standings.find(x=>x.roster_id===t.roster_id)||{wins:0,losses:0,fpts:0};
+    const wk=awScores[t.roster_id]||[];
     const avg=wk.length?wk.reduce((a,b)=>a+b,0)/wk.length:0;
     const std=wk.length?Math.sqrt(wk.reduce((s,p)=>s+Math.pow(p-avg,2),0)/wk.length):0;
     const ages=t.players.filter(p=>p.age&&p.pos!=='DEF').map(p=>p.age);
@@ -3993,11 +4136,16 @@ function renderAwards(){
   const draftGuru=Object.entries(drafterCounts).sort((a,b)=>b[1]-a[1])[0];
   // Champ check
   const latestChamp=D.champions[D.champions.length-1];
-  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 '+CURRENT_YEAR+' Season</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 '+awYr+' Season'+(awLive?'':' (Most Recent Completed)')+'</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Awards are automatically computed from league data. No voting, no bias \u2014 the numbers decide everything.</div></div></div>';
   h+='<div class="award-grid stagger">';
   // Dynasty Champion
   if(latestChamp){h+='<div class="award-card gold"><div class="award-emoji">'+icon('trophy',28)+'</div><div class="award-title">Dynasty Champion</div><div class="award-winner">'+latestChamp.champion+'</div><div class="award-stat">'+latestChamp.year+'</div><div class="award-desc">Defeated '+latestChamp.runner_up+' in the championship</div></div>';}
+  // Most Titles (career)
+  const titleCounts={};
+  D.champions.forEach(c=>{titleCounts[c.champion]=(titleCounts[c.champion]||0)+1;});
+  const titleKing=Object.entries(titleCounts).sort((a,b)=>b[1]-a[1])[0];
+  if(titleKing&&titleKing[1]>1){h+='<div class="award-card gold"><div class="award-emoji">'+icon('trophy',28)+'</div><div class="award-title">The Dynasty</div><div class="award-winner">'+titleKing[0]+'</div><div class="award-stat">'+titleKing[1]+' championships</div><div class="award-desc">Most titles in league history</div></div>';}
   // MVP
   if(mvp){h+='<div class="award-card gold"><div class="award-emoji">'+icon('crown',28)+'</div><div class="award-title">Most Valuable Manager</div><div class="award-winner">'+mvp.name+'</div><div class="award-stat">'+mvp.wins+'-'+mvp.losses+' \u00b7 '+mvp.fpts+' PF</div><div class="award-desc">Best combination of wins and total points</div></div>';}
   // Point Machine
@@ -4026,7 +4174,15 @@ function renderAwards(){
 // ═══ ANALYTICS ═══
 function toAbbr(n){var w=n.replace(/[^a-zA-Z0-9\s]/g,' ').trim().split(/\s+/).filter(function(s){return s.length>0;});if(!w.length)return n.substring(0,4).toUpperCase();if(w.length===1)return w[0].substring(0,4).toUpperCase();if(w.length===2)return(w[0].substring(0,2)+w[1].substring(0,2)).toUpperCase();return w.slice(0,3).map(function(x){return x[0].toUpperCase();}).join('');}
 function renderAnalytics(){
-  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 '+CURRENT_YEAR+' Season</span></div></div>';
+  // Season picker \u2014 default to the most recent season with scores
+  const anOptsAll=SEASON_YEARS.filter(function(y){const ws=seasonScores(y);return Object.values(ws).some(function(a){return a&&a.length});});
+  const anOpts=anOptsAll.length?anOptsAll:[CURRENT_YEAR];
+  if(!selAnYr||anOpts.indexOf(selAnYr)<0)selAnYr=anOpts[anOpts.length-1];
+  const anYr=selAnYr,anScores=seasonScores(anYr),anMw=seasonMatchupWeeks(anYr),anSt=getStandings(anYr);
+  let h='<div class="bh"><h2 class="bh-tag">Analytics</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Advanced Metrics \u2022 '+anYr+' Season</span></div></div>';
+  if(anOpts.length>1){
+    h+='<div class="tab-sub">'+anOpts.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===anYr?' active':'')+'" onclick="selAnYr=\''+y+'\';renderAnalytics()">'+y+'</button>';}).join('')+'</div>';
+  }
   // ── H2H MATRIX ──
   h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Record \u2022 All Matchups</span></div></div>';
   const rids=Object.keys(D.rid_to_name).map(Number).sort((a,b)=>a-b);
@@ -4050,21 +4206,21 @@ function renderAnalytics(){
   h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All-Play</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">How Many Teams You\'d Beat Each Week</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">All-play record: for each week, count how many of the other 11 teams your score would have beaten. This removes schedule luck entirely.</div></div></div>';
   const allPlay=rids.map(rid=>{
-    const wk=D.weekly_scores[rid]||[];
+    const wk=anScores[rid]||[];
     let apW=0,apL=0;
     wk.forEach((pts,wi)=>{
       rids.forEach(opp=>{
         if(opp===rid)return;
-        const oppWk=D.weekly_scores[opp]||[];
+        const oppWk=anScores[opp]||[];
         if(wi<oppWk.length){
           if(pts>oppWk[wi])apW++;
           else if(pts<oppWk[wi])apL++;
         }
       });
     });
-    const s=CUR_STANDINGS.find(x=>x.roster_id===rid)||{wins:0,losses:0};
+    const s=anSt.find(x=>x.roster_id===rid)||{wins:0,losses:0};
     const apPct=apW+apL>0?(apW/(apW+apL)*100).toFixed(1):'0';
-    const luckDiff=s.wins-Math.round(apW/(apW+apL)*(s.wins+s.losses));
+    const luckDiff=apW+apL>0?s.wins-Math.round(apW/(apW+apL)*(s.wins+s.losses)):0;
     return{rid,name:D.rid_to_name[rid],apW,apL,apPct:parseFloat(apPct),actW:s.wins,actL:s.losses,luckDiff};
   }).sort((a,b)=>b.apPct-a.apPct);
   h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>#</th><th>Team</th><th>Actual</th><th>All-Play</th><th>AP%</th><th>Luck</th></tr></thead><tbody>';
@@ -4083,14 +4239,14 @@ function renderAnalytics(){
   // Calc PA per team from matchups
   const paMap={};
   rids.forEach(r=>{paMap[r]=0});
-  Object.values(D.matchup_weeks).forEach(wk=>{
+  Object.values(anMw).forEach(wk=>{
     wk.forEach(g=>{
       paMap[g.team_a.roster_id]=(paMap[g.team_a.roster_id]||0)+g.team_b.points;
       paMap[g.team_b.roster_id]=(paMap[g.team_b.roster_id]||0)+g.team_a.points;
     });
   });
   const pythData=rids.map(rid=>{
-    const s=CUR_STANDINGS.find(x=>x.roster_id===rid)||{wins:0,losses:0,fpts:0};
+    const s=anSt.find(x=>x.roster_id===rid)||{wins:0,losses:0,fpts:0};
     const pa=paMap[rid]||1;
     const games=s.wins+s.losses||1;
     const exp=2.37;
@@ -4109,13 +4265,13 @@ function renderAnalytics(){
   h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">SOS</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Strength of Schedule \u2022 Opponent Win %</span></div></div>';
   const sosData=rids.map(rid=>{
     let oppWins=0,oppGames=0;
-    Object.values(D.matchup_weeks).forEach(wk=>{
+    Object.values(anMw).forEach(wk=>{
       wk.forEach(g=>{
         let opp=null;
         if(g.team_a.roster_id===rid)opp=g.team_b.roster_id;
         else if(g.team_b.roster_id===rid)opp=g.team_a.roster_id;
         if(opp){
-          const os=CUR_STANDINGS.find(x=>x.roster_id===opp);
+          const os=anSt.find(x=>x.roster_id===opp);
           if(os){oppWins+=os.wins;oppGames+=os.wins+os.losses;}
         }
       });
@@ -4141,7 +4297,7 @@ function renderAnalytics(){
     ctx.scale(dpr,dpr);
     const pad={t:20,r:20,b:40,l:50};
     const pts=rids.map(rid=>{
-      const wk=D.weekly_scores[rid]||[];
+      const wk=anScores[rid]||[];
       const avg=wk.length?wk.reduce((a,b)=>a+b,0)/wk.length:0;
       const std=wk.length?Math.sqrt(wk.reduce((s,p)=>s+Math.pow(p-avg,2),0)/wk.length):0;
       return{name:D.rid_to_name[rid],avg,std};
@@ -4171,9 +4327,16 @@ function renderAnalytics(){
 }
 // ═══ MOVES ═══
 function renderMoves(){
-  const moves=D.moves||[];
-  let h='<div class="bh"><h2 class="bh-tag">Moves</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+moves.length+' Waiver & FA Transactions</span></div></div>';
-  if(!moves.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No moves data</div>';document.getElementById('tab-moves').innerHTML=h;return;}
+  const allMoves=D.moves||[];
+  let h='<div class="bh"><h2 class="bh-tag">Moves</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allMoves.length+' Waiver & FA Transactions</span></div></div>';
+  if(!allMoves.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No moves data</div>';document.getElementById('tab-moves').innerHTML=h;return;}
+  // Year filter — render one season at a time, newest by default
+  const mvYears=[...new Set(allMoves.map(m=>String(m.yr)))].sort();
+  if(!selMovesYr||mvYears.indexOf(selMovesYr)<0)selMovesYr=mvYears[mvYears.length-1];
+  if(mvYears.length>1){
+    h+='<div class="tab-sub">'+mvYears.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===selMovesYr?' active':'')+'" onclick="selMovesYr=\''+y+'\';renderMoves()">'+y+'</button>';}).join('')+'</div>';
+  }
+  const moves=allMoves.filter(m=>String(m.yr)===selMovesYr);
   // Stats bar
   const waivers=moves.filter(m=>m.tp==='waiver').length;
   const fas=moves.filter(m=>m.tp==='free_agent').length;
@@ -4215,6 +4378,8 @@ function renderGM(){
   h+='<div class="mgr-grid">';
   D.teams.forEach(function(tm){
     const sm=CUR_STANDINGS.find(function(x){return x.roster_id===tm.roster_id;})||{wins:0,losses:0,fpts:0};
+    // Career numbers from franchise totals (all seasons); current season as fallback pre-merge
+    const frM=(D.franchise||[]).find(function(f){return f.roster_id===tm.roster_id;});
     const actM=D.activity[tm.team_name]||{trades:0,moves:0,draft_picks:0};
     const lkM=D.luck[tm.roster_id];
     const lkVal=lkM?lkM.luck:0;
@@ -4222,12 +4387,11 @@ function renderGM(){
     const avgAgeN=agesM.length?agesM.reduce(function(a,b){return a+b;},0)/agesM.length:28;
     const avgAgeS=agesM.length?avgAgeN.toFixed(1):'?';
     const champM=D.champions.filter(function(c){return c.champ_rid===tm.roster_id;});
-    const wM=sm.wins,lM=sm.losses,totM=(wM+lM)||1;
+    const wM=frM?frM.total_wins:sm.wins,lM=frM?frM.total_losses:sm.losses,totM=(wM+lM)||1;
     const wpM=wM/totM;
     const trdM=actM.trades||0;
     const totActM=trdM+(actM.moves||0);
-    const wkM=D.weekly_scores[tm.roster_id]||[];
-    const ppgM=wkM.length?(wkM.reduce(function(a,b){return a+b;},0)/wkM.length).toFixed(1):'--';
+    const ppgM=totM&&(frM?frM.total_pts:sm.fpts)?((frM?frM.total_pts:sm.fpts)/totM).toFixed(1):'--';
     const picksM=(D.pick_trades||[]).filter(function(p){return p.current_owner_roster_id===tm.roster_id;}).length;
     var archN,archC;
     if(champM.length>=1&&wpM>=0.60){archN='DYNASTY';archC='#FFD700';}
@@ -4252,7 +4416,7 @@ function renderGM(){
     h+='<span style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1.5px;padding:3px 7px;border-radius:4px;background:'+archC+'22;color:'+archC+';border:1px solid '+archC+'44;white-space:nowrap;align-self:flex-start;margin-top:2px">'+archN+'</span>';
     h+='</div>';
     h+='<div class="mgr-stats">';
-    h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px">'+wM+'-'+lM+'</div><div class="mgr-sl">RECORD</div></div>';
+    h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px">'+wM+'-'+lM+'</div><div class="mgr-sl">ALL-TIME</div></div>';
     h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px;color:'+winColor+'">'+(wpM*100).toFixed(0)+'%</div><div class="mgr-sl">WIN%</div></div>';
     h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px">'+ppgM+'</div><div class="mgr-sl">PPG</div></div>';
     h+='<div class="mgr-stat"><div class="mgr-sv" style="font-size:13px;color:var(--y)">'+champM.length+'</div><div class="mgr-sl">TITLES</div></div>';
@@ -4281,8 +4445,11 @@ function renderGM(){
   h+='</div>';
   const t=D.teams.find(x=>x.roster_id===selGM);
   if(!t){document.getElementById('tab-gm').innerHTML=h;return;}
-  const s=CUR_STANDINGS.find(x=>x.roster_id===selGM)||{wins:0,losses:0,fpts:0};
-  const wk=D.weekly_scores[selGM]||[];
+  // Deep-dive season stats come from the latest season with games
+  const gmLive=CUR_STANDINGS.some(x=>x.wins+x.losses+(x.ties||0)>0);
+  const gmB=gmLive?{yr:CURRENT_YEAR,standings:CUR_STANDINGS}:latestScoredSeason();
+  const s=gmB.standings.find(x=>x.roster_id===selGM)||{wins:0,losses:0,fpts:0};
+  const wk=seasonScores(gmB.yr)[selGM]||[];
   const avg=wk.length?(wk.reduce((a,b)=>a+b,0)/wk.length).toFixed(1):0;
   const high=wk.length?Math.max(...wk):0;
   const low=wk.length?Math.min(...wk):0;
@@ -4295,13 +4462,13 @@ function renderGM(){
   h+='<div style="display:flex;align-items:center;gap:16px;padding:20px;background:var(--g2);border-radius:12px;border:1px solid var(--g4);margin-bottom:16px">';
   h+=av(selGM,64);
   h+='<div style="flex:1"><div style="font-family:var(--fd);font-size:28px;font-weight:800;color:var(--t1);line-height:1">'+t.team_name+'</div>';
-  h+='<div style="font-family:var(--fb);font-size:13px;color:var(--t3);margin-top:4px">'+s.wins+'-'+s.losses+' \u00b7 '+s.fpts+' PF \u00b7 Age '+avgAge+(champYears.length?' \u00b7 \u2605 '+champYears.join(', '):'')+'</div>';
+  h+='<div style="font-family:var(--fb);font-size:13px;color:var(--t3);margin-top:4px">'+(gmLive?'':'\u2019'+String(gmB.yr).slice(2)+': ')+s.wins+'-'+s.losses+' \u00b7 '+s.fpts+' PF \u00b7 Age '+avgAge+(champYears.length?' \u00b7 \u2605 '+champYears.join(', '):'')+'</div>';
   h+='</div>';
   h+='<button class="share-btn gm-share-btn" style="flex-shrink:0">SHARE</button>';
   h+='</div>';
   h+='<div class="gm-grid stagger">';
   // Scoring card
-  h+='<div class="gm-card"><div class="gm-card-title">Scoring Profile</div>';
+  h+='<div class="gm-card"><div class="gm-card-title">Scoring Profile · '+gmB.yr+'</div>';
   h+='<div class="gm-stat-row"><div class="gm-stat-label">Avg/Week</div><div class="gm-stat-val"><span class="count-up" data-target="'+avg+'" data-decimals="1">0</span></div></div>';
   h+='<div class="gm-stat-row"><div class="gm-stat-label">Season High</div><div class="gm-stat-val" style="color:var(--a)"><span class="count-up" data-target="'+high+'" data-decimals="1">0</span></div></div>';
   h+='<div class="gm-stat-row"><div class="gm-stat-label">Season Low</div><div class="gm-stat-val" style="color:var(--red-t)"><span class="count-up" data-target="'+low+'" data-decimals="1">0</span></div></div>';
@@ -4424,7 +4591,7 @@ function renderGM(){
   setTimeout(function(){
     var gmShare=document.querySelector('.gm-share-btn');
     if(gmShare)gmShare.onclick=function(){
-      var wkArr=D.weekly_scores[selGM]||[];
+      var wkArr=seasonScores(gmB.yr)[selGM]||[];
       var ppgGM=wkArr.length?(wkArr.reduce(function(a,b){return a+b;},0)/wkArr.length).toFixed(1):'--';
       var content='<div style="font-family:var(--fd);display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
       content+='<div style="background:#1a1a24;border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:900;color:var(--a)">'+s.wins+'-'+s.losses+'</div><div style="font-size:10px;letter-spacing:2px;color:var(--t4)">RECORD</div></div>';
@@ -4438,32 +4605,73 @@ function renderGM(){
   },50);
 }
 // ═══ RIVALS ═══
+// Every regular-season meeting between two rosters, oldest first
+function rivalSeries(aRid,bRid){
+  const games=[];
+  SEASON_YEARS.forEach(y=>{
+    const mw=seasonMatchupWeeks(y);
+    Object.keys(mw).map(Number).sort((x,z)=>x-z).forEach(wk=>{
+      (mw[wk]||[]).forEach(g=>{
+        const ra=g.team_a.roster_id,rb=g.team_b.roster_id;
+        if((ra===aRid&&rb===bRid)||(ra===bRid&&rb===aRid))games.push({y,wk,g});
+      });
+    });
+  });
+  return games;
+}
 function renderRivals(){
   const rivals=D.rivalries||[];
-  let h='<div class="bh"><h2 class="bh-tag">Rivals</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+rivals.length+' Rivalry Matchups \u2022 Dominance Tracker</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Rivals</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Marquee Matchups \u2022 '+rivals.length+' Series Tracked</span></div></div>';
   if(!rivals.length){h+='<div style="text-align:center;padding:40px;color:var(--t4)">No rivalry data</div>';document.getElementById('tab-rivals').innerHTML=h;return;}
-  h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Rivalries ranked by total games played. The dominance bar shows who owns the series. Rivalries are born in the regular season.</div></div></div>';
-  // Sort by total games then dominance
-  const sorted=rivals.slice().sort((a,b)=>b.total-a.total||(b.dominance||0)-(a.dominance||0));
-  sorted.forEach(r=>{
+  // Heat = volume + how contested the series is \u2014 the marquee earns its spot
+  const ranked=rivals.slice().map(r=>{
     const totalG=r.a_wins+r.b_wins;
     const aPct=totalG>0?(r.a_wins/totalG*100):50;
-    const bPct=100-aPct;
-    const aCol=r.a_wins>r.b_wins?'var(--a)':'var(--g5)';
-    const bCol=r.b_wins>r.a_wins?'var(--red-t)':'var(--g5)';
-    const isDom=r.dominant&&r.dominated;
-    h+='<div class="rival-card">';
-    h+='<div class="rival-hdr">';
-    h+='<div class="rival-vs">'+r.a+' <span style="color:var(--t4);font-size:12px">vs</span> '+r.b+'</div>';
-    h+='<div class="rival-total">'+totalG+' games</div>';
+    return{...r,totalG,aPct,heat:totalG*2+(50-Math.abs(aPct-50))/4};
+  }).sort((a,b)=>b.heat-a.heat);
+  const marquee=ranked.slice(0,6);
+  h+='<div class="stagger">';
+  marquee.forEach((r,mi)=>{
+    const tcA=TC[r.a_rid]||{},tcB=TC[r.b_rid]||{};
+    const aCol=tcA.p||'#cc0000',bCol=tcB.p||'#3b82f6';
+    const games=rivalSeries(r.a_rid,r.b_rid);
+    // Streak from the most recent meeting backwards
+    let stN=0,stRid=null;
+    for(let i=games.length-1;i>=0;i--){
+      const w=games[i].g.winner.roster_id;
+      if(stRid===null){stRid=w;stN=1;}
+      else if(w===stRid)stN++;
+      else break;
+    }
+    const last=games[games.length-1];
+    let big=null;games.forEach(gm=>{if(!big||gm.g.diff>big.g.diff)big=gm;});
+    h+='<div class="rvq-card" style="background:linear-gradient(105deg,'+aCol+'2e 0%,transparent 40%,transparent 60%,'+bCol+'2e 100%),var(--g2)">';
+    h+='<div class="rvq-rank">RIVALRY #'+(mi+1)+'</div>';
+    h+='<div class="rvq-split">';
+    h+='<div class="rvq-side">'+av(r.a_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.a+'</div><div class="rvq-sub">'+Math.round(r.aPct)+'% of series</div></div></div>';
+    h+='<div class="rvq-center"><div class="rvq-score">'+r.a_wins+'\u2013'+r.b_wins+'</div><div class="rvq-vs">ALL-TIME SERIES</div></div>';
+    h+='<div class="rvq-side right">'+av(r.b_rid,52)+'<div style="min-width:0"><div class="rvq-name">'+r.b+'</div><div class="rvq-sub">'+Math.round(100-r.aPct)+'% of series</div></div></div>';
     h+='</div>';
-    h+='<div class="rival-bar-track">';
-    h+='<div class="rival-bar-a" style="width:'+aPct+'%;background:'+aCol+'">'+r.a_wins+'W</div>';
-    h+='<div class="rival-bar-b" style="background:'+bCol+'">'+r.b_wins+'W</div>';
+    h+='<div class="rvq-bar"><div style="width:'+r.aPct+'%;background:'+aCol+'"></div><div style="flex:1;background:'+bCol+'"></div></div>';
+    h+='<div class="rvq-chips">';
+    if(stRid!==null&&stN>1)h+='<span class="rvq-chip" style="border-color:'+(stRid===r.a_rid?aCol:bCol)+'66">STREAK <b>'+tn(stRid)+' W'+stN+'</b></span>';
+    if(last)h+='<span class="rvq-chip">LAST <b>\u2019'+String(last.y).slice(2)+' WK'+last.wk+' \u00b7 '+tn(last.g.winner.roster_id)+' '+last.g.winner.points.toFixed(1)+'\u2013'+last.g.loser.points.toFixed(1)+'</b></span>';
+    if(big&&big.g.diff>0)h+='<span class="rvq-chip">BIGGEST WIN <b>'+tn(big.g.winner.roster_id)+' BY '+big.g.diff.toFixed(1)+'</b></span>';
+    if(r.dominant&&r.dominance>=65)h+='<span class="rvq-chip" style="color:var(--y);border-color:rgba(255,204,0,.3)">'+r.dominant.toUpperCase()+' OWNS IT \u00b7 '+r.dominance+'%</span>';
     h+='</div>';
-    if(isDom){h+='<div style="margin-top:6px;display:flex;gap:8px;align-items:center"><span class="rival-badge" style="background:rgba(204,0,0,.12);color:var(--a)">'+r.dominant+' owns this rivalry</span></div>';}
     h+='</div>';
   });
+  h+='</div>';
+  // The other 60 pairings are reference data \u2014 a compact index, not 60 cards
+  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All Series</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Every Head-to-Head \u2022 Sorted by Games Played</span></div></div>';
+  h+='<div class="rvi-grid">';
+  ranked.slice(6).forEach(r=>{
+    const tcA=TC[r.a_rid]||{},tcB=TC[r.b_rid]||{};
+    h+='<div class="rvi-row"><span class="rvi-names">'+r.a+' <span style="color:var(--t4)">vs</span> '+r.b+'</span>';
+    h+='<span class="rvi-bar"><span style="width:'+r.aPct+'%;background:'+(tcA.p||'var(--a)')+'"></span><span style="flex:1;background:'+(tcB.p||'var(--g5)')+'"></span></span>';
+    h+='<span class="rvi-rec">'+r.a_wins+'\u2013'+r.b_wins+'</span></div>';
+  });
+  h+='</div>';
   document.getElementById('tab-rivals').innerHTML=h;
 }
 // ═══ CONTRACTS ═══
@@ -4509,6 +4717,12 @@ function renderContracts(){
     h+='<button class="tab-sub-btn'+(selConTeam===tc.name?' active':'')+'" onclick="selConTeam=\''+tc.name.replace(/'/g,"\\'")+'\';renderContracts()" style="display:flex;align-items:center;gap:5px">'+av(tc.rid,18)+tc.name.substring(0,12)+'</button>';
   });
   h+='</div>';
+  // Section jump bar — ten stacked modules need a map
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:-6px 0 14px">';
+  [['con-exm','EXEMPTIONS'],['con-health','TEAM HEALTH'],['con-value','VALUE'],['con-cliff','CLIFF'],['con-roi','EXM ROI']].forEach(function(jb){
+    h+='<button class="wk-btn" style="font-size:10px;letter-spacing:1.5px" onclick="event.stopPropagation();var el=document.getElementById(\''+jb[0]+'\');if(el)el.scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+jb[1]+' \u2193</button>';
+  });
+  h+='</div>';
   // Recompute stats for filtered view
   var fContracted=filtC.reduce(function(s,t){return s+t.contracted.length},0);
   var fUncontracted=filtC.reduce(function(s,t){return s+t.uncontracted.length},0);
@@ -4544,7 +4758,7 @@ function renderContracts(){
   var exmH=D.exemption_history||{};
   var exmYears=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
   if(exmYears.length){
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year</span></div></div>';
+    h+='<div class="bh" id="con-exm" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year</span></div></div>';
     h+='<div style="display:flex;gap:4px;margin-bottom:12px">';
     exmYears.forEach(function(yr,i){
       h+='<button class="tab-sub-btn'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.exm-yr-panel\').forEach(function(el){el.style.display=\'none\'});document.getElementById(\'exm-'+yr+'\').style.display=\'flex\';this.parentNode.querySelectorAll(\'.tab-sub-btn\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">'+yr+' ('+exmH[yr].length+')</button>';
@@ -4584,7 +4798,7 @@ function renderContracts(){
     });
   }
   // ── CONTRACT HEALTH PER TEAM ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years</span></div></div>';
+  h+='<div class="bh" id="con-health" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years</span></div></div>';
   var sorted=filtC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs)});
   sorted.forEach(function(tc){
     var cCount=tc.contracted.length;
@@ -4600,7 +4814,7 @@ function renderContracts(){
     h+='</div>';
   });
   // ── DYNASTY VALUE RANKINGS ──
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Dynasty Value</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Portfolio Value by KTC</span></div></div>';
+  h+='<div class="bh" id="con-value" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Dynasty Value</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Portfolio Value by KTC</span></div></div>';
   var valSorted=filtC.slice().sort(function(a,b){return b.totalKtc-a.totalKtc});
   var maxKtc=valSorted[0]?valSorted[0].totalKtc:1;
   valSorted.forEach(function(tc,i){
@@ -4616,7 +4830,7 @@ function renderContracts(){
   // ── CONTRACT CLIFF (heatmap cards) ──
   var cliffStart=curSeason;
   var cliffYears=Array.from({length:6},function(_,i){return cliffStart+i});
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
+  h+='<div class="bh" id="con-cliff" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
   h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0">';
   filtC.slice().sort(function(a,b){return b.contracted.length-a.contracted.length}).forEach(function(tc){
     h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:14px;text-align:center">';
@@ -4657,7 +4871,7 @@ function renderContracts(){
   allExms.sort(function(a,b){return b.ktc-a.ktc});
   if(allExms.length){
     var totalExmKtc=allExms.reduce(function(s,e){return s+e.ktc},0);
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allExms.length+' Exemptions \u2022 '+totalExmKtc.toLocaleString()+' Total KTC</span></div></div>';
+    h+='<div class="bh" id="con-roi" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allExms.length+' Exemptions \u2022 '+totalExmKtc.toLocaleString()+' Total KTC</span></div></div>';
     var best=allExms[0],worst=allExms[allExms.length-1];
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
     h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--a);margin-bottom:6px">BEST EXEMPTION</div><div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+best.player+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+best.owner+' \u2022 '+best.year+'</div><div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--a);margin-top:6px">'+best.ktc.toLocaleString()+' KTC</div></div>';
@@ -4698,7 +4912,7 @@ function renderConstitution(){
   function sec(num,title,body){return'<div class="const-section"><div class="const-num">'+num+'</div><div class="const-title">'+title+'</div><div class="const-body">'+body+'</div></div>';}
   function kv(label,val){return'<li><span class="cl-label">'+label+'</span><span class="cl-value">'+val+'</span></li>';}
   // Article I
-  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',lg.type||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
+  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',({0:'Redraft',1:'Keeper',2:'Dynasty'})[lg.type]||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
   // Article II
   h+=sec('ARTICLE II','Roster Configuration','<ul class="const-list">'+kv('Total Roster',lg.roster_spots||'10 starters, 15 bench, 1 IR')+kv('Starters',lg.starters||'QB, 2RB, 3WR, TE, 2FLEX, DEF')+kv('Bench','15 spots')+kv('IR Slots','1 spot')+kv('Keeper Limit','15 players')+'</ul>');
   // Article III
@@ -4719,7 +4933,7 @@ function renderConstitution(){
   var champList='<ul class="const-list">';
   D.champions.forEach(function(c){champList+=kv(c.year+' Champion',c.champion+' over '+c.runner_up)});
   champList+='</ul>';
-  h+=sec('ARTICLE X','Championship History','The league\'s all-time championship record. Three seasons of Sleeper dynasty glory.'+champList);
+  h+=sec('ARTICLE X','Championship History','The league\'s all-time championship record. '+(D.champions.length||'')+' season'+(D.champions.length===1?'':'s')+' of Sleeper dynasty glory.'+champList);
   document.getElementById('tab-constitution').innerHTML=h;
 }
 // ═══ WAR ROOM ═══
@@ -4735,73 +4949,37 @@ function renderWarRoom(){
     {label:'NFL Kickoff',date:SEASON_DATES.nflKickoff,note:'Season Opener \u2022 '+fmtSeasonDate(SEASON_DATES.nflKickoff)},
   ];
   events.forEach(function(ev){
-    var days=null,urgency='future';
+    var days=null,urgency='future',passed=false;
     if(ev.date){
       var target=new Date(ev.date);
       var diff=target-now;
       days=Math.floor(diff/864e5);
-      urgency=days<14?'urgent':days<60?'soon':'future';
+      passed=diff<=0;
+      urgency=passed?'future':days<14?'urgent':days<60?'soon':'future';
     }
     h+='<div class="wr-timer '+urgency+'">';
     h+='<div class="wr-timer-label">'+ev.label+'</div>';
-    if(days!==null){
-      h+='<div class="wr-timer-val">'+Math.max(0,days)+'</div>';
-      h+='<div class="wr-timer-unit">Days Away</div>';
-    }else{
+    if(days===null){
       h+='<div class="wr-timer-val" style="font-size:20px">TBD</div>';
       h+='<div class="wr-timer-unit">Date Not Set</div>';
+    }else if(passed){
+      h+='<div class="wr-timer-val" style="font-size:18px;color:var(--grn,#17b169)">✓</div>';
+      h+='<div class="wr-timer-unit">Passed</div>';
+    }else{
+      h+='<div class="wr-timer-val">'+days+'</div>';
+      h+='<div class="wr-timer-unit">Days Away</div>';
     }
     h+='<div class="wr-timer-date">'+ev.note+'</div>';
     h+='</div>';
   });
   h+='</div>';
-  // Exemption Status Board
+  // \u2014 Team Status Grid: exemption + expiring + draft capital in one card per team \u2014
   var curSznNum=parseInt(D.league.season)||parseInt(CURRENT_YEAR);
   var prevSzn=String(curSznNum-1);
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Exemption Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+curSznNum+' Exemption Ownership</span></div></div>';
-  h+='<div class="wr-checklist">';
   var exmH=D.exemption_history||{};
   var usedPrev=(exmH[prevSzn]||[]).map(function(e){return e.o});
   var ownerCounts={};
   usedPrev.forEach(function(o){ownerCounts[o]=(ownerCounts[o]||0)+1});
-  D.teams.forEach(function(t){
-    var used=ownerCounts[t.team_name]||0;
-    var indColor=used===0?'green':used===1?'yellow':'red';
-    var label=used===0?'Has '+curSznNum+' Exemption':used>=2?'Used Multiple':'Possible Carryover';
-    h+='<div class="wr-team-row">';
-    h+=av(t.roster_id,32);
-    h+='<div style="min-width:0"><div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--t1)">'+t.team_name+'</div>';
-    h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">'+label+'</div></div>';
-    h+='<div class="wr-indicators"><div class="wr-ind '+indColor+'" title="'+label+'"></div></div>';
-    h+='</div>';
-  });
-  h+='</div>';
-  // Expiring Contracts Alert
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag" style="background:var(--red-t);color:white">Expiring Contracts</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">0-Year Deals \u2022 Decision Required</span></div></div>';
-  var expiringByTeam=[];
-  D.teams.forEach(function(t){
-    var exp=[];
-    t.players.forEach(function(p){
-      var c=D.contracts&&D.contracts[p.name];
-      if(c&&c.yrs===0)exp.push(p.name);
-    });
-    if(exp.length)expiringByTeam.push({team:t.team_name,rid:t.roster_id,players:exp});
-  });
-  expiringByTeam.sort(function(a,b){return b.players.length-a.players.length});
-  if(expiringByTeam.length){
-    expiringByTeam.forEach(function(row){
-      h+='<div class="wr-team-row">';
-      h+=av(row.rid,32);
-      h+='<div style="min-width:0;flex:1"><div style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--t1)">'+row.team+'</div>';
-      h+='<div style="font-family:var(--fb);font-size:11px;color:var(--t3)">'+row.players.join(', ')+'</div></div>';
-      h+='<div style="font-family:var(--fm);font-size:16px;font-weight:800;color:var(--red-t)">'+row.players.length+'</div>';
-      h+='</div>';
-    });
-  }else{
-    h+='<div style="text-align:center;padding:20px;color:var(--t3);font-family:var(--fb);font-size:13px">No expiring contracts found.</div>';
-  }
-  // Draft Capital Overview
-  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Draft Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Future Pick Inventory \u2022 Net Balance</span></div></div>';
   var capMap={};
   D.pick_trades.forEach(function(p){
     var cur=p.current_owner,orig=p.original_owner;
@@ -4810,28 +4988,41 @@ function renderWarRoom(){
     capMap[cur].gained++;
     if(orig!==cur)capMap[orig].lost++;
   });
-  var capArr=Object.entries(capMap).sort(function(a,b){return(b[1].gained-b[1].lost)-(a[1].gained-a[1].lost)});
-  capArr.forEach(function(entry){
-    var nm=entry[0],c=entry[1];
-    var net=c.gained-c.lost;
-    var col=net>0?'var(--grn)':net<0?'var(--red-t)':'var(--t4)';
-    var teamObj=D.teams.find(function(t){return t.team_name===nm});
-    h+='<div class="h-row" style="gap:8px">';
-    if(teamObj)h+=av(teamObj.roster_id,28);
-    h+='<span class="h-team" style="flex:1">'+nm+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4)">+'+c.gained+' gained</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4)">-'+c.lost+' traded</span>';
-    h+='<span style="font-family:var(--fm);font-size:16px;font-weight:800;color:'+col+';min-width:36px;text-align:right">'+(net>0?'+':'')+net+'</span>';
+  h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Franchise Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Exemptions \u2022 Expiring Deals \u2022 Draft Capital \u2014 One Card Per Team</span></div></div>';
+  var statusCards=D.teams.map(function(t){
+    var used=ownerCounts[t.team_name]||0;
+    var exmColor=used===0?'#17b169':used===1?'var(--y)':'var(--red-t)';
+    var exmLabel=used===0?'EXEMPTION IN HAND':used>=2?'USED MULTIPLE':'CARRYOVER?';
+    var exp=[];
+    t.players.forEach(function(p){var c=D.contracts&&D.contracts[p.name];if(c&&c.yrs===0)exp.push(p.name);});
+    var cap=capMap[t.team_name]||{gained:0,lost:0};
+    var net=cap.gained-cap.lost;
+    return{t:t,used:used,exmColor:exmColor,exmLabel:exmLabel,exp:exp,net:net,urgency:exp.length*2+(used>=2?3:0)};
+  }).sort(function(a,b){return b.urgency-a.urgency});
+  h+='<div class="wr-grid stagger">';
+  statusCards.forEach(function(sc){
+    var t=sc.t,tc=TC[t.roster_id]||{},tcP=tc.p||'#cc0000';
+    var netCol=sc.net>0?'#17b169':sc.net<0?'var(--red-t)':'var(--t4)';
+    h+='<div class="wr-card" style="border-top:3px solid '+tcP+'">';
+    h+='<div class="wr-card-hdr">'+av(t.roster_id,34)+'<div style="min-width:0;flex:1"><div class="wr-card-name">'+t.team_name+'</div>';
+    h+='<div class="wr-card-exm" style="color:'+sc.exmColor+'"><span class="wr-ind-dot" style="background:'+sc.exmColor+'"></span>'+sc.exmLabel+'</div></div></div>';
+    h+='<div class="wr-card-stats">';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:'+(sc.exp.length?'var(--red-t)':'var(--t4)')+'">'+sc.exp.length+'</div><div class="wr-csl">EXPIRING</div></div>';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:'+netCol+'">'+(sc.net>0?'+':'')+sc.net+'</div><div class="wr-csl">NET PICKS</div></div>';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:var(--t2)">'+sc.used+'</div><div class="wr-csl">EXM USED \u2019'+prevSzn.slice(2)+'</div></div>';
+    h+='</div>';
+    if(sc.exp.length)h+='<div class="wr-card-exp">'+sc.exp.slice(0,3).join(' \u00b7 ')+(sc.exp.length>3?' +'+(sc.exp.length-3):'')+'</div>';
     h+='</div>';
   });
+  h+='</div>';
   document.getElementById('tab-warroom').innerHTML=h;
 }
 // ═══ PULSE FEED ═══
 function renderPulse(){
   var cards=[];
   // Championship recaps
-  D.champions.forEach(function(c){
-    cards.push({type:'championship',priority:10,icon:'\u2605',tag:'CHAMPIONSHIP',headline:c.champion+' Dynasty Champion — '+c.year,body:c.champion+' defeats '+c.runner_up+' in the '+c.year+' title game. A dynasty moment cemented in Harambe\'s Dozen lore.',meta:'SEASON '+c.year});
+  champsDesc().slice(0,2).forEach(function(c,i){
+    cards.push({type:'championship',priority:10-i,feature:i===0,icon:'\u2605',tag:i===0?'REIGNING CHAMPION':'CHAMPIONSHIP',headline:c.champion+' Dynasty Champion — '+c.year,body:c.champion+' defeats '+c.runner_up+' in the '+c.year+' title game. A dynasty moment cemented in Harambe\'s Dozen lore.',meta:'SEASON '+c.year});
   });
   // Record alerts
   var rec=D.records;
@@ -4841,10 +5032,11 @@ function renderPulse(){
   if(rec&&rec.biggest_blowout){
     cards.push({type:'record',priority:8,icon:'\u25B2',tag:'RECORD',headline:'Biggest Blowout: '+tn(rec.biggest_blowout.winner.roster_id)+' wins by '+rec.biggest_blowout.diff,body:tn(rec.biggest_blowout.winner.roster_id)+' ('+rec.biggest_blowout.winner.points+') defeats '+tn(rec.biggest_blowout.loser.roster_id)+' ('+rec.biggest_blowout.loser.points+') in Week '+rec.biggest_blowout.week+'.',meta:(rec.biggest_blowout.year||CURRENT_YEAR)+' SEASON \u2022 WK '+rec.biggest_blowout.week});
   }
-  // Power movement
-  var pw=D.teams.map(function(t){var s25=CUR_STANDINGS.find(function(s){return s.roster_id===t.roster_id})||{wins:0,fpts:0};var wPct=s25.wins/(s25.wins+(s25.losses||0)||1);var maxP=Math.max.apply(null,CUR_STANDINGS.map(function(s){return s.fpts}));var pPct=s25.fpts/maxP;return{name:t.team_name,pw:Math.round((wPct*40+pPct*60)*10)/10};}).sort(function(a,b){return b.pw-a.pw});
+  // Power movement (shared offseason-safe composite)
+  var pwc=computePowerTeams();
+  var pw=pwc.teams.map(function(t){return{name:t.team_name,pw:t.pw};});
   if(pw.length>=2){
-    cards.push({type:'power',priority:7,icon:'\u25A0',tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering '+CURRENT_YEAR+', ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:CURRENT_YEAR+' OFFSEASON POWER INDEX'});
+    cards.push({type:'power',priority:7,icon:'\u25A0',tag:'POWER',headline:'POWER: '+pw[0].name+' leads the dynasty with a '+pw[0].pw+' composite score',body:pw[0].name+' holds the top spot entering '+CURRENT_YEAR+', ahead of '+pw[1].name+' ('+pw[1].pw+'). Championship window is wide open.',meta:pwc.basis.live?CURRENT_YEAR+' POWER RANKINGS':CURRENT_YEAR+' OFFSEASON POWER INDEX'});
   }
   // Trade stories
   (D.unified_trades||[]).slice(0,6).forEach(function(t){
@@ -4864,20 +5056,23 @@ function renderPulse(){
       cards.push({type:'exemption',priority:5,icon:'\u25CB',tag:'EXEMPTION',headline:e.o+' uses '+(isTraded?'traded ':'')+'exemption on '+e.p,body:e.o+' restructures '+e.p+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+e.from+'.':'')+(e.note?' '+e.note+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
     });
   });
-  // Draft highlights
+  // Draft highlights — one story per draft class, not one per player
   var dh=D.draft_hits||{};
-  Object.entries(dh).forEach(function(entry){
-    var yr=entry[0],hits=entry[1];
-    hits.filter(function(h){return h.status==='starter'&&h.rd===1}).forEach(function(h){
-      var c=D.contracts&&D.contracts[h.nm];
-      cards.push({type:'draft',priority:4,icon:'\u25C6',tag:'DRAFT',headline:h.drafter+' hits on '+h.nm+' — Round '+h.rd+' starter',body:h.nm+' ('+h.pos+') drafted Rd'+h.rd+', Pk'+h.pk+' by '+h.drafter+'.'+(c?' Currently valued at '+c.ktc+' KTC.':'')+' Status: '+h.status+'.',meta:yr+' ROOKIE DRAFT \u2022 RD'+h.rd+' PK'+h.pk});
-    });
+  Object.keys(dh).sort().reverse().forEach(function(yr){
+    var hits=dh[yr]||[];
+    var r1=hits.filter(function(h){return h.rd===1});
+    var r1S=r1.filter(function(h){return h.status==='starter'});
+    if(!r1S.length)return;
+    var names=r1S.slice(0,4).map(function(h){return h.nm+' ('+h.drafter+')'}).join(', ');
+    var more=r1S.length>4?' +'+(r1S.length-4)+' more':'';
+    cards.push({type:'draft',priority:4,icon:'\u25C6',tag:'DRAFT CLASS',headline:yr+' first round: '+r1S.length+' of '+r1.length+' picks became starters',body:'The hits: '+names+more+'.',meta:yr+' ROOKIE DRAFT \u2022 ROUND 1 REPORT CARD'});
   });
   cards.sort(function(a,b){return b.priority-a.priority});
+  cards=cards.slice(0,20);
   var h='<div class="bh"><h2 class="bh-tag">League Pulse</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+cards.length+' League Stories \u2022 Powered by Dynasty Data</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Auto-generated narrative cards from real league data. Every trade, championship, record, and exemption has a story.</div></div></div>';
   cards.forEach(function(card){
-    h+='<div class="pulse-card '+card.type+'">';
+    h+='<div class="pulse-card '+card.type+(card.feature?' pulse-feature':'')+'">';
     h+='<span class="pulse-tag '+card.type+'">'+card.tag+'</span>';
     h+='<div class="pulse-headline">'+card.icon+' '+card.headline+'</div>';
     h+='<div class="pulse-body">'+card.body+'</div>';
@@ -4890,7 +5085,7 @@ function renderPulse(){
 function renderChronicle(){
   var events=[];
   // Championships
-  D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
+  D.champions.forEach(function(c){events.push({year:parseInt(c.year),type:'champ',feat:true,icon:'\u2605',title:c.champion+' wins '+c.year+' Championship',body:'Defeated '+c.runner_up+' in the dynasty title game.',date:c.year+' Season Finals'});});
   // Records
   var recYr=D.records&&D.records.highest_score&&D.records.highest_score.year?D.records.highest_score.year:CURRENT_YEAR;
   if(D.records&&D.records.highest_score){events.push({year:parseInt(recYr),type:'record',icon:'\u2191',title:'All-Time High: '+D.records.highest_score.pts+' pts',body:tn(D.records.highest_score.roster_id)+' shatters the league scoring record.',date:recYr+' Season \u2022 Wk '+D.records.highest_score.week});}
@@ -4902,12 +5097,24 @@ function renderChronicle(){
     var yr=parseInt(entry[0]),exms=entry[1];
     exms.forEach(function(e){events.push({year:yr,type:'exemption',icon:'\u25CB',title:e.o+' extends '+e.p,body:'New deal: '+e.new_yrs+'yr. '+(e.note||''),date:yr+' Offseason'});});
   });
-  // Trades
-  (D.unified_trades||[]).forEach(function(t){
-    var yr=parseInt(t.yr);
-    var sideA=t.sides[0],sideB=t.sides[1];
-    var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks].slice(0,2).join(', ')||'picks';
-    events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Deal: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
+  // Trades \u2014 only the 3 biggest deals per year make the history books
+  var tradesByYear={};
+  (D.unified_trades||[]).forEach(function(t){var y=String(t.yr);(tradesByYear[y]=tradesByYear[y]||[]).push(t);});
+  function tradeHeat(t){
+    var v=0;
+    t.sides.forEach(function(sd){
+      sd.players.forEach(function(p){var c=D.contracts&&D.contracts[p.nm];v+=(c&&c.ktc)||800;});
+      v+=sd.picks.length*1500;
+    });
+    return v;
+  }
+  Object.keys(tradesByYear).forEach(function(y){
+    tradesByYear[y].sort(function(a,b){return tradeHeat(b)-tradeHeat(a)}).slice(0,3).forEach(function(t){
+      var yr=parseInt(t.yr);
+      var sideA=t.sides[0],sideB=t.sides[1];
+      var assets=[...sideA.players.map(function(p){return p.nm}),...sideA.picks.map(function(pk){return String(pk).replace(/\s*\((\?|Unknown)\)/g,'').trim()})].slice(0,2).join(', ')||'picks';
+      events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Blockbuster: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
+    });
   });
   // All-time era (CBS era 2016-2020)
   if(D.alltime_standings&&D.alltime_standings.length){
@@ -4927,14 +5134,14 @@ function renderChronicle(){
   h+='<div class="chronicle">';
   h+='<div class="chronicle-track" id="chronicle-track">';
   yearList.forEach(function(yr){
-    var evts=years[yr];
+    var evts=years[yr].slice().sort(function(a,b){return(b.feat?1:0)-(a.feat?1:0)});
     h+='<div class="chronicle-year" id="chr-'+yr+'">';
     h+='<div class="chronicle-year-label">'+yr+'</div>';
     h+='<div class="chronicle-line"></div>';
     evts.forEach(function(ev,i){
       h+='<div style="position:relative">';
       h+='<div class="chronicle-dot '+ev.type+'" style="left:'+((i%3)*30)+'px" title="'+ev.title+'"></div>';
-      h+='<div class="chronicle-event">';
+      h+='<div class="chronicle-event'+(ev.feat?' feat':'')+'">';
       h+='<div class="chronicle-event-icon">'+ev.icon+'</div>';
       h+='<div class="chronicle-event-title">'+ev.title+'</div>';
       h+='<div class="chronicle-event-body">'+ev.body+'</div>';
