@@ -20,13 +20,13 @@ Fantasy football dynasty league dashboard for a 12-team PPR league. Single-file 
 ```
 index.html
 ├── <style> — ~1,090 lines of CSS (design tokens, components, responsive)
-├── <body>  — Loading screen, header, hero, cast strip, nav, 18 tab panels, footer
+├── <body>  — Loading screen, header, hero, cast strip, nav, 19 tab panels (incl. home front page), footer
 └── <script>
     ├── Config (CFG) + fetch utilities + cache helpers
     ├── Data pipeline: discoverLeague → fetchCurrentSeason → fetchPlayerDB → buildCurrentSeasonData
     ├── Historical: loadHistory → mergeHistoricalData (background, progressive re-render)
     ├── Global state: let D = {} (single mutable object holds all app data)
-    ├── 18 render functions: renderPower(), renderRosters(), renderTrades(), etc.
+    ├── 19 render functions in TAB_RENDERERS: renderHome(), renderPower(), renderRosters(), etc.
     ├── URL builders: PI() (player thumb), PIF() (player full), TL() (team logo)
     ├── Helpers: pimg() (player img HTML), av() (avatar → tcInit), tcInit() (gradient circle), cpill() (contract pill), dtierTag() (tier badge)
     └── PWA install banner + service worker registration
@@ -39,7 +39,8 @@ index.html
 - External strings are HTML-escaped once at ingestion via `esc()` — never insert raw API/sheet strings into `D`
 - Expanded/open UI state is keyed in the `UI_OPEN` set (`data-okey` attrs + `uiToggle()`/`secOpen()`) so it survives destructive re-renders
 - Each tab has a `renderX()` function that builds HTML via string concatenation and sets `innerHTML`
-- Tab switching calls `showTab(id)` which toggles `.active` class on panels
+- Tab switching calls `showTab(id)` which toggles `.active` class on panels, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
+- "My team" is `myTeamRid()`: localStorage `hd_my_team`, falling back to the roster owned by `CFG.userId`; `.gm-link` + `data-rid` makes any team name open its GM profile via a delegated handler
 - Team identity colors live in the `TC` object (keyed by roster_id)
 - Player images come from Sleeper CDN: `sleepercdn.com/content/nfl/players/`
 - Avatar fallbacks use gradient circles with team-colored initials via `tcInit()`
@@ -105,12 +106,12 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 
 ## Data Flow
 
-1. `init()` discovers the league via Sleeper API (user ID + league name)
+1. `init()` starts the player-DB/values/contracts fetches immediately, then discovers the league via Sleeper API (user ID + league name; the previous-league chain is cached permanently)
 2. Fetches current season: rosters, users, matchups (per week), transactions, draft picks
 3. Fetches full NFL player database (~20K players, pruned to active + rostered)
 4. Fetches dynasty values from FantasyCalc, then contracts from the published Google Sheets CSV (`CFG.sheetCsvUrl`)
 5. `buildCurrentSeasonData()` assembles everything into `D`
-6. All 16+ render functions fire, populating tab panels
+6. Only the landing tab renders at init; the other tabs are marked dirty and render on first visit (`dirtyTabs` + `showTab`)
 7. Background: historical seasons load and `mergeHistoricalData()` progressively re-renders affected tabs
 
 **Cache strategy:** localStorage with TTL. Player DB cached 24hrs. If API fails, falls back to cached `D`.
