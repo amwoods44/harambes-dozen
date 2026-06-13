@@ -4502,7 +4502,7 @@ function renderAnalytics(){
     h+='<div class="tab-sub">'+anOpts.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===anYr?' active':'')+'" onclick="selAnYr=\''+y+'\';renderAnalytics()">'+y+'</button>';}).join('')+'</div>';
   }
   // ── H2H MATRIX ──
-  h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head \u2022 Regular Season \u2022 All Years</span></div></div>';
+  h+='<div class="bh" style="margin-top:16px"><h2 class="bh-tag">H2H Matrix</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head \u2022 Regular Season \u2022 ALL-TIME (every season, not the year above)</span></div></div>';
   const rids=Object.keys(D.rid_to_name).map(Number).sort((a,b)=>a-b);
   const n=rids.length;
   h+='<div class="h2h-matrix"><div class="h2h-grid" style="grid-template-columns:160px repeat('+n+',1fr)">';
@@ -4533,6 +4533,7 @@ function renderAnalytics(){
         if(wi<oppWk.length){
           if(pts>oppWk[wi])apW++;
           else if(pts<oppWk[wi])apL++;
+          else{apW+=0.5;apL+=0.5;} // tie = half win / half loss so apW+apL = weeks*(N-1)
         }
       });
     });
@@ -4565,16 +4566,28 @@ function renderAnalytics(){
       paMap[g.team_b.roster_id]=(paMap[g.team_b.roster_id]||0)+g.team_a.points;
     });
   });
+  // Pythagorean exponent fit to THIS league's data (per-team k = ln(W/L)/ln(PF/PA),
+  // robust median, clamped) rather than the NFL 2.37, which overstates fantasy variance.
+  const kVals=[];
+  rids.forEach(rid=>{
+    const s=anSt.find(x=>x.roster_id===rid);const pa=paMap[rid];
+    if(s&&s.wins>0&&s.losses>0&&pa>0&&s.fpts>0&&s.fpts!==pa){
+      const k=Math.log(s.wins/s.losses)/Math.log(s.fpts/pa);
+      if(isFinite(k)&&k>0.5&&k<4)kVals.push(k);
+    }
+  });
+  kVals.sort((a,b)=>a-b);
+  const PYEXP=kVals.length>=4?Math.min(2.6,Math.max(1.4,kVals[Math.floor(kVals.length/2)])):2.0;
   const pythData=rids.map(rid=>{
     const s=anSt.find(x=>x.roster_id===rid)||{wins:0,losses:0,fpts:0};
     const pa=paMap[rid]||1;
     const games=s.wins+s.losses||1;
-    const exp=2.37;
-    const pyth=Math.pow(s.fpts,exp)/(Math.pow(s.fpts,exp)+Math.pow(pa,exp));
+    const pyth=Math.pow(s.fpts,PYEXP)/(Math.pow(s.fpts,PYEXP)+Math.pow(pa,PYEXP));
     const expWins=Math.round(pyth*games*10)/10;
     const diff=s.wins-expWins;
     return{rid,name:D.rid_to_name[rid],pf:s.fpts,pa:Math.round(pa),actW:s.wins,expW:expWins,diff:Math.round(diff*10)/10};
   }).sort((a,b)=>b.diff-a.diff);
+  h+='<div style="font-family:var(--fu);font-size:11px;color:var(--t4);margin:4px 0 10px">Exponent k='+PYEXP.toFixed(2)+' — '+(kVals.length>=4?'fit to this league’s scoring':'league default, insufficient history to fit')+' · regular season only.</div>';
   h+='<div style="overflow-x:auto"><table class="ap-table"><thead><tr><th>#</th><th>Team</th><th>PF</th><th>PA</th><th>Actual W</th><th>Expected W</th><th>Diff</th></tr></thead><tbody>';
   pythData.forEach((t,i)=>{
     const cls=t.diff>0?'ap-luck-pos':t.diff<0?'ap-luck-neg':'';
