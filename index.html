@@ -351,6 +351,13 @@ button{min-height:36px}
 .nav-drop-item{font-family:var(--fd);padding:11px 20px;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);cursor:pointer;border:none;background:none;text-align:left;transition:all .15s;border-left:2px solid transparent}
 .nav-drop-item:hover{color:var(--t1);background:rgba(255,255,255,.04);border-left-color:var(--g6)}
 .nav-drop-item.active{color:var(--a);border-left-color:var(--a);background:rgba(204,0,0,.05)}
+/* ═══ SUB-TAB BAR (multi-panel sections) ═══ */
+.subnav{display:none;gap:7px;padding:9px 30px;max-width:1440px;margin:0 auto;overflow-x:auto;scrollbar-width:none;background:linear-gradient(180deg,rgba(20,16,13,.92),rgba(12,10,8,.7));border-bottom:1px solid var(--g3)}
+.subnav::-webkit-scrollbar{display:none}
+.subnav.show{display:flex}
+.subnav-btn{flex:0 0 auto;font-family:var(--fu);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);background:var(--g2);border:1px solid var(--g4);border-radius:6px;padding:7px 15px;cursor:pointer;white-space:nowrap;transition:color .15s,background .15s,border-color .15s}
+.subnav-btn:hover{color:var(--t1);border-color:var(--g5);background:var(--g3)}
+.subnav-btn.active{color:#fff;background:var(--a);border-color:var(--ab);box-shadow:0 2px 10px rgba(204,0,0,.3)}
 /* ═══ THE RAFTERS ═══ */
 /* ═══ RAFTERS — Iron Mount Cloth Banners ═══ */
 .rafters-scene{background:linear-gradient(180deg,#060608,#0c0c12 40%,#0f0f16);border-radius:16px;padding:40px 24px 48px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
@@ -1323,6 +1330,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 <div class="cast" id="cast-strip"></div>
 <div class="sstrip" id="sstrip"></div>
 <nav class="nav-bar" id="nav-bar"><button class="nav-arrow left" aria-label="Scroll tabs left">&#x25C0;</button><div class="nav-in" id="nav"></div><button class="nav-arrow right" aria-label="Scroll tabs right">&#x25B6;</button></nav>
+<div class="subnav" id="subnav" aria-label="Section views"></div>
 <main class="main" id="main">
   <section class="panel active" id="tab-home"></section>
   <section class="panel" id="tab-power"></section>
@@ -2329,6 +2337,25 @@ const TABS=[
   {id:'pulse',label:'Pulse'},
   {id:'chronicle',label:'Chronicle'},
 ];
+// Intent-based navigation: 11 sections over the 19 underlying panels. Multi-panel
+// sections render a sub-tab bar; single-panel sections jump straight to their panel.
+// Panel ids stay the routing currency (hash + HASH_ALIASES + .gm-link), so every
+// old deep link still resolves and render functions/panels are untouched.
+const SECTIONS=[
+  {id:'home',label:'Home',panels:[['home','HQ']]},
+  {id:'power',label:'Power',panels:[['power','Power']]},
+  {id:'rosters',label:'Rosters',panels:[['rosters','Rosters']]},
+  {id:'teams',label:'Teams',panels:[['gm','GM']]},
+  {id:'matchups',label:'Matchups',panels:[['matchups','Matchups']]},
+  {id:'draft',label:'Draft',panels:[['draft','Draft']]},
+  {id:'transactions',label:'Transactions',panels:[['trades','Trades'],['moves','Wire']]},
+  {id:'stats',label:'Stats',panels:[['analytics','Analytics'],['scoring','Scoring'],['age','Age Map'],['rivals','Rivals']]},
+  {id:'frontoffice',label:'Front Office',panels:[['contracts','Contracts'],['warroom','War Room'],['constitution','Rules']]},
+  {id:'rafters',label:'Rafters',panels:[['trophies','Trophy Room'],['awards','Awards']]},
+  {id:'chronicle',label:'Chronicle',panels:[['pulse','Pulse'],['chronicle','Timeline']]},
+];
+const panelToSection={};SECTIONS.forEach(sec=>sec.panels.forEach(p=>{panelToSection[p[0]]=sec;}));
+let sectionLastSub={};
 let aTab='home',selWk=1,selDraft=null,selScoreYr=null,selAnYr=null,selMovesYr=null;
 const dirtyTabs=new Set();
 const tn=r=>D.rid_to_name[r]||'?';
@@ -2554,7 +2581,9 @@ async function init(){
 
 const TAB_RENDERERS={home:renderHome,power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
 function renderTab(id){const f=TAB_RENDERERS[id];if(f)f();}
-const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups',hq:'home'};
+const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups',hq:'home',
+  // section-id deep links → their first panel
+  stats:'analytics',transactions:'trades',frontoffice:'contracts',teams:'gm',wire:'moves',timeline:'chronicle'};
 function resolveTab(h){h=(h||'').toLowerCase();return document.getElementById('tab-'+h)?h:HASH_ALIASES[h]||null;}
 
 async function loadHistory(disc,playerDB){
@@ -2603,25 +2632,25 @@ function updateCD(){
 }
 function buildNav(){
   const n=document.getElementById('nav');
-  const PRIMARY=['home','power','rosters','matchups','draft','trades'];
-  const GROUPS=[
-    {label:'INTEL',tabs:['analytics','age','gm','rivals']},
-    {label:'HISTORY',tabs:['trophies','awards','chronicle','pulse']},
-    {label:'LEAGUE',tabs:['scoring','contracts','warroom','moves','constitution']},
-  ];
+  const sn=document.getElementById('subnav');
   const tabLabel=id=>(TABS.find(t=>t.id===id)||{label:id}).label;
+  function renderSubnav(sec,activeId){
+    if(!sn)return;
+    if(sec&&sec.panels.length>1){
+      sn.innerHTML=sec.panels.map(p=>'<button class="subnav-btn'+(p[0]===activeId?' active':'')+'" data-t="'+p[0]+'" type="button">'+p[1]+'</button>').join('');
+      sn.classList.add('show');
+      sn.querySelectorAll('.subnav-btn').forEach(b=>{b.onclick=()=>showTab(b.dataset.t);});
+    }else{sn.classList.remove('show');sn.innerHTML='';}
+  }
   function showTab(id){
     aTab=id;
     if(dirtyTabs.has(id)){renderTab(id);dirtyTabs.delete(id);}
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active','wipe-in'));
     const tp=document.getElementById('tab-'+id);if(tp){tp.classList.add('active','wipe-in');const _stg=[...tp.querySelectorAll('.stagger > *')];_stg.forEach(el=>el.style.animation='none');tp.offsetHeight;_stg.forEach(el=>el.style.animation='');tp.querySelectorAll('.count-up').forEach(el=>{el.textContent='0';});animateCounters(tp);}
-    n.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.t===id));
-    n.querySelectorAll('.nav-drop-item').forEach(b=>b.classList.toggle('active',b.dataset.t===id));
-    n.querySelectorAll('.nav-group').forEach(g=>{
-      const has=[...g.querySelectorAll('.nav-drop-item')].some(b=>b.dataset.t===id);
-      g.querySelector('.nav-group-btn').classList.toggle('active',has);
-      if(!has)g.classList.remove('open');
-    });
+    const sec=panelToSection[id];
+    if(sec)sectionLastSub[sec.id]=id;
+    n.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',!!sec&&b.dataset.sec===sec.id));
+    renderSubnav(sec,id);
     const nb=document.querySelector('.nav-bar');if(nb){const nTop=nb.getBoundingClientRect().top+window.scrollY-59;if(window.scrollY>nTop+80)window.scrollTo({top:nTop,behavior:'smooth'});}
     history.replaceState(null,'','#'+id);
     document.body.classList.toggle('compact',id!=='home');
@@ -2629,21 +2658,12 @@ function buildNav(){
     document.title=tabLabel(id)+" \u2014 Harambe's Dozen";
     window._showTab=showTab;window.__showTab=showTab;
   }
+  function showSection(secId){const sec=SECTIONS.find(s=>s.id===secId);if(!sec)return;showTab(sectionLastSub[secId]||sec.panels[0][0]);}
   let html='';
-  PRIMARY.forEach(id=>{html+='<button class="nav-btn'+(id===aTab?' active':'')+'" data-t="'+id+'">'+tabLabel(id)+'</button>';});
-  GROUPS.forEach(g=>{
-    const ga=g.tabs.includes(aTab);
-    html+='<div class="nav-group'+(ga?' open':'')+'">';
-    html+='<button class="nav-group-btn'+(ga?' active':'')+'" type="button">'+g.label+'</button>';
-    html+='<div class="nav-dropdown">';
-    g.tabs.forEach(id=>{html+='<button class="nav-drop-item'+(id===aTab?' active':'')+'" data-t="'+id+'">'+tabLabel(id)+'</button>';});
-    html+='</div></div>';
-  });
+  SECTIONS.forEach(sec=>{const active=panelToSection[aTab]===sec;html+='<button class="nav-btn'+(active?' active':'')+'" data-sec="'+sec.id+'" type="button">'+sec.label+'</button>';});
   n.innerHTML=html;
-  n.querySelectorAll('.nav-btn').forEach(b=>{b.onclick=()=>showTab(b.dataset.t);});
-  n.querySelectorAll('.nav-drop-item').forEach(b=>{b.onclick=e=>{e.stopPropagation();showTab(b.dataset.t);b.closest('.nav-group').classList.remove('open');};});
-  n.querySelectorAll('.nav-group-btn').forEach(b=>{b.onclick=e=>{e.stopPropagation();const g=b.closest('.nav-group');const wasOpen=g.classList.contains('open');n.querySelectorAll('.nav-group').forEach(x=>x.classList.remove('open'));if(!wasOpen){const r=b.getBoundingClientRect();const dd=g.querySelector('.nav-dropdown');const nbr=document.getElementById('nav-bar').getBoundingClientRect();dd.style.top=(r.bottom-nbr.top+1)+'px';dd.style.left=(r.left-nbr.left)+'px';g.classList.add('open');}};});
-  document.addEventListener('click',()=>n.querySelectorAll('.nav-group').forEach(g=>g.classList.remove('open')));
+  n.querySelectorAll('.nav-btn').forEach(b=>{b.onclick=()=>showSection(b.dataset.sec);});
+  renderSubnav(panelToSection[aTab],aTab);
   // Nav scroll indicators + arrow buttons — scroll targets .nav-in, classes on .nav-bar
   const nb=document.getElementById('nav-bar');
   if(nb){
@@ -2657,7 +2677,7 @@ function buildNav(){
     nb.querySelector('.nav-arrow.left').onclick=function(e){e.stopPropagation();n.scrollBy({left:-200,behavior:'smooth'});};
     nb.querySelector('.nav-arrow.right').onclick=function(e){e.stopPropagation();n.scrollBy({left:200,behavior:'smooth'});};
     // Scroll active tab into view on load
-    var act=n.querySelector('.nav-btn.active')||n.querySelector('.nav-group-btn.active');
+    var act=n.querySelector('.nav-btn.active');
     if(act)act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
   window._showTab=showTab;  // expose early so hash routing can use it
