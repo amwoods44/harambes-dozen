@@ -4340,9 +4340,31 @@ function renderScoring(){
     const std=wk.length?Math.sqrt(wk.reduce(function(s,p){return s+Math.pow(p-avg,2)},0)/wk.length).toFixed(1):0;
     return Object.assign({},s,{wk:wk,avg:avg,mx:mx,mn:mn,std:std});
   }).sort(function(a,b){return b.fpts-a.fpts});
-  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+scYr+' Season \u2022 Heat Map \u2022 Sparklines</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">Scoring</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+scYr+' Season \u2022 Who\u2019s hot, who\u2019s cold, who\u2019s steady</span></div></div>';
   if(yrOpts.length>1){
     h+='<div class="tab-sub">'+yrOpts.slice().reverse().map(function(y){return'<button class="tab-sub-btn'+(y===scYr?' active':'')+'" onclick="selScoreYr=\''+y+'\';renderScoring()">'+y+'</button>';}).join('')+'</div>';
+  }
+  // Scoring story (lede) — lead with the headline scoring facts before the raw grid
+  var scLed=sd.filter(function(t){return t.wk.length;});
+  if(scLed.length){
+    var topScorer=scLed[0];
+    var bigWeek=scLed.slice().sort(function(a,b){return b.mx-a.mx;})[0];
+    var consistent=scLed.slice().sort(function(a,b){return parseFloat(a.std)-parseFloat(b.std);})[0];
+    var explosive=scLed.slice().sort(function(a,b){return parseFloat(b.std)-parseFloat(a.std);})[0];
+    var scCard=function(label,t,big,sub,col){
+      return '<div style="background:linear-gradient(160deg,var(--g2),var(--g1));border:1px solid var(--g4);border-top:3px solid '+col+';border-radius:12px;padding:15px">'
+        +'<div style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--t4);margin-bottom:10px">'+label+'</div>'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">'+crest(t.roster_id,26)+'<span class="gm-link" data-rid="'+t.roster_id+'" style="font-family:var(--fu);font-size:12px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+t.team_name+'</span></div>'
+        +'<div style="font-family:var(--fd);font-size:30px;font-weight:800;color:'+col+';line-height:1">'+big+'</div>'
+        +'<div style="font-family:var(--fu);font-size:11px;color:var(--t3);margin-top:3px">'+sub+'</div>'
+      +'</div>';
+    };
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0 22px">';
+    h+=scCard('Points Leader',topScorer,Math.round(topScorer.fpts).toLocaleString(),topScorer.avg+' pts/wk average','var(--a)');
+    h+=scCard('Highest Week',bigWeek,bigWeek.mx,'single-week peak this season','var(--y)');
+    h+=scCard('Most Consistent',consistent,'SD '+consistent.std,'smallest week-to-week swing','var(--blu)');
+    h+=scCard('Most Explosive',explosive,'SD '+explosive.std,'boom-or-bust every week','var(--pur)');
+    h+='</div>';
   }
   // ═══ HEAT MAP ═══
   h+='<div class="hm-wrap">';
