@@ -3353,16 +3353,6 @@ function renderTrophies(){
     }
     h+='</div></div>';
   });
-  // ── ALL-TIME STANDINGS (CBS Era 2016-2020) ──
-  if(D.alltime_standings&&D.alltime_standings.length){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All-Time</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Sleeper Era Franchise Standings \u2022 '+YEAR_RANGE+'</span></div></div>';
-    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Every Sleeper-era game, all '+NUM_SEASONS+' seasons combined. The CBS years (2016\u20132020) predate the data and live on in the Chronicle.</div></div></div>';
-    h+='<div class="fr-hdr"><span class="c">#</span><span>FRANCHISE</span><span class="r">RECORD</span><span class="r">WIN%</span><span class="r">TOTAL PF</span><span>MANAGER</span></div>';
-    D.alltime_standings.forEach(function(f,i){
-      var col=f.pct>=0.6?'var(--a)':f.pct>=0.5?'var(--y)':f.pct>=0.4?'var(--t3)':'var(--red-t)';
-      h+='<div class="fr-row"><span class="fr-rk">'+(i+1)+'</span><span class="fr-name" style="color:'+col+'">'+f.name+'</span><span class="fr-stat">'+f.w+'-'+f.l+'</span><span class="fr-stat fr-pct" style="color:'+col+'"><span class="count-up" data-target="'+(f.pct*100).toFixed(1)+'" data-decimals="1">0</span>%</span><span class="fr-stat"><span class="count-up" data-target="'+f.pf+'">0</span></span><span style="font-family:var(--fb);font-size:11px;color:var(--t4)">'+f.mgr+'</span></div>';
-    });
-  }
   document.getElementById('tab-trophies').innerHTML=h;
 }
 // ═══ TRADES ═══
@@ -4262,11 +4252,6 @@ function renderAge(){
   // Item 18: Dynasty scatter plot
   h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Dynasty Scatter</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Age vs Power \u2022 Where Every Team Sits</span></div></div>';
   h+='<canvas class="dynasty-scatter" id="dynasty-scatter"></canvas>';
-  h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Windows</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Championship Window</span></div></div>';
-  ageData.forEach(t=>{
-    const w=t.avg<=25?['Wide Open','var(--a)']:t.avg<=26.5?['Building','var(--blu)']:t.avg<=27.5?['Win Now','var(--y)']:['Closing','var(--red-t)'];
-    h+='<div class="h-row"><span class="h-team gm-link" data-rid="'+t.rid+'">'+t.name+'</span><span style="font-family:var(--fu);font-size:12px;font-weight:700;color:'+w[1]+'">'+w[0]+'</span></div>';
-  });
   document.getElementById('tab-age').innerHTML=h;
   // Draw dynasty scatter
   setTimeout(function(){
@@ -4547,10 +4532,6 @@ function renderAnalytics(){
     h+='<tr><td>'+(i+1)+'</td><td style="font-weight:700"><span class="gm-link" data-rid="'+t.rid+'">'+t.name+'</span></td><td>'+t.actW+'-'+t.actL+'</td><td>'+t.apW+'-'+t.apL+'</td><td style="font-family:var(--fm);font-weight:700;color:var(--a)"><span class="count-up" data-target="'+t.apPct+'" data-decimals="1">0</span>%</td><td class="'+lCls+'">'+(t.luckDiff>0?'+':'')+t.luckDiff+'</td></tr>';
   });
   h+='</tbody></table></div>';
-  // ── CONSISTENCY SCATTER ──
-  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Consistency</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Average Points vs Variance</span></div></div>';
-  h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Top-right = high scoring + inconsistent (boom/bust). Top-left = low scoring + inconsistent (bad + volatile). Bottom-right = high scoring + consistent (elite). Bottom-left = low + consistent (mediocre but steady).</div></div></div>';
-  h+='<canvas class="consistency-chart" id="scatter-chart"></canvas>';
   // ── PYTHAGOREAN WINS ──
   h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Pythagorean</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Expected Wins Based on Points For/Against</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Pythagorean expectation: uses PF and PA to calculate "deserved" wins. Teams above expected are overperforming, below are underperforming.</div></div></div>';
@@ -4996,15 +4977,6 @@ function renderRivals(){
   });
   h+='</div>';
   // The other 60 pairings are reference data \u2014 a compact index, not 60 cards
-  h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">All Series</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Every Head-to-Head \u2022 Sorted by Games Played</span></div></div>';
-  h+='<div class="rvi-grid">';
-  ranked.slice(6).forEach(r=>{
-    const tcA=TC[r.a_rid]||{},tcB=TC[r.b_rid]||{};
-    h+='<div class="rvi-row"><span class="rvi-names">'+r.a+' <span style="color:var(--t4)">vs</span> '+r.b+'</span>';
-    h+='<span class="rvi-bar"><span style="width:'+r.aPct+'%;background:'+(tcA.p||'var(--a)')+'"></span><span style="flex:1;background:'+(tcB.p||'var(--g5)')+'"></span></span>';
-    h+='<span class="rvi-rec">'+r.a_wins+'\u2013'+r.b_wins+'</span></div>';
-  });
-  h+='</div>';
   document.getElementById('tab-rivals').innerHTML=h;
 }
 // ═══ CONTRACTS ═══
