@@ -148,7 +148,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 | `manifest.json` | PWA manifest |
 | `sw.js` | Service worker (cache strategy) |
 | `harambe-logo.png` | App logo (also favicon, touch icon, PWA icon) |
-| `assets/avatars/Kevin.png`, `Chuck.png` | Custom manager avatar overrides (`CFG.avatarOverrides`) |
+| `assets/avatars/Kevin.png`, `Chuck.png` | Owner portrait cards. To add one: drop `assets/avatars/<Name>.png`, add a line to `CFG.avatarOverrides` keyed by roster_id or lowercase Sleeper display name |
 | `features.html` | Marketing/status page (not the app) |
 | `data/contracts.csv` | Contract source material — NOT read by the app at runtime (app reads the published Google Sheet) |
 | `data/sheets-setup.js` | Google Sheets formatting helper, not app code |

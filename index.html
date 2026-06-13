@@ -117,15 +117,18 @@ button{min-height:36px}
 .cast::before,.cast::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
 .cast::before{left:0;background:linear-gradient(90deg,var(--g1),transparent)}
 .cast::after{right:0;background:linear-gradient(270deg,var(--g1),transparent)}
-.cast-in{display:flex;align-items:center;justify-content:center;gap:0;padding:0 30px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
+.cast-in{display:flex;align-items:stretch;gap:7px;padding:2px 30px 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
 .cast-in::-webkit-scrollbar{display:none}
-.cast-fig{flex-shrink:0;position:relative;width:96px;height:96px;border-radius:50%;overflow:hidden;border:2px solid var(--g5);background:var(--g3);transition:all .3s cubic-bezier(.22,1,.36,1);cursor:pointer;margin:0 -8px;display:flex;align-items:center;justify-content:center}
-.cast-fig:hover{transform:scale(1.2);z-index:10;border-color:var(--a);box-shadow:0 0 28px rgba(204,0,0,.45)}
-.cast-fig img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.9)}
-.cast-fig:hover img{filter:saturate(1.1)}
-.cast-fig .cast-init{font-family:var(--fd);font-size:28px;font-weight:800;color:var(--t3)}
-.cast-fig::after{content:attr(data-label);position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-family:var(--fu);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none}
-.cast-fig:hover::after{opacity:1}
+.cast-fig{flex:0 0 auto;position:relative;width:clamp(76px,7vw,96px);border-radius:5px;overflow:hidden;background:var(--g2);border:1px solid var(--g4);border-top:3px solid var(--tc,var(--g5));cursor:pointer;display:flex;flex-direction:column;transition:transform .25s var(--ease-out),box-shadow .25s,border-color .25s}
+.cast-fig:first-child{margin-left:auto}
+.cast-fig:last-child{margin-right:auto}
+.cast-fig:hover{transform:translateY(-4px);border-color:var(--tc,var(--a));box-shadow:0 10px 22px rgba(0,0,0,.55),0 0 16px var(--tcg,rgba(204,0,0,.3));z-index:10}
+.cast-port{position:relative;width:100%;aspect-ratio:5/6;overflow:hidden}
+.cast-port img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.92)}
+.cast-fig:hover .cast-port img{filter:saturate(1.08)}
+.cast-init{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:24px;font-weight:800;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4)}
+.cast-nm{padding:4px 4px 5px;text-align:center;font-family:var(--fu);font-size:8.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--g1);border-top:1px solid var(--g4);transition:color .2s}
+.cast-fig:hover .cast-nm{color:var(--t1)}
 .cast-line{height:1px;background:linear-gradient(90deg,transparent 10%,var(--g5) 30%,var(--g5) 70%,transparent 90%);margin-top:6px}
 .tl-img{width:20px;height:20px;object-fit:contain;flex-shrink:0;vertical-align:middle;opacity:.9}
 .pl-nfl-cell{display:inline-flex;align-items:center;gap:4px;min-width:38px}
@@ -1349,7 +1352,13 @@ let D={};
 const CFG={
   userId:'393634863552425984',
   leagueName:"Harambe's Dozen",
-  avatarOverrides:{10:'assets/avatars/Kevin.png'},
+  // Owner portrait cards (cast rail + everywhere avatars appear).
+  // To add one: drop assets/avatars/<Name>.png in the repo, then add a line here.
+  // Keys: roster_id (number — stable forever) OR the owner's Sleeper display name in lowercase.
+  avatarOverrides:{
+    10:'assets/avatars/Kevin.png',
+    'chuck':'assets/avatars/Chuck.png'
+  },
   sleeperBase:'https://api.sleeper.app/v1',
   sheetCsvUrl:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrwFZSQor9KOXxYX9CGxX8uyPTzRdahn2Pch_uLjQFe0YUSoUuoQ7n7akevWWB9dfgVl2wIeZOeEim/pub?output=csv',
   ktcUrl:'https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams=12&ppr=1'
@@ -1746,10 +1755,9 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
     const u=userMap[r.owner_id]||{name:'Team '+r.roster_id,display_name:'Team '+r.roster_id,avatar:null};
     const teamName=u.name;
     const displayName=u.display_name;
-    let avatarSrc=null;
-    if(CFG.avatarOverrides&&CFG.avatarOverrides[r.roster_id]){
-      avatarSrc=CFG.avatarOverrides[r.roster_id];
-    }else if(u.avatar){
+    const ovr=CFG.avatarOverrides||{};
+    let avatarSrc=ovr[r.roster_id]||ovr[(displayName||'').toLowerCase()]||null;
+    if(!avatarSrc&&u.avatar){
       avatarSrc=`https://sleepercdn.com/avatars/thumbs/${u.avatar}`;
     }
     const starterIds=new Set(r.starters||[]);
@@ -2626,13 +2634,13 @@ function buildNav(){
 }
 function buildCast(){
   const h=D.teams.map(t=>{
-    const c=TC[t.roster_id],pc=c?c.p:'var(--g4)';
+    const c=TC[t.roster_id],pc=c?c.p:'#665a50';
     const hasAvatar=t.avatar&&!isDefaultAvatar(t.avatar);
     const initials=(c?c.i:t.team_name.substring(0,2).toUpperCase());
-    // Always render initials as base; overlay avatar img on top
-    const initDiv='<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(135deg,'+pc+','+pc+'99)">'+initials+'</div>';
-    const imgEl=hasAvatar?'<img src="'+t.avatar+'" alt="'+t.team_name+' owner" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%" onerror="this.remove()">':'';
-    return'<div class="cast-fig" data-label="'+t.team_name.substring(0,16)+'" style="position:relative;border-color:'+pc+'77;border-width:3px" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard">'+initDiv+imgEl+'</div>';
+    // Initials card is always the base layer; owner portrait art overlays it when present
+    const initDiv='<div class="cast-init" style="background:linear-gradient(160deg,'+pc+'cc,'+pc+'55 55%,var(--g2))">'+initials+'</div>';
+    const imgEl=hasAvatar?'<img src="'+t.avatar+'" alt="'+t.team_name+' owner" loading="lazy" onerror="this.remove()">':'';
+    return'<div class="cast-fig" style="--tc:'+pc+';--tcg:'+pc+'55" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard"><div class="cast-port">'+initDiv+imgEl+'</div><div class="cast-nm">'+t.team_name+'</div></div>';
   }).join('');
   document.getElementById('cast-strip').innerHTML='<div class="cast-in">'+h+'</div><div class="cast-line"></div>';
 }
