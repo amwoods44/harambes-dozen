@@ -358,6 +358,10 @@ button{min-height:36px}
 .subnav-btn{flex:0 0 auto;font-family:var(--fu);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);background:var(--g2);border:1px solid var(--g4);border-radius:6px;padding:7px 15px;cursor:pointer;white-space:nowrap;transition:color .15s,background .15s,border-color .15s}
 .subnav-btn:hover{color:var(--t1);border-color:var(--g5);background:var(--g3)}
 .subnav-btn.active{color:#fff;background:var(--a);border-color:var(--ab);box-shadow:0 2px 10px rgba(204,0,0,.3)}
+.subnav-btn:focus-visible{outline:2px solid var(--y);outline-offset:2px}
+/* Keyboard-focus fallback for interactive elements without a bespoke focus style */
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,.gm-link:focus-visible{outline:2px solid var(--y);outline-offset:2px;border-radius:4px}
+#main:focus{outline:none}
 /* ═══ THE RAFTERS ═══ */
 /* ═══ RAFTERS — Iron Mount Cloth Banners ═══ */
 .rafters-scene{background:linear-gradient(180deg,#060608,#0c0c12 40%,#0f0f16);border-radius:16px;padding:40px 24px 48px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
@@ -1331,7 +1335,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 <div class="sstrip" id="sstrip"></div>
 <nav class="nav-bar" id="nav-bar"><button class="nav-arrow left" aria-label="Scroll tabs left">&#x25C0;</button><div class="nav-in" id="nav"></div><button class="nav-arrow right" aria-label="Scroll tabs right">&#x25B6;</button></nav>
 <div class="subnav" id="subnav" aria-label="Section views"></div>
-<main class="main" id="main">
+<main class="main" id="main" tabindex="-1">
   <section class="panel active" id="tab-home"></section>
   <section class="panel" id="tab-power"></section>
   <section class="panel" id="tab-rosters"></section>
@@ -3008,11 +3012,13 @@ function renderPower(){
     const w=cvs.offsetWidth,ht=cvs.offsetHeight;
     const top6=teams.slice(0,6);
     const barH=(ht-20)/6-6;
-    const barColors=['#10B981','#3b82f6','#F59E0B','#ef4444','#8b5cf6','#ec4899'];
     top6.forEach((t,i)=>{
       const y=10+i*(barH+6);
       const barW=(t.pw/mx)*(w-140);
-      ctx.fillStyle=barColors[i];
+      const tcp=(TC[t.roster_id]&&TC[t.roster_id].p)||'#cc0000';
+      const grad=ctx.createLinearGradient(100,0,100+(barW||1),0);
+      grad.addColorStop(0,tcp);grad.addColorStop(1,tcp+'aa');
+      ctx.fillStyle=grad;
       ctx.beginPath();
       ctx.roundRect(100,y,barW,barH,[0,4,4,0]);
       ctx.fill();
