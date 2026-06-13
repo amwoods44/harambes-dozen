@@ -5018,12 +5018,6 @@ function renderContracts(){
     h+='<button class="tab-sub-btn'+(selConTeam===tc.name?' active':'')+'" onclick="selConTeam=\''+tc.name.replace(/'/g,"\\'")+'\';renderContracts()" style="display:flex;align-items:center;gap:5px">'+av(tc.rid,18)+tc.name.substring(0,12)+'</button>';
   });
   h+='</div>';
-  // Section jump bar — ten stacked modules need a map
-  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin:-6px 0 14px">';
-  [['con-exm','EXEMPTIONS'],['con-health','TEAM HEALTH'],['con-value','VALUE'],['con-cliff','CLIFF'],['con-roi','EXM ROI']].forEach(function(jb){
-    h+='<button class="wk-btn" style="font-size:10px;letter-spacing:1px" onclick="event.stopPropagation();var el=document.getElementById(\''+jb[0]+'\');if(el)el.scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+jb[1]+' \u2193</button>';
-  });
-  h+='</div>';
   // Recompute stats for filtered view
   var fContracted=filtC.reduce(function(s,t){return s+t.contracted.length},0);
   var fUncontracted=filtC.reduce(function(s,t){return s+t.uncontracted.length},0);
@@ -5037,6 +5031,27 @@ function renderContracts(){
   h+=statCard(fExp,'EXPIRING (1yr)','var(--red-t)','rgba(239,68,68,.3)');
   h+=statCard(fTag,'FRANCHISE TAGGED','var(--y)','rgba(245,158,11,.3)');
   h+='</div>';
+  // ── EXPIRY TIMELINE (hero) — when each team's talent hits the market ──
+  var tlYears=Array.from({length:5},function(_,i){return curSeason+i;});
+  h+='<div class="bh" style="margin-top:4px"><h2 class="bh-tag">Expiry Timeline</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">When Each Team’s Talent Hits the Market</span></div></div>';
+  h+='<div style="overflow-x:auto;margin-bottom:8px"><div style="min-width:560px">';
+  h+='<div style="display:grid;grid-template-columns:148px repeat('+tlYears.length+',1fr);gap:4px;margin-bottom:5px"><div></div>';
+  tlYears.forEach(function(yr,i){h+='<div style="text-align:center;font-family:var(--fd);font-size:12px;font-weight:800;color:var(--t3)">'+yr+(i===tlYears.length-1?'+':'')+'</div>';});
+  h+='</div>';
+  filtC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs);}).forEach(function(tc){
+    var byYear=tlYears.map(function(){return 0;});
+    tc.contracted.forEach(function(p){byYear[Math.min(tlYears.length-1,Math.max(0,p.yrs||0))]++;});
+    h+='<div style="display:grid;grid-template-columns:148px repeat('+tlYears.length+',1fr);gap:4px;margin-bottom:4px;align-items:center">';
+    h+='<div class="gm-link" data-rid="'+tc.rid+'" style="display:flex;align-items:center;gap:6px;cursor:pointer">'+av(tc.rid,22)+'<span style="font-family:var(--fu);font-size:11px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+tc.name.substring(0,14)+'</span></div>';
+    byYear.forEach(function(n,i){
+      var col=i===0?'239,68,68':i===1?'245,158,11':'16,185,129';
+      var a=n===0?0.05:Math.min(0.72,0.18+n/6*0.55);
+      h+='<div title="'+n+' expiring '+tlYears[i]+(i===tlYears.length-1?'+':'')+'" style="height:32px;border-radius:5px;background:rgba('+col+','+a.toFixed(2)+');display:grid;place-items:center;font-family:var(--fm);font-size:13px;font-weight:700;color:'+(n?'#fff':'var(--g5)')+'">'+(n||'')+'</div>';
+    });
+    h+='</div>';
+  });
+  h+='</div></div>';
+  h+='<div style="font-family:var(--fu);font-size:10px;color:var(--t4);margin:-2px 0 16px;display:flex;gap:14px"><span><span style="color:var(--red-t)">■</span> expiring soon</span><span><span style="color:var(--y)">■</span> mid-term</span><span><span style="color:#17b169">■</span> locked long</span></div>';
   // ── CONTRACT DATABASE — filterable / sortable / searchable (the hub) ──
   var lenOf=function(p){return !p.contracted?'UNSIGNED':((p.yrs||0)<=0?'EXP':p.yrs===1?'1':p.yrs<=3?'2-3':'4+');};
   var lenCol=function(L){return L==='4+'?'#17b169':L==='2-3'?'var(--y)':L==='1'?'#f97316':L==='EXP'?'var(--red-t)':'var(--t4)';};
@@ -5069,25 +5084,6 @@ function renderContracts(){
   });
   if(!rows.length)h+='<div style="padding:20px;color:var(--t4);font-family:var(--fb);font-size:12px">No players match these filters.</div>';
   h+='</div>';
-  // ── FRANCHISE TAGGED PLAYERS ──
-  var taggedPlayers=[];
-  filtC.forEach(function(tc){tc.contracted.filter(function(p){return p.tag}).forEach(function(p){taggedPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
-  taggedPlayers.sort(function(a,b){return b.ktc-a.ktc});
-  if(taggedPlayers.length){
-    var tagCards='';
-    taggedPlayers.forEach(function(p){tagCards+=conCard(p,{owner:p.team_name,topLeft:p.tag?p.tag.toUpperCase():''});});
-    h+=stripWrap('linear-gradient(180deg,rgba(245,158,11,.2),rgba(245,158,11,.05))','TAGGED',taggedPlayers.length,'var(--y)','players',tagCards);
-  }
-  // ── EXPIRING CONTRACTS ──
-  var expPlayers=[];
-  filtC.forEach(function(tc){tc.contracted.filter(function(p){return p.yrs<=1}).forEach(function(p){expPlayers.push({team_name:tc.name,rid:tc.rid,...p})})});
-  expPlayers.sort(function(a,b){return b.ktc-a.ktc});
-  if(expPlayers.length){
-    h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Future Free Agents</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Expiring Deals — Who Could Hit the Market</span></div></div>';
-    var expCards='';
-    expPlayers.forEach(function(p){expCards+=conCard(p,{owner:p.team_name,topLeft:'EXPIRING'});});
-    h+=stripWrap('linear-gradient(180deg,rgba(239,68,68,.2),rgba(239,68,68,.05))','MARKET',expPlayers.length,'var(--red-t)','expiring',expCards);
-  }
   // ── EXEMPTION HISTORY (timeline cards) ──
   var exmH=D.exemption_history||{};
   var exmYears=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
@@ -5131,57 +5127,6 @@ function renderContracts(){
       h+='</div>';
     });
   }
-  // ── CONTRACT HEALTH PER TEAM ──
-  h+='<div class="bh" id="con-health" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Team Health</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Depth \u2022 Avg Years</span></div></div>';
-  var sorted=filtC.slice().sort(function(a,b){return parseFloat(b.avgYrs)-parseFloat(a.avgYrs)});
-  sorted.forEach(function(tc){
-    var cCount=tc.contracted.length;
-    var healthCol=tc.avgYrs>=3?'var(--a)':tc.avgYrs>=2?'var(--y)':'var(--red-t)';
-    var healthPct=Math.min(100,tc.avgYrs/5*100);
-    h+='<div class="h-row" style="gap:8px">';
-    h+=av(tc.rid,28);
-    h+='<span class="h-team" style="min-width:120px">'+tc.name+'</span>';
-    h+='<span style="font-family:var(--fm);font-size:11px;color:var(--t4);min-width:40px">'+cCount+'/'+(cCount+tc.uncontracted.length)+'</span>';
-    h+='<div style="flex:1;height:8px;background:var(--g3);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+healthPct+'%;background:'+healthCol+';border-radius:4px"></div></div>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:'+healthCol+';min-width:36px;text-align:right">'+tc.avgYrs+'yr</span>';
-    if(tc.expiring)h+=cbadge(tc.expiring+' EXP','red');
-    h+='</div>';
-  });
-  // ── DYNASTY VALUE RANKINGS ──
-  h+='<div class="bh" id="con-value" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Dynasty Value</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Portfolio Value by KTC</span></div></div>';
-  var valSorted=filtC.slice().sort(function(a,b){return b.totalKtc-a.totalKtc});
-  var maxKtc=valSorted[0]?valSorted[0].totalKtc:1;
-  valSorted.forEach(function(tc,i){
-    var pct=(tc.totalKtc/maxKtc*100).toFixed(0);
-    h+='<div class="h-row" style="gap:8px">';
-    h+='<span class="h-rk">'+(i+1)+'</span>';
-    h+=av(tc.rid,28);
-    h+='<span class="h-team" style="min-width:120px">'+tc.name+'</span>';
-    h+='<div style="flex:1;height:8px;background:var(--g3);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--a);border-radius:4px"></div></div>';
-    h+='<span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right"><span class="count-up" data-target="'+tc.totalKtc+'">0</span></span>';
-    h+='</div>';
-  });
-  // ── CONTRACT CLIFF (heatmap cards) ──
-  var cliffStart=curSeason;
-  var cliffYears=Array.from({length:6},function(_,i){return cliffStart+i});
-  h+='<div class="bh" id="con-cliff" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Contract Cliff</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Talent Dropping Off \u2022 '+cliffYears[0]+'\u2013'+cliffYears[cliffYears.length-1]+'</span></div></div>';
-  h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0">';
-  filtC.slice().sort(function(a,b){return b.contracted.length-a.contracted.length}).forEach(function(tc){
-    h+='<div style="background:var(--g2);border:1px solid var(--g4);border-radius:10px;padding:14px;text-align:center">';
-    h+='<div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:10px">'+av(tc.rid,20)+'<span style="font-family:var(--fu);font-size:12px;font-weight:700;color:var(--t1)">'+tc.name.substring(0,14)+'</span></div>';
-    h+='<div style="display:flex;gap:3px;justify-content:center">';
-    cliffYears.forEach(function(yr,yi){
-      var count=tc.contracted.filter(function(p){return(p.yrs||0)>yi}).length;
-      var pct=tc.contracted.length>0?count/tc.contracted.length:0;
-      var segRgb=pct>=0.7?'16,185,129':pct>=0.4?'245,158,11':'239,68,68';
-      h+='<div style="width:20px;height:28px;border-radius:4px;background:rgba('+segRgb+','+(0.15+pct*0.35)+');display:grid;place-items:center;font-family:var(--fm);font-size:9px;font-weight:700;color:rgba(255,255,255,.7)">'+count+'</div>';
-    });
-    h+='</div>';
-    h+='<div style="display:flex;gap:3px;justify-content:center;margin-top:3px">';
-    cliffYears.forEach(function(yr){h+='<div style="width:20px;text-align:center;font-family:var(--fm);font-size:7px;color:var(--t4)">'+String(yr).substring(2)+'</div>';});
-    h+='</div></div>';
-  });
-  h+='</div>';
   // ── EXEMPTION ROI ──
   var exmH2=D.exemption_history||{};
   var allExms=[];
