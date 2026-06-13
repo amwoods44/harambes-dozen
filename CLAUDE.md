@@ -55,7 +55,11 @@ Every visual element must feel like a broadcast graphic or magazine editorial �
 - If a design looks like "a styled div with smaller styled divs inside it," it's not done
 - Go bold first, pull back if needed — don't iterate timidly
 
-After any UI change, run `/visual-verify` before considering the task done. In remote sessions where the network policy blocks the live APIs, use the mock-API harness instead: `dev/audit/` (see its README) screenshots every tab against generated fixture data in offseason and midseason states.
+After any UI change, verify visually before considering the task done — but **lean by default** (owner directive, 2026-06: full-suite runs were burning usage):
+
+- Screenshot ONLY the tab(s) and viewport you actually changed (`dev/audit/capture.js --tabs=<tab> --viewports=<vp>` in remote sessions where the network policy blocks live APIs; `/visual-verify` locally). Look at 1–2 images, not the whole set
+- Full multi-mode/all-tab regression is reserved for genuinely global changes: type system, palette, spacing tokens, global CSS, shared components used everywhere
+- One verification pass per change — don't re-screenshot unaffected tabs "to be safe"
 
 ## Design System
 
