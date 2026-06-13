@@ -167,7 +167,7 @@ button{min-height:36px}
 .nav-btn.active::after{display:none}
 .nav-btn:focus-visible{outline:2px solid var(--y);outline-offset:-2px;border-radius:2px}
 /* ═══ PANELS ═══ */
-.main{max-width:1440px;margin:0 auto;padding:0 28px}
+.main{max-width:1240px;margin:0 auto;padding:0 28px}
 .panel{padding-bottom:32px}
 @keyframes wipeIn{from{clip-path:inset(0 100% 0 0);opacity:.8}to{clip-path:inset(0);opacity:1}}
 /* ═══ POWER RANKING CARDS ═══ */
@@ -1129,7 +1129,7 @@ body{background:linear-gradient(180deg,#1a1410 0%,#120e0c 30%,#0e0906 100%)}
 /* Panel breathing room */
 .panel.active{padding-top:20px;padding-bottom:64px}
 /* Section headers: 60px luxury gap above each, 8px at panel top */
-.panel>.bh{margin-top:60px}
+.panel>.bh{margin-top:var(--sp-7)}
 .panel>.bh:first-child,.panel>*:first-child .bh{margin-top:8px}
 /* Smooth transitions cover box-shadow on these cards */
 .luck-card,.mu-card,.sc-card,.award-card,.gm-card,.rival-card,.move-card,.pk-card{transition:all .25s cubic-bezier(.22,1,.36,1)}
