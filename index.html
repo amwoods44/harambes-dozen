@@ -3701,18 +3701,6 @@ function renderTrades(){
   });
   h+='</div>'; // .trade-grid
   h+='<button id="trades-show-more" class="wk-btn" style="display:none;margin:16px auto;padding:8px 24px" onclick="toggleTradeShowAll()">Show all trades</button>';
-  // H2H Rivalries
-  if(D.rivalries&&D.rivalries.length){
-    h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'rivalries\')"><h2 class="bh-tag">Rivalries</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Head-to-Head Records \u2022 Click to '+(secOpen('rivalries')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('rivalries')?'':'none')+'">';
-    D.rivalries.filter(function(r){return r.total>=2}).forEach(function(r){
-      const aName=tn(r.a),bName=tn(r.b);
-      const aW=r.a_wins,bW=r.b_wins;
-      h+='<div class="h-row" style="gap:10px"><span style="flex:1;font-family:var(--fu);font-size:12px;font-weight:700;color:'+(aW>bW?'var(--a)':'var(--t2)')+'">'+aName+'</span>';
-      h+='<span style="font-family:var(--fd);font-size:14px;font-weight:800;color:var(--y);min-width:40px;text-align:center;font-variant-numeric:tabular-nums">'+aW+'-'+bW+'</span>';
-      h+='<span style="flex:1;text-align:right;font-family:var(--fu);font-size:12px;font-weight:700;color:'+(bW>aW?'var(--a)':'var(--t2)')+'">'+bName+'</span></div>';
-    });
-    h+='</div></div>'; // close rivalries section body + wrapper
-  }
   // Pick capital
   h+='<div class="tc-section" style="margin-top:20px"><div class="bh tc-section-hdr" style="cursor:pointer" onclick="toggleSection(this,\'capital\')"><h2 class="bh-tag">Capital</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Net Draft Pick Balance \u2022 Click to '+(secOpen('capital')?'collapse':'expand')+'</span></div></div><div class="tc-section-body" style="display:'+(secOpen('capital')?'':'none')+'">';
   const cap={};
