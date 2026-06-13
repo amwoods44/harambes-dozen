@@ -4419,24 +4419,6 @@ function renderScoring(){
     avgLines+='<div style="position:absolute;left:0;right:0;bottom:'+lgAvgPx+'px;height:1px;border-top:1px solid rgba(204,0,0,.3);pointer-events:none;z-index:1"></div>';
     h+='<div class="sc-card"><div class="sc-hdr"><div><span class="sc-rank">#'+(i+1)+'</span> <span class="sc-name gm-link" data-rid="'+t.roster_id+'">'+t.team_name+'</span></div><span class="sc-pts">'+t.fpts+'</span></div><div class="spark" style="position:relative">'+sparkH+avgLines+'</div><div class="sc-meta"><span>Avg '+t.avg+'/wk</span><span>High '+t.mx+' \u00b7 Low '+t.mn+'</span><span>\u03C3 '+t.std+'</span></div></div>';
   });
-  // ═══ DRAFT HIT RATE ═══
-  Object.keys(D.draft_hits||{}).sort().reverse().forEach(function(yr){
-    var hits=D.draft_hits[yr];
-    if(!hits||!hits.length)return;
-    var starters=hits.filter(function(h){return h.status==='starter'}).length;
-    var rostered=hits.filter(function(h){return h.status!=='cut'}).length;
-    var cut=hits.filter(function(h){return h.status==='cut'}).length;
-    
-    h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">'+yr+' Draft</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+starters+' Starters \u2022 '+(rostered-starters)+' Bench \u2022 '+cut+' Cut</span></div></div>';
-    
-    h+='<div class="hit-grid">';
-    hits.filter(function(p){return p.rd<=3}).forEach(function(p){
-      var cls=p.status;
-      var slot=(p.pk-1)%12+1;
-      h+='<div class="hit-card '+cls+'">'+pimg(p.pid,44)+'<div class="hit-nm">'+p.nm.split(' ').pop()+'</div><div class="hit-pk">'+p.rd+'.'+String(slot).padStart(2,'0')+'</div></div>';
-    });
-    h+='</div>';
-  });
   // Scoring settings
   h+='<div class="bh" style="margin-top:20px"><h2 class="bh-tag">Settings</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">PPR + Bonus</span></div></div>';
   [['Pass TD','4'],['Pass Yd','0.04/yd'],['INT','-1'],['Rush TD','6'],['Rush Yd','0.1/yd'],['Reception','1 (PPR)'],['Rec TD','6'],['Rec Yd','0.1/yd'],['Fum Lost','-2'],['100 Rush/Rec','+1'],['200 Rush/Rec','+2'],['300/400 Pass','+1/+2']].forEach(function(s){
