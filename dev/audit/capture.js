@@ -11,6 +11,9 @@ const ROOT = path.resolve(__dirname, '../..');
 const arg = (k, d) => { const a = process.argv.find(s => s.startsWith('--' + k + '=')); return a ? a.split('=')[1] : d; };
 const MODE = arg('mode', 'offseason');
 const VIEWPORTS = arg('viewports', 'desktop,mobile').split(',');
+// --tabs=power,stats limits capture to those panel ids (lean per-change verification);
+// omit to capture every panel. Accepts panel ids or section ids (mapped via the app).
+const ONLY = arg('tabs', '').split(',').map(s => s.trim()).filter(Boolean);
 const OUT = path.join(__dirname, 'screens', MODE);
 const PORT = 8131;
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.ico': 'image/x-icon' };
@@ -88,7 +91,15 @@ function svgFor(url) {
       contracts: Object.keys(D.contracts || {}).length, moves: D.moves && D.moves.length
     })));
 
-    const tabs = await page.$$eval('main section.panel', els => els.map(e => e.id.replace('tab-', '')));
+    let tabs = await page.$$eval('main section.panel', els => els.map(e => e.id.replace('tab-', '')));
+    if (ONLY.length) {
+      // resolve any section ids to their panels, then keep only requested panels
+      const wanted = await page.evaluate(ids => ids.flatMap(id => {
+        const sec = (typeof SECTIONS !== 'undefined') && SECTIONS.find(s => s.id === id);
+        return sec ? sec.panels.map(p => p[0]) : [id];
+      }), ONLY);
+      tabs = tabs.filter(t => wanted.includes(t));
+    }
     await page.screenshot({ path: path.join(OUT, `_home--${vp}.png`), fullPage: true });
     for (const t of tabs) {
       await page.evaluate(id => window._showTab(id), t);
