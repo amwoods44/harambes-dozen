@@ -123,14 +123,22 @@ These are features that would make the app truly elite. They require additional 
 
 | Metric | Count |
 |--------|-------|
-| Total tabs | 13 |
-| Working features | 40+ |
-| Render functions | 15 |
-| Data sections used | 22 of 25 (88%) |
-| Lines of code | ~1,830 |
-| External dependencies | 0 (vanilla JS + HTML + CSS) |
-| File count | 1 (index.html) |
+| Nav sections (intent-based) | 11 |
+| Underlying tab panels | 19 |
+| Working features | 50+ |
+| Render functions | 19 in `TAB_RENDERERS` |
+| Lines of code | ~5,800 (index.html) |
+| External dependencies | 0 runtime (html2canvas via CDN for share cards only) |
+| App file count | 1 (index.html) |
 
 ---
 
-*Last updated: 2026-03-27*
+## 2026-06 update
+
+- **11 intent-based nav sections** (was a 6-primary + 3-dropdown sprawl over 19 tabs); multi-panel sections (Stats, Transactions, Front Office, Rafters, Chronicle) use a sub-tab bar. Old deep links still resolve.
+- **Team crest avatars** — every franchise has a finished broadcast-emblem badge (team colors + monogram), shown everywhere avatars appear; real owner photos drop in via `CFG.avatarOverrides`.
+- **Sleeper-style matchup box scores** + clickable team names (GM dossier) across the app.
+- **Forkable**: one documented `CFG` block, `applyBranding()` hero, FantasyCalc sized to `leagueSize`, degraded-data banner, `SETUP.md` deploy guide.
+- Two-tier type system (Oswald display / Inter data layer); correctness pass (luck math, badge thresholds, count-up re-render guard).
+
+*Last updated: 2026-06-13*

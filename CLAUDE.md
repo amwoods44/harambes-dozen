@@ -20,7 +20,7 @@ Fantasy football dynasty league dashboard for a 12-team PPR league. Single-file 
 ```
 index.html
 ├── <style> — ~1,090 lines of CSS (design tokens, components, responsive)
-├── <body>  — Loading screen, header, hero, cast strip, nav, 19 tab panels (incl. home front page), footer
+├── <body>  — Loading screen, header, hero, cast strip, nav (11 intent sections) + sub-tab bar, 19 tab panels (incl. home front page), footer
 └── <script>
     ├── Config (CFG) + fetch utilities + cache helpers
     ├── Data pipeline: discoverLeague → fetchCurrentSeason → fetchPlayerDB → buildCurrentSeasonData
@@ -28,18 +28,19 @@ index.html
     ├── Global state: let D = {} (single mutable object holds all app data)
     ├── 19 render functions in TAB_RENDERERS: renderHome(), renderPower(), renderRosters(), etc.
     ├── URL builders: PI() (player thumb), PIF() (player full), TL() (team logo)
-    ├── Helpers: pimg() (player img HTML), av() (avatar → tcInit), tcInit() (gradient circle), cpill() (contract pill), dtierTag() (tier badge)
+    ├── Helpers: pimg() (player img HTML), av() (team avatar: real owner photo if present, else crest()), crest() (broadcast SVG emblem badge per team), tcInit() (gradient-initials circle, legacy), cpill() (contract pill), dtierTag() (tier badge)
     └── PWA install banner + service worker registration
 ```
 
 **Key patterns:**
 
-- Configuration lives in the `CFG` object (~line 1271): `userId`, `leagueName`, `sheetCsvUrl`, `ktcUrl`, `avatarOverrides`, API base URLs; annual dates live in `SEASON_DATES` just below it
+- Configuration lives in the `CFG` object (~line 1360): 3 required fields (`userId`, `leagueName`, `sheetCsvUrl`) + league-identity fields (`foundedYear`, `leagueSize`, `format`, `heroTags`, `preSleeperPlatform`) + `avatarOverrides`; `ktcUrl` is derived from `leagueSize`. `applyBranding()` paints the hero from `CFG`. Annual dates live in `SEASON_DATES` just below. Fork/deploy guide: `SETUP.md`
 - Caching via the `cache` object (~line 1337): `get(key)`, `set(key, data, ttl)`, `has(key)` wrapping localStorage
 - External strings are HTML-escaped once at ingestion via `esc()` — never insert raw API/sheet strings into `D`
 - Expanded/open UI state is keyed in the `UI_OPEN` set (`data-okey` attrs + `uiToggle()`/`secOpen()`) so it survives destructive re-renders
 - Each tab has a `renderX()` function that builds HTML via string concatenation and sets `innerHTML`
-- Tab switching calls `showTab(id)` which toggles `.active` class on panels, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
+- Navigation is **11 intent sections** (`SECTIONS`, ~line 2331) layered over the 19 panels: single-panel sections jump straight in; multi-panel ones (Stats, Transactions, Front Office, Rafters, Chronicle) render a sub-tab bar (`#subnav`). `showTab(panelId)` is the workhorse — panel ids stay the routing currency (hash + `HASH_ALIASES` + `.gm-link`), so every old deep link still resolves. `showSection(secId)` jumps to a section's remembered/first panel
+- Tab switching via `showTab(id)` toggles `.active` on panels, syncs the section button + sub-tab bar, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
 - "My team" is `myTeamRid()`: localStorage `hd_my_team`, falling back to the roster owned by `CFG.userId`; `.gm-link` + `data-rid` makes any team name open its GM profile via a delegated handler
 - Team identity colors live in the `TC` object (keyed by roster_id)
 - Player images come from Sleeper CDN: `sleepercdn.com/content/nfl/players/`
@@ -152,6 +153,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 | `manifest.json` | PWA manifest |
 | `sw.js` | Service worker (cache strategy) |
 | `harambe-logo.png` | App logo (also favicon, touch icon, PWA icon) |
+| `SETUP.md` | Deploy/fork guide — the 3 required `CFG` edits, identity fields, avatar drop-in, annual maintenance |
 | `assets/avatars/Kevin.png`, `Chuck.png` | Owner portrait cards. To add one: drop `assets/avatars/<Name>.png`, add a line to `CFG.avatarOverrides` keyed by roster_id or lowercase Sleeper display name |
 | `features.html` | Marketing/status page (not the app) |
 | `data/contracts.csv` | Contract source material — NOT read by the app at runtime (app reads the published Google Sheet) |
