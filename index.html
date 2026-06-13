@@ -1960,8 +1960,9 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
       const week=parseInt(wk);
       if(txn.type==='waiver'||txn.type==='free_agent'||txn.type==='commissioner'){
         const adds=txn.adds||{};const drops=txn.drops||{};
-        const addRids=[...new Set(Object.values(adds).map(Number))];
-        addRids.forEach(rid=>{
+        // every roster touched by an add OR a drop — drop-only moves (cuts) were being missed
+        const touchedRids=[...new Set([...Object.values(adds),...Object.values(drops)].map(Number))];
+        touchedRids.forEach(rid=>{
           const addedPids=Object.keys(adds).filter(pid=>adds[pid]===rid);
           const droppedPids=Object.keys(drops).filter(pid=>drops[pid]===rid);
           const addName=addedPids.map(pid=>(playerDB[pid]||{}).fn||pid).join(', ');
@@ -3577,7 +3578,7 @@ function renderTrades(){
   // KTC record per manager
   var ktcRecord={};
   trades.forEach(function(t){
-    if(t.sides.length<2)return;
+    if(t.sides.length!==2)return; // 2-team only; multi-team nets can't be decomposed from this data
     var a=t.sides[0],b=t.sides[1];
     var aKtc=ktcVal(a.players,a.picks),bKtc=ktcVal(b.players,b.picks);
     var aNet=aKtc-bKtc,bNet=bKtc-aKtc;
@@ -3606,7 +3607,7 @@ function renderTrades(){
   // ═══ HEIST OF THE YEAR — most lopsided deal on the board ═══
   var heist=null,heistNet=0;
   trades.forEach(function(t){
-    if(t.sides.length<2)return;
+    if(t.sides.length!==2)return; // 2-team only; multi-team nets can't be decomposed from this data
     var aK=ktcVal(t.sides[0].players,t.sides[0].picks),bK=ktcVal(t.sides[1].players,t.sides[1].picks);
     if(!aK&&!bK)return;
     var net=Math.abs(aK-bK);
@@ -3623,13 +3624,15 @@ function renderTrades(){
     h+='</div>';
   }
   // ═══ BROADCAST TRADE CARDS ═══
+  h+='<div style="font-family:var(--fu);font-size:11px;color:var(--t4);margin:0 0 12px;line-height:1.55;max-width:760px">Grades show the <b>net value swing at today’s values</b> (not the trade date). Player values apply a control discount for contract years left (≤1yr ×0.6, ≤2yr ×0.85, unsigned ×0.5); picks are valued by round (1st 5000 · 2nd 2000 · 3rd 500). A directional read, not a verdict — and multi-team deals are shown but not graded.</div>';
   h+='<div class="trade-grid stagger">';
   trades.forEach(function(t,ti){
     if(t.sides.length<2)return;
+    var multi=t.sides.length>2;
     var a=t.sides[0],b=t.sides[1];
     var aKtc=ktcVal(a.players,a.picks),bKtc=ktcVal(b.players,b.picks);
     var aNet=aKtc-bKtc,bNet=bKtc-aKtc;
-    var hasKtc=aKtc>0||bKtc>0;
+    var hasKtc=(aKtc>0||bKtc>0)&&!multi;
     var aGrade=hasKtc?gradeLabel(aNet):'',bGrade=hasKtc?gradeLabel(bNet):'';
     var aGCls=hasKtc?gradeClass(aNet):'',bGCls=hasKtc?gradeClass(bNet):'';
     var aPc=a.players.length,bPc=b.players.length;
@@ -3639,7 +3642,7 @@ function renderTrades(){
 
     // ── FRONT ──
     h+='<div class="tc-front" style="position:relative">';
-    h+='<div class="tc-rh"><span class="tc-rh-t">TRADE</span><span class="tc-rh-d">WEEK '+t.wk+' \u00B7 '+t.yr+'</span></div>';
+    h+='<div class="tc-rh"><span class="tc-rh-t">'+(multi?t.sides.length+'-TEAM TRADE':'TRADE')+'</span><span class="tc-rh-d">WEEK '+t.wk+' \u00B7 '+t.yr+'</span></div>';
     h+='<div class="tc-split" style="display:flex;height:160px;overflow:hidden">';
 
     // Left side
@@ -4191,6 +4194,8 @@ function renderDraft(){
   h+='</div>';
   // ── MEMORY LANE ──
   h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Memory Lane</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+selDraft+' Class \u2022 Hit Rate Analysis</span></div></div>';
+  var draftTooEarly=parseInt(selDraft)>=parseInt(CURRENT_YEAR);
+  if(draftTooEarly)h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--y)')+'</div><div class="nar-text">Too recent to grade fairly \u2014 this class hasn\u2019t had a full season to earn starting roles, so hit rate will rise as the season plays out.</div></div></div>';
   // Per-team hit rate
   var teamHits={};
   picks.forEach(function(p){var nm=tn(p.rid);teamHits[nm]=teamHits[nm]||{starters:0,total:0};teamHits[nm].total++;var hit=hitMap[p.pid];if(hit&&hit.status==='starter')teamHits[nm].starters++;});
@@ -4206,7 +4211,9 @@ function renderDraft(){
   });
   h+='</div>';
   // Best steal and biggest bust
-  var starters=hits.filter(function(h2){return h2.status==='starter'&&h2.pos!=='DEF'&&!/^[A-Z]{2,3}$/.test(String(h2.pid))}).sort(function(a,b){return b.rd-a.rd||b.pk-a.pk});
+  // "Steal" = value recovered: current KTC above what the pick slot should yield (not just latest round)
+  var rdBase=function(rd){return rd===1?5000:rd===2?2000:rd===3?800:300;};
+  var starters=hits.filter(function(h2){return h2.status==='starter'&&h2.pos!=='DEF'&&!/^[A-Z]{2,3}$/.test(String(h2.pid))}).map(function(h2){var sc=D.contracts&&D.contracts[h2.nm];var ktc=sc&&sc.ktc?sc.ktc:0;return Object.assign({},h2,{steal:ktc-rdBase(h2.rd)});}).sort(function(a,b){return b.steal-a.steal||b.rd-a.rd||b.pk-a.pk});
   var cuts=hits.filter(function(h2){return h2.status==='cut'});
   if(starters.length||cuts.length){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">';
