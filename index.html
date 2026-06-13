@@ -2337,7 +2337,12 @@ const isDefaultAvatar=url=>!url||url.includes('/avatars/thumbs/')||url.includes(
 const playerMap={};
 function rebuildPlayerMap(){Object.keys(playerMap).forEach(k=>delete playerMap[k]);if(D.teams)D.teams.forEach(t=>t.players.forEach(p=>{playerMap[p.id]=p;}));}
 function showGM(rid){selGM=rid;if(window._showTab)window._showTab('gm');renderGM();}
-const av=(rid,sz)=>tcInit(rid,sz||56);
+// Resolved owner-photo URL for a roster (override or Sleeper), or null.
+function teamAvatar(rid){const t=D.teams&&D.teams.find(x=>x.roster_id===rid);return t&&t.avatar&&!isDefaultAvatar(t.avatar)?t.avatar:null;}
+// Team avatar used app-wide: a real owner photo when present (with the crest as
+// its onerror fallback), otherwise the team crest. Photos drop in via
+// CFG.avatarOverrides with zero render changes.
+const av=(rid,sz)=>{const s=sz||56;const src=teamAvatar(rid);if(!src)return crest(rid,s);return'<div style="width:'+s+'px;height:'+s+'px;border-radius:50%;overflow:hidden;flex-shrink:0;position:relative">'+crest(rid,s)+'<img src="'+src+'" alt="" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top" onerror="this.remove()"></div>';};
 const isDEF=id=>/^[A-Z]{2,3}$/.test(id);
 const pimg=(id,sz)=>{const s=sz||40;const pn=(playerMap[id]||{}).name||'Player';if(isDEF(id)){const logo=TL(id);return`<img src="${logo}" alt="${id} D/ST" loading="lazy" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:contain;background:var(--g3);border:1px solid var(--g5);flex-shrink:0;padding:4px">`;}const src=s>=40?PIF(id):PI(id);return`<img src="${src}" alt="${pn}" loading="lazy" style="width:${s}px;height:${s}px;border-radius:50%;object-fit:cover;object-position:top;background:var(--g3);border:1px solid var(--g5);flex-shrink:0;cursor:pointer" class="pp-trigger" data-pid="${id}" onerror="this.src='${PI(id)}';this.onerror=null">`};
 let selGM=1;
@@ -2381,6 +2386,31 @@ const TC={
 };
 function tcGrad(rid){const c=TC[rid];if(!c)return'var(--g3)';return'linear-gradient(135deg,'+c.p+','+c.p+'cc)';}
 function tcInit(rid,sz){const t=D.teams.find(x=>x.roster_id===rid);const c=TC[rid]||{p:'var(--g4)',i:'?'};const s=sz||56;const fs=Math.round(s*.38);const nm=c.i||(t?t.team_name.substring(0,2).toUpperCase():'??');return'<div style="width:'+s+'px;height:'+s+'px;border-radius:50%;border:2px solid '+c.p+'66;background:'+tcGrad(rid)+';display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:'+fs+'px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);flex-shrink:0">'+nm+'</div>';}
+// Team crest: a cohesive broadcast-emblem badge — team-color sphere shading, a
+// secondary-color ring, a faint primal paw watermark, and the franchise
+// monogram. Distinct per team via TC color pairs + initials; league-agnostic
+// (no per-name art), so it works for any franchise and any fork. Real owner
+// photos override it via av()/buildCast.
+function crest(rid,sz){
+  const c=TC[rid]||{p:'#665a50',s:'#ffffff',i:'??'};
+  const t=D.teams&&D.teams.find(x=>x.roster_id===rid);
+  const ini=c.i||(t?t.team_name.substring(0,2).toUpperCase():'??');
+  const s=sz||56,u='cr'+rid;
+  return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 64 64" style="flex-shrink:0;display:block" role="img" aria-label="'+(t?t.team_name+' crest':'team crest')+'">'
+    +'<defs><radialGradient id="'+u+'g" cx="0.34" cy="0.26" r="0.9">'
+      +'<stop offset="0" stop-color="#fff" stop-opacity="0.28"/>'
+      +'<stop offset="0.55" stop-color="'+c.p+'"/>'
+      +'<stop offset="1" stop-color="#000" stop-opacity="0.5"/>'
+    +'</radialGradient><clipPath id="'+u+'c"><circle cx="32" cy="32" r="30"/></clipPath></defs>'
+    +'<circle cx="32" cy="32" r="30" fill="'+c.p+'"/>'
+    +'<circle cx="32" cy="32" r="30" fill="url(#'+u+'g)"/>'
+    +'<g clip-path="url(#'+u+'c)" fill="'+c.s+'" opacity="0.14">'
+      +'<ellipse cx="47" cy="49" rx="7.5" ry="6"/><circle cx="40.5" cy="41" r="2.7"/><circle cx="47" cy="38.5" r="2.9"/><circle cx="53.5" cy="41" r="2.7"/>'
+    +'</g>'
+    +'<circle cx="32" cy="32" r="29" fill="none" stroke="'+c.s+'" stroke-width="2" opacity="0.6"/>'
+    +'<text x="32" y="40" text-anchor="middle" font-family="Oswald,sans-serif" font-size="23" font-weight="800" fill="#fff" style="paint-order:stroke">'+ini+'</text>'
+  +'</svg>';
+}
 // Item 14: Empty state placeholders (replaced by render functions)
 const EMPTY_STATES={power:['\u25A0','POWER RANKINGS'],rosters:['\u25A0','ROSTERS'],trophies:['\u25A0','TROPHY CASE'],trades:['\u25A0','TRADE CENTER'],matchups:['\u25A0','MATCHUPS'],age:['\u25A0','AGE MAP'],scoring:['\u25A0','SCORING'],draft:['\u25A0','DRAFT BOARD'],awards:['\u25A0','AWARDS'],analytics:['\u25A0','ANALYTICS'],moves:['\u25A0','TRANSACTIONS'],gm:['\u25A0','GM PROFILE'],rivals:['\u25A0','RIVALRIES'],contracts:['\u25A0','CONTRACTS'],constitution:['\u25A0','RULES'],warroom:['\u25A0','WAR ROOM'],pulse:['\u25A0','LEAGUE PULSE'],chronicle:['\u25A0','CHRONICLE']};
 function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{const el=document.getElementById('tab-'+id);if(el&&!el.innerHTML.trim()){el.innerHTML='<div class="empty-state"><div class="empty-state-icon">'+e[0]+'</div><div class="empty-state-text">'+e[1]+'</div><div class="empty-state-sub">Loading data...</div></div>';}});}
@@ -2636,9 +2666,8 @@ function buildCast(){
   const h=D.teams.map(t=>{
     const c=TC[t.roster_id],pc=c?c.p:'#665a50';
     const hasAvatar=t.avatar&&!isDefaultAvatar(t.avatar);
-    const initials=(c?c.i:t.team_name.substring(0,2).toUpperCase());
-    // Initials card is always the base layer; owner portrait art overlays it when present
-    const initDiv='<div class="cast-init" style="background:linear-gradient(160deg,'+pc+'cc,'+pc+'55 55%,var(--g2))">'+initials+'</div>';
+    // Crest is always the base layer; owner portrait art overlays it when present
+    const initDiv='<div class="cast-init" style="background:radial-gradient(120% 100% at 30% 0%,'+pc+'33,var(--g2))">'+crest(t.roster_id,58)+'</div>';
     const imgEl=hasAvatar?'<img src="'+t.avatar+'" alt="'+t.team_name+' owner" loading="lazy" onerror="this.remove()">':'';
     return'<div class="cast-fig" style="--tc:'+pc+';--tcg:'+pc+'55" onclick="showGM('+t.roster_id+')" title="'+t.team_name+' — Click for GM Dashboard"><div class="cast-port">'+initDiv+imgEl+'</div><div class="cast-nm">'+t.team_name+'</div></div>';
   }).join('');
