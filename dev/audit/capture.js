@@ -105,6 +105,13 @@ function svgFor(url) {
       await page.evaluate(id => window._showTab(id), t);
       await page.waitForTimeout(650);
       await page.screenshot({ path: path.join(OUT, `${t}--${vp}.png`), fullPage: true });
+      // INVARIANT GATE: a rendered NaN / undefined / Infinity is a broken number — fail the run.
+      const bad = await page.evaluate(id => {
+        const el = document.getElementById('tab-' + id);
+        const txt = (el && el.innerText) || '';
+        return [/\bNaN\b/, /\bundefined\b/, /\bInfinity\b/].filter(re => re.test(txt)).map(re => re.source);
+      }, t);
+      if (bad.length) errors.push(`INVARIANT ${MODE}/${t}--${vp}: rendered ${bad.join(' , ')}`);
       process.stdout.write(`shot ${MODE}/${t}--${vp}\n`);
     }
     await ctx.close();
