@@ -2109,7 +2109,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
           const adds=txn.adds||{};const drops=txn.drops||{};
           const rids=[...new Set([...Object.values(adds),...Object.values(drops)].map(Number))];
           const tradedPicks=(txn.draft_picks||[]).map(pk=>{const orig=pk.roster_id_origin!=null?pk.roster_id_origin:pk.roster_id;return{label:pk.season+' Rd'+pk.round+' ('+(rtn[orig]||'?')+')',to:Number(pk.owner_id!=null?pk.owner_id:pk.roster_id)};});
-          d.trades.push({yr:season,wk:week,s:season,rids,adds,drops,draft_picks:tradedPicks,txn_id:txn.transaction_id});
+          if(!txn.transaction_id||!d.trades.some(t=>t.txn_id===txn.transaction_id))d.trades.push({yr:season,wk:week,s:season,rids,adds,drops,draft_picks:tradedPicks,txn_id:txn.transaction_id});
         }
       });
     });
@@ -2131,7 +2131,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
     if(winnersBracket&&winnersBracket.length){
       const maxRound=Math.max(...winnersBracket.map(m=>m.r||0));
       const champMatch=winnersBracket.find(m=>m.r===maxRound&&m.p===1);
-      if(champMatch&&champMatch.w&&champMatch.l){
+      if(champMatch&&champMatch.w&&champMatch.l&&!d.champions.some(c=>c.year===String(season))){
         d.champions.push({year:String(season),champion:rtn[champMatch.w]||'?',runner_up:rtn[champMatch.l]||'?',champ_rid:champMatch.w,runner_up_rid:champMatch.l,week:maxRound});
       }
     }
