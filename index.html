@@ -1358,19 +1358,31 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 let D={};
 // ═══ CONFIG ═══
 const CFG={
-  userId:'393634863552425984',
-  leagueName:"Harambe's Dozen",
-  // Owner portrait cards (cast rail + everywhere avatars appear).
-  // To add one: drop assets/avatars/<Name>.png in the repo, then add a line here.
+  // ─────────── REQUIRED to fork (change these three) ───────────
+  userId:'393634863552425984',     // any Sleeper user id in your league (find via the Sleeper API or app)
+  leagueName:"Harambe's Dozen",    // exact Sleeper league name — auto-discovers the league + its full season-history chain
+  sheetCsvUrl:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrwFZSQor9KOXxYX9CGxX8uyPTzRdahn2Pch_uLjQFe0YUSoUuoQ7n7akevWWB9dfgVl2wIeZOeEim/pub?output=csv', // published Google Sheet CSV of contracts; set '' to run without contracts
+
+  // ─────────── League identity (cosmetic — hero + headers; see SETUP.md) ───────────
+  foundedYear:2016,                // first-ever season (pre-Sleeper is fine)
+  leagueSize:12,                   // team count; also feeds FantasyCalc dynasty values
+  format:'PPR Dynasty',            // hero eyebrow descriptor
+  heroTags:['15 Keepers','Pick Trading','Bonus Scoring'], // hero feature chips (leading number is bolded)
+  preSleeperPlatform:'CBS',        // platform for the pre-Sleeper founding era ('' if the league started on Sleeper)
+
+  // ─────────── Owner portraits ───────────
+  // Drop assets/avatars/<Name>.png in the repo, then add a line here.
   // Keys: roster_id (number — stable forever) OR the owner's Sleeper display name in lowercase.
   avatarOverrides:{
     10:'assets/avatars/Kevin.png',
     'chuck':'assets/avatars/Chuck.png'
   },
-  sleeperBase:'https://api.sleeper.app/v1',
-  sheetCsvUrl:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrwFZSQor9KOXxYX9CGxX8uyPTzRdahn2Pch_uLjQFe0YUSoUuoQ7n7akevWWB9dfgVl2wIeZOeEim/pub?output=csv',
-  ktcUrl:'https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams=12&ppr=1'
+
+  // ─────────── Endpoints (rarely changed) ───────────
+  sleeperBase:'https://api.sleeper.app/v1'
 };
+// FantasyCalc dynasty values, sized to the league
+CFG.ktcUrl='https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams='+CFG.leagueSize+'&ppr=1';
 
 // Key league/NFL dates — update once each offseason
 const SEASON_DATES={
@@ -1546,6 +1558,9 @@ function prunePlayerDB(res,allPlayerIds){
 }
 
 // ═══ DYNASTY VALUES (FantasyCalc) ═══
+// Tracks live-data degradation (fetch failed AND no cache) so the UI can say so
+// instead of silently showing blanks.
+const DEGRADED={values:false,contracts:false};
 async function fetchDynastyValues(){
   const cached=cache.get('hd_ktc');
   if(cached)return cached;
@@ -1559,6 +1574,7 @@ async function fetchDynastyValues(){
     cache.set('hd_ktc',map,12*60*60*1000);
     return map;
   }catch(e){
+    if(!cached)DEGRADED.values=true;
     return cached||{};
   }
 }
@@ -1739,7 +1755,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
     name:esc(league.name),
     season:league.season,
     status:league.status,
-    num_teams:league.total_rosters||12,
+    num_teams:league.total_rosters||CFG.leagueSize,
     type:ls.type||0,
     scoring:ls.trade_review_type||'',
     roster_spots:ls.roster_positions?ls.roster_positions.length:0,
@@ -2525,6 +2541,7 @@ async function init(){
     const playerDB=prunePlayerDB(await playerDBPromise,allIds);
     const ktcMap=await valuesPromise;
     const csvText=await csvPromise;
+    if(!csvText&&!cache.get('hd_contracts2')&&CFG.sheetCsvUrl)DEGRADED.contracts=true;
     const contractData=csvText?parseContractCSV(csvText,ktcMap||{}):(cache.get('hd_contracts2')||{contracts:{},exemptions:{}});
 
     // ── BUILD D ──
@@ -2541,10 +2558,12 @@ async function init(){
 
     // ── RENDER — landing tab only; the other 17 render on first visit ──
     injectEmptyStates();
+    applyBranding();
     buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
     Object.keys(TAB_RENDERERS).forEach(t=>dirtyTabs.add(t));
     window._showTab(resolveTab(location.hash.slice(1))||'home');
     updateCD();setInterval(updateCD,60000);
+    showDegradeBanner();
 
     // ── HIDE LOADING SCREEN ──
     document.getElementById('ls').classList.add('fade-out');
@@ -2566,11 +2585,13 @@ async function init(){
       initSeasonConstants();
       rebuildPlayerMap();
       injectEmptyStates();
+      applyBranding();
       buildNav();buildCast();buildStats();buildHeroHist();buildTicker();
       Object.keys(TAB_RENDERERS).forEach(t=>dirtyTabs.add(t));
       window._showTab(resolveTab(location.hash.slice(1))||'home');
       updateCD();setInterval(updateCD,60000);
       document.getElementById('ls').classList.add('fade-out');
+      document.querySelector('.hero').classList.add('hero-reveal');
       setTimeout(animateCounters,600);
       showCacheBanner();
     }else{
@@ -2681,6 +2702,28 @@ function buildNav(){
     if(act)act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
   window._showTab=showTab;  // expose early so hash routing can use it
+}
+// Populate the static hero masthead from CFG so the only league-identity strings
+// live in one config block (forkable). Falls back silently if elements are absent.
+function applyBranding(){
+  const firstSleeper=(typeof SEASON_YEARS!=='undefined'&&SEASON_YEARS[0])||CURRENT_YEAR;
+  const ey=document.querySelector('.hero-ey');
+  if(ey)ey.textContent='Est. '+CFG.foundedYear+' · Sleeper Era '+firstSleeper+' · '+CFG.leagueSize+' Team '+CFG.format;
+  const tag=document.querySelector('.hero-tag');
+  if(tag&&CFG.heroTags&&CFG.heroTags.length){
+    tag.innerHTML=CFG.heroTags.map(t=>{const m=String(t).match(/^(\d+)\s+(.*)$/);return m?'<b>'+m[1]+'</b> '+m[2]:'<b>'+t+'</b>';}).join(' • ');
+  }
+}
+// Non-blocking banner when live values/contracts failed with no cache to fall back on.
+function showDegradeBanner(){
+  const parts=[];if(DEGRADED.values)parts.push('dynasty values');if(DEGRADED.contracts)parts.push('contracts');
+  if(!parts.length)return;
+  const div=document.createElement('div');
+  div.className='data-status';
+  div.style.cssText='color:var(--y);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);display:flex;gap:12px;align-items:center';
+  div.innerHTML='Live '+parts.join(' & ')+' unavailable — showing what loaded. <button type="button" style="font:inherit;color:#fff;background:var(--a);border:none;border-radius:4px;padding:3px 10px;cursor:pointer">Retry</button>';
+  div.querySelector('button').onclick=()=>location.reload();
+  document.body.appendChild(div);
 }
 function buildCast(){
   const h=D.teams.map(t=>{
@@ -3115,7 +3158,7 @@ function renderRosters(){
 }
 // ═══ THE RAFTERS ═══
 function renderTrophies(){
-  let h='<div class="bh"><h2 class="bh-tag">The Rafters</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Championships \u2022 Est. '+FIRST_YEAR+'</span></div></div>';
+  let h='<div class="bh"><h2 class="bh-tag">The Rafters</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Dynasty Championships \u2022 Est. '+CFG.foundedYear+'</span></div></div>';
   // ── Iron Mount Cloth Banners ──
   const champs=[...D.champions].reverse();
   // Light vs dark cloth detection
@@ -5188,7 +5231,7 @@ function renderConstitution(){
   function sec(num,title,body){return'<div class="const-section"><div class="const-num">'+num+'</div><div class="const-title">'+title+'</div><div class="const-body">'+body+'</div></div>';}
   function kv(label,val){return'<li><span class="cl-label">'+label+'</span><span class="cl-value">'+val+'</span></li>';}
   // Article I
-  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||"Harambe's Dozen")+kv('Type',({0:'Redraft',1:'Keeper',2:'Dynasty'})[lg.type]||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||12)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
+  h+=sec('ARTICLE I','League Overview','<ul class="const-list">'+kv('League Name',lg.name||CFG.leagueName)+kv('Type',({0:'Redraft',1:'Keeper',2:'Dynasty'})[lg.type]||'Dynasty / Keeper (15)')+kv('Teams',lg.num_teams||CFG.leagueSize)+kv('Season',lg.season||CURRENT_YEAR)+kv('Platform','Sleeper')+kv('Status',({pre_draft:'Pre-Draft / Offseason',drafting:'Drafting',in_season:'In Season',complete:'Season Complete'})[lg.status]||'Offseason')+'</ul>');
   // Article II
   h+=sec('ARTICLE II','Roster Configuration','<ul class="const-list">'+kv('Total Roster',lg.roster_spots||'10 starters, 15 bench, 1 IR')+kv('Starters',lg.starters||'QB, 2RB, 3WR, TE, 2FLEX, DEF')+kv('Bench','15 spots')+kv('IR Slots','1 spot')+kv('Keeper Limit','15 players')+'</ul>');
   // Article III
@@ -5410,8 +5453,8 @@ function renderChronicle(){
       events.push({year:yr,type:'trade',icon:'\u21C4',title:sideA.name+' \u2194 '+sideB.name,body:'Blockbuster: '+assets+(t.exm?' + Exemption':''),date:yr+' \u2022 Wk '+t.wk});
     });
   });
-  // All-time era (CBS era 2016-2020)
-  if(D.alltime_standings&&D.alltime_standings.length){
+  // Pre-Sleeper founding era (guarded so Sleeper-native forks don't show a false era)
+  if(CFG.preSleeperPlatform&&D.alltime_standings&&D.alltime_standings.length){
     events.push({year:2016,type:'record',icon:'\u25A0',title:'League Founded — CBS Era Begins',body:'Harambe\'s Dozen launches on CBS — five seasons before the Sleeper era.',date:'2016 \u2022 Founding Season'});
     events.push({year:2021,type:'record',icon:'\u25CF',title:'Migration to Sleeper',body:'League transitions from CBS to Sleeper. Dynasty era begins.',date:'2021 \u2022 Platform Migration'});
   }
@@ -5419,7 +5462,7 @@ function renderChronicle(){
   var years={};
   events.forEach(function(ev){years[ev.year]=years[ev.year]||[];years[ev.year].push(ev);});
   var yearList=Object.keys(years).map(Number).sort(function(a,b){return a-b});
-  var h='<div class="bh"><h2 class="bh-tag">Chronicle</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">League History \u2022 2016\u2013'+CURRENT_YEAR+'</span></div></div>';
+  var h='<div class="bh"><h2 class="bh-tag">Chronicle</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">League History \u2022 '+CFG.foundedYear+'\u2013'+CURRENT_YEAR+'</span></div></div>';
   h+='<div class="chronicle-nav">';
   yearList.forEach(function(yr){
     h+='<button class="tab-sub-btn" onclick="document.getElementById(\'chr-'+yr+'\')&&document.getElementById(\'chr-'+yr+'\').scrollIntoView({behavior:\'smooth\',block:\'nearest\',inline:\'start\'})">'+yr+'</button>';
