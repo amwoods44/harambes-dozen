@@ -3881,13 +3881,6 @@ function renderMatchups(){
       if(finalGame&&((finalGame.team_a.lineup&&finalGame.team_a.lineup.length)||(finalGame.team_b.lineup&&finalGame.team_b.lineup.length))){
         eh+='<div class="mu-card open" style="cursor:default;margin-top:10px">'+muBoxScore(finalGame,lastChamp.year)+'</div>';
       }
-      if(scored.standings.length){
-        eh+='<div class="bh" style="margin-top:14px"><h2 class="bh-tag">'+scored.yr+' Final</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Last Season\u2019s Standings</span></div></div>';
-        scored.standings.forEach(function(st,i){
-          const isC=lastChamp&&lastChamp.champion===st.team_name;
-          eh+='<div class="h-row"><span class="h-rk">'+(i+1)+'</span><span class="h-team gm-link" data-rid="'+st.roster_id+'">'+(isC?'\u2605 ':'')+st.team_name+'</span><span class="h-rec">'+st.wins+'-'+st.losses+'</span><span class="h-pts">'+st.fpts+' PF</span></div>';
-        });
-      }
     }
     document.getElementById('tab-matchups').innerHTML=eh;
     return;
