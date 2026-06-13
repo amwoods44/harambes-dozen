@@ -2182,7 +2182,7 @@ function mergeHistoricalData(d,historicalSeasons,playerDB){
       const st=(d[sk]||[]).find(s=>s.roster_id===rid)||{wins:0,losses:0};
       const actualWins=st.wins;
       const luck=Math.round((actualWins-expectedWins)*10)/10;
-      d.luck[rid]={roster_id:rid,team_name:rtn[rid]||'?',actual_wins:actualWins,expected_wins:Math.round(expectedWins*10)/10,luck};
+      d.luck[rid]={roster_id:rid,team_name:rtn[rid]||'?',actual_wins:actualWins,expected_wins:Math.round(expectedWins*10)/10,luck,games:numWeeks};
     });
   }
 
@@ -2419,7 +2419,7 @@ function conCard(p,opts){
   // Meta
   h+='<div style="font-family:var(--fb);font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">'+(p.team||'FA')+' \u00b7 '+(opts.owner||'').substring(0,14)+'</div>';
   // KTC
-  if(p.ktc)h+='<div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--a);margin-top:4px">'+p.ktc.toLocaleString()+' KTC</div>';
+  if(p.ktc!=null)h+='<div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--a);margin-top:4px">'+p.ktc.toLocaleString()+' KTC</div>';
   // Top-left label
   if(opts.topLeft)h+='<div style="position:absolute;top:4px;left:8px;font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.4)">'+opts.topLeft+'</div>';
   // NFL logo bottom-right
@@ -2992,8 +2992,8 @@ function calcBadges(teamName){
   if(s&&s.fpts>=CUR_STANDINGS.slice().sort((a,b)=>b.fpts-a.fpts)[0].fpts)badges.push({label:'Point Machine',bg:'rgba(204,0,0,.12)',color:'var(--a)'});
   if(D.champions.some(c=>c.champion===teamName))badges.push({label:'Champion',bg:'rgba(245,158,11,.12)',color:'var(--y)'});
   const luck=Object.values(D.luck||{}).find(l=>l.team_name===teamName);
-  if(luck&&luck.luck>=7)badges.push({label:'Lucky Charm',bg:'rgba(204,0,0,.12)',color:'var(--a)'});
-  if(luck&&luck.luck<=2)badges.push({label:'Snake Bitten',bg:'rgba(239,68,68,.12)',color:'var(--red-t)'});
+  if(luck&&luck.luck>=3)badges.push({label:'Lucky Charm',bg:'rgba(204,0,0,.12)',color:'var(--a)'});
+  if(luck&&luck.luck<=-3)badges.push({label:'Snake Bitten',bg:'rgba(239,68,68,.12)',color:'var(--red-t)'});
   return badges;
 }
 function renderRosters(){
@@ -3169,8 +3169,9 @@ function renderTrophies(){
     luckArr.forEach(function(l){
       const color=l.luck>2?'var(--a)':l.luck>0?'var(--blu)':l.luck>-2?'var(--y)':'var(--red-t)';
       const label=l.luck>3?'Very Lucky':l.luck>1?'Lucky':l.luck>-1?'Fair':'Unlucky';
-      const expPct=(l.expected_wins/28*100).toFixed(0);
-      const actPct=(l.actual_wins/28*100).toFixed(0);
+      const lgames=l.games||14;
+      const expPct=Math.min(100,l.expected_wins/lgames*100).toFixed(0);
+      const actPct=Math.min(100,l.actual_wins/lgames*100).toFixed(0);
       
       h+='<div class="luck-card">';
       h+='<div class="luck-hdr">';
@@ -5114,7 +5115,11 @@ function animateCounters(scope){
     var decimals=parseInt(el.getAttribute('data-decimals')||'0');
     var duration=800;
     var startTime=null;
+    // Bump a per-element generation so an earlier in-flight loop (rapid tab
+    // re-entry / history-merge re-render) self-cancels instead of fighting this one.
+    var gen=(el._cuGen||0)+1;el._cuGen=gen;
     function step(timestamp){
+      if(el._cuGen!==gen)return;
       if(!startTime)startTime=timestamp;
       var progress=Math.min((timestamp-startTime)/duration,1);
       var eased=1-Math.pow(1-progress,3);
@@ -5202,6 +5207,10 @@ function renderWarRoom(){
   // Exemption usage comes from the contracts sheet's exemption column (a year
   // string) — D.exemption_history is never populated, and an all-green board
   // built from empty data misinforms everyone during exemption season
+  // Exemption usage is derived from the contracts sheet's per-player exemption
+  // column (a year string), plus any populated exemption_history; an empty
+  // contract sheet is handled below via exmDataAvailable so the board never
+  // shows a misleading all-green when data simply failed to load.
   var ownerCounts={};
   D.teams.forEach(function(t){
     var used=0;

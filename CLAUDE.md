@@ -124,7 +124,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 
 - **Annual date maintenance:** `SEASON_DATES` (exemption deadline, NFL kickoff — near the top of the script next to `CFG`) must be updated once each offseason. Everything else derives the season dynamically from the Sleeper API
 - **Chronicle start year:** the "League History • 2016–…" label hardcodes the league's 2016 founding (pre-Sleeper era); the end year is dynamic
-- **Exemption history:** `D.exemption_history` is never populated from the sheet — the War Room exemption board only reflects current-season exemptions
+- **Exemption history:** `D.exemption_history` is populated from the contract sheet's `exemptions` (index.html ~1800); the War Room board derives per-team usage from the per-player `exm` column and guards the empty-sheet case via `exmDataAvailable`
 
 ## Session Start (This Project)
 
