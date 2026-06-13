@@ -3260,52 +3260,6 @@ function renderTrophies(){
       h+='</div>';
     });
   }
-  // ═══ LUCK RATING ═══
-  if(D.luck){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Luck</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Schedule-Adjusted Wins \u2022 '+(D.luck_season||latestScoredSeason().yr)+' Season</span></div></div>';
-    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">For each week, we calculate how many teams you <i>would have</i> beaten. The difference between actual wins and expected wins = your luck factor. Positive = lucky schedule, Negative = unlucky.</div></div></div>';
-    
-    const luckArr=Object.values(D.luck).sort(function(a,b){return b.luck-a.luck});
-    const maxExp=Math.max(...luckArr.map(function(l){return l.expected_wins}));
-    
-    luckArr.forEach(function(l){
-      const color=l.luck>2?'var(--a)':l.luck>0?'var(--blu)':l.luck>-2?'var(--y)':'var(--red-t)';
-      const label=l.luck>3?'Very Lucky':l.luck>1?'Lucky':l.luck>-1?'Fair':'Unlucky';
-      const lgames=l.games||14;
-      const expPct=Math.min(100,l.expected_wins/lgames*100).toFixed(0);
-      const actPct=Math.min(100,l.actual_wins/lgames*100).toFixed(0);
-      
-      h+='<div class="luck-card">';
-      h+='<div class="luck-hdr">';
-      h+='<span style="font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1)">'+l.team_name+'</span>';
-      h+='<span style="font-family:var(--fd);font-size:16px;font-weight:800;color:'+color+';font-variant-numeric:tabular-nums">'+(l.luck>0?'+':'')+l.luck+'</span></div>';
-      
-      h+='<div class="luck-bar">';
-      h+='<span style="font-family:var(--fm);font-size:10px;color:var(--t4);min-width:50px">Expected</span>';
-      h+='<div class="luck-track"><div class="luck-fill" style="width:'+expPct+'%;background:var(--g6)"></div></div>';
-      h+='<span class="luck-val" style="color:var(--t3)">'+l.expected_wins+'W</span></div>';
-      
-      h+='<div class="luck-bar">';
-      h+='<span style="font-family:var(--fm);font-size:10px;color:var(--t4);min-width:50px">Actual</span>';
-      h+='<div class="luck-track"><div class="luck-fill" style="width:'+actPct+'%;background:'+color+'"></div></div>';
-      h+='<span class="luck-val" style="color:'+color+'">'+l.actual_wins+'W</span></div>';
-      h+='</div>';
-    });
-  }
-  // ═══ MANAGER ACTIVITY ═══
-  if(D.activity){
-    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Activity</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Manager Tendencies \u2022 '+YEAR_RANGE+'</span></div></div>';
-    h+='<div style="display:flex;gap:10px;margin:8px 0"><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--a)">\u25A0 TRADES</span><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--y)">\u25A0 MOVES</span><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--pur)">\u25A0 DRAFT PICKS</span></div>';
-    
-    const maxAct=Math.max(...Object.values(D.activity).map(function(a){return a.trades+a.moves+a.draft_picks}));
-    Object.entries(D.activity).sort(function(a,b){return(b[1].trades+b[1].moves+b[1].draft_picks)-(a[1].trades+a[1].moves+a[1].draft_picks)}).forEach(function([name,a]){
-      const total=a.trades+a.moves+a.draft_picks;
-      const tPct=(a.trades/maxAct*100).toFixed(0);
-      const mPct=(a.moves/maxAct*100).toFixed(0);
-      const dPct=(a.draft_picks/maxAct*100).toFixed(0);
-      h+='<div class="act-row"><span class="act-name">'+name+'</span><div class="act-bars"><div class="act-seg" style="width:'+tPct+'%;background:var(--a)"></div><div class="act-seg" style="width:'+mPct+'%;background:var(--y)"></div><div class="act-seg" style="width:'+dPct+'%;background:var(--pur)"></div></div><span class="act-val">'+total+'</span></div>';
-    });
-  }
   // Season-by-season chapters — standings + bracket per year, accordion (latest open)
   if(!UI_OPEN.has('rafters-seeded')&&SEASON_YEARS.length){UI_OPEN.add('rafters-seeded');UI_OPEN.add('sec:rafters-'+SEASON_YEARS[SEASON_YEARS.length-1]);}
   SEASON_YEARS.slice().reverse().forEach(function(yr){
@@ -4437,8 +4391,6 @@ function renderAwards(){
   let h='<div class="bh"><h2 class="bh-tag">Awards</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Auto-Computed Superlatives \u2022 '+awYr+' Season'+(awLive?'':' (Most Recent Completed)')+'</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Awards are automatically computed from league data. No voting, no bias \u2014 the numbers decide everything.</div></div></div>';
   h+='<div class="award-grid stagger">';
-  // Dynasty Champion
-  if(latestChamp){h+='<div class="award-card gold"><div class="award-emoji">'+icon('trophy',28)+'</div><div class="award-title">Dynasty Champion</div><div class="award-winner">'+latestChamp.champion+'</div><div class="award-stat">'+latestChamp.year+'</div><div class="award-desc">Defeated '+latestChamp.runner_up+' in the championship</div></div>';}
   // Most Titles (career)
   const titleCounts={};
   D.champions.forEach(c=>{titleCounts[c.champion]=(titleCounts[c.champion]||0)+1;});
@@ -4594,6 +4546,52 @@ function renderAnalytics(){
     const label=t.sos>=55?'HARD':t.sos>=50?'AVERAGE':'EASY';
     h+='<div class="h-row"><span class="h-rk" style="color:'+col+'">'+label+'</span><span class="h-team gm-link" data-rid="'+t.rid+'">'+t.name+'</span><span style="font-family:var(--fm);font-size:14px;font-weight:700;color:'+col+'">'+t.sos+'%</span></div>';
   });
+  // ═══ LUCK RATING ═══
+  if(D.luck){
+    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Luck</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Schedule-Adjusted Wins \u2022 '+(D.luck_season||latestScoredSeason().yr)+' Season</span></div></div>';
+    h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">For each week, we calculate how many teams you <i>would have</i> beaten. The difference between actual wins and expected wins = your luck factor. Positive = lucky schedule, Negative = unlucky.</div></div></div>';
+    
+    const luckArr=Object.values(D.luck).sort(function(a,b){return b.luck-a.luck});
+    const maxExp=Math.max(...luckArr.map(function(l){return l.expected_wins}));
+    
+    luckArr.forEach(function(l){
+      const color=l.luck>2?'var(--a)':l.luck>0?'var(--blu)':l.luck>-2?'var(--y)':'var(--red-t)';
+      const label=l.luck>3?'Very Lucky':l.luck>1?'Lucky':l.luck>-1?'Fair':'Unlucky';
+      const lgames=l.games||14;
+      const expPct=Math.min(100,l.expected_wins/lgames*100).toFixed(0);
+      const actPct=Math.min(100,l.actual_wins/lgames*100).toFixed(0);
+      
+      h+='<div class="luck-card">';
+      h+='<div class="luck-hdr">';
+      h+='<span style="font-family:var(--fd);font-size:14px;font-weight:700;color:var(--t1)">'+l.team_name+'</span>';
+      h+='<span style="font-family:var(--fd);font-size:16px;font-weight:800;color:'+color+';font-variant-numeric:tabular-nums">'+(l.luck>0?'+':'')+l.luck+'</span></div>';
+      
+      h+='<div class="luck-bar">';
+      h+='<span style="font-family:var(--fm);font-size:10px;color:var(--t4);min-width:50px">Expected</span>';
+      h+='<div class="luck-track"><div class="luck-fill" style="width:'+expPct+'%;background:var(--g6)"></div></div>';
+      h+='<span class="luck-val" style="color:var(--t3)">'+l.expected_wins+'W</span></div>';
+      
+      h+='<div class="luck-bar">';
+      h+='<span style="font-family:var(--fm);font-size:10px;color:var(--t4);min-width:50px">Actual</span>';
+      h+='<div class="luck-track"><div class="luck-fill" style="width:'+actPct+'%;background:'+color+'"></div></div>';
+      h+='<span class="luck-val" style="color:'+color+'">'+l.actual_wins+'W</span></div>';
+      h+='</div>';
+    });
+  }
+  // ═══ MANAGER ACTIVITY ═══
+  if(D.activity){
+    h+='<div class="bh" style="margin-top:24px"><h2 class="bh-tag">Activity</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Manager Tendencies \u2022 '+YEAR_RANGE+'</span></div></div>';
+    h+='<div style="display:flex;gap:10px;margin:8px 0"><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--a)">\u25A0 TRADES</span><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--y)">\u25A0 MOVES</span><span style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--pur)">\u25A0 DRAFT PICKS</span></div>';
+    
+    const maxAct=Math.max(...Object.values(D.activity).map(function(a){return a.trades+a.moves+a.draft_picks}));
+    Object.entries(D.activity).sort(function(a,b){return(b[1].trades+b[1].moves+b[1].draft_picks)-(a[1].trades+a[1].moves+a[1].draft_picks)}).forEach(function([name,a]){
+      const total=a.trades+a.moves+a.draft_picks;
+      const tPct=(a.trades/maxAct*100).toFixed(0);
+      const mPct=(a.moves/maxAct*100).toFixed(0);
+      const dPct=(a.draft_picks/maxAct*100).toFixed(0);
+      h+='<div class="act-row"><span class="act-name">'+name+'</span><div class="act-bars"><div class="act-seg" style="width:'+tPct+'%;background:var(--a)"></div><div class="act-seg" style="width:'+mPct+'%;background:var(--y)"></div><div class="act-seg" style="width:'+dPct+'%;background:var(--pur)"></div></div><span class="act-val">'+total+'</span></div>';
+    });
+  }
   document.getElementById('tab-analytics').innerHTML=h;
   // Draw scatter chart
   setTimeout(()=>{
@@ -5315,8 +5313,8 @@ function renderWarRoom(){
 // ═══ PULSE FEED ═══
 function renderPulse(){
   var cards=[];
-  // Championship recaps
-  champsDesc().slice(0,2).forEach(function(c,i){
+  // Championship recaps — reigning champ only (older titles live in the Chronicle archive)
+  champsDesc().slice(0,1).forEach(function(c,i){
     cards.push({type:'championship',priority:10-i,feature:i===0,icon:'\u2605',tag:i===0?'REIGNING CHAMPION':'CHAMPIONSHIP',headline:c.champion+' Dynasty Champion — '+c.year,body:c.champion+' defeats '+c.runner_up+' in the '+c.year+' title game. A dynasty moment cemented in Harambe\'s Dozen lore.',meta:'SEASON '+c.year});
   });
   // Record alerts
@@ -5344,8 +5342,10 @@ function renderPulse(){
   });
   // Exemption news
   var exmH=D.exemption_history||{};
+  var exmLatest=Object.keys(exmH).sort().reverse()[0];
   Object.entries(exmH).forEach(function(entry){
     var yr=entry[0],exms=entry[1];
+    if(yr!==exmLatest)return; // Pulse = latest offseason only; full history in Chronicle
     exms.slice(0,3).forEach(function(e){
       var isTraded=e.from&&e.from!==e.o;
       cards.push({type:'exemption',priority:5,icon:'\u25CB',tag:'EXEMPTION',headline:e.o+' uses '+(isTraded?'traded ':'')+'exemption on '+e.p,body:e.o+' restructures '+e.p+'\'s contract: '+(e.had!==null?e.had+'yr \u2192 ':'')+e.new_yrs+'yr deal.'+(isTraded?' Exemption acquired via trade from '+e.from+'.':'')+(e.note?' '+e.note+'.':''),meta:yr+' OFFSEASON'+(isTraded?' \u2022 TRADED EXEMPTION':'')});
@@ -5353,7 +5353,7 @@ function renderPulse(){
   });
   // Draft highlights — one story per draft class, not one per player
   var dh=D.draft_hits||{};
-  Object.keys(dh).sort().reverse().forEach(function(yr){
+  Object.keys(dh).sort().reverse().slice(0,1).forEach(function(yr){ // latest draft class only; archive in Chronicle
     var hits=dh[yr]||[];
     var r1=hits.filter(function(h){return h.rd===1});
     var r1S=r1.filter(function(h){return h.status==='starter'});
@@ -5364,7 +5364,7 @@ function renderPulse(){
   });
   cards.sort(function(a,b){return b.priority-a.priority});
   cards=cards.slice(0,20);
-  var h='<div class="bh"><h2 class="bh-tag">League Pulse</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+cards.length+' League Stories \u2022 Powered by Dynasty Data</span></div></div>';
+  var h='<div class="bh"><h2 class="bh-tag">League Pulse</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">This Season & Latest Offseason \u2022 '+cards.length+' Stories</span></div></div>';
   h+='<div class="narrative"><div class="nar-item"><div class="nar-icon">'+icon('info',16,'var(--a)')+'</div><div class="nar-text">Auto-generated narrative cards from real league data. Every trade, championship, record, and exemption has a story.</div></div></div>';
   cards.forEach(function(card){
     h+='<div class="pulse-card '+card.type+(card.feature?' pulse-feature':'')+'">';
