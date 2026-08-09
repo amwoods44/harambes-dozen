@@ -159,7 +159,7 @@ button{min-height:36px}
 /* ═══ NAV BAR — WINS POOL STYLE ═══ */
 .nav-bar{background:rgba(26,20,16,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--g3);position:sticky;top:59px;z-index:900}
 .nav-bar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(270deg,rgba(26,20,16,.95),transparent);pointer-events:none;z-index:1}
-.nav-in{max-width:1440px;margin:0 auto;padding:0 12px;display:flex;gap:0;flex-wrap:nowrap;min-width:max-content;overflow-x:auto;scrollbar-width:none}
+.nav-in{width:100%;max-width:1440px;min-width:0;margin:0 auto;padding:0 12px;display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
 .nav-in::-webkit-scrollbar{display:none}
 .nav-btn{font-family:var(--fd);padding:14px 28px;font-size:16px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;position:relative}
 .nav-btn:hover{color:var(--t1);background:rgba(255,255,255,.02)}
@@ -1309,6 +1309,47 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
 /* ═══ DRAFT PICK HISTORY TOOLTIP ═══ */
 .draft-hist-tip{display:none;position:fixed;z-index:9999;background:rgba(12,12,20,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 12px;min-width:170px;max-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.8);pointer-events:none}
 
+/* ═══ EXEMPTION LEDGER ═══ */
+.exm-hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(125deg,#15120e 0%,#09090d 55%,#130807 100%);padding:26px 28px;margin-bottom:16px}
+.exm-hero:after{content:'X';position:absolute;right:18px;top:-45px;font-family:var(--fd);font-weight:800;font-size:180px;line-height:1;color:rgba(204,0,0,.10);transform:rotate(8deg);pointer-events:none}
+.exm-kicker{font-family:var(--fu);font-size:10px;font-weight:800;letter-spacing:2px;color:var(--a);text-transform:uppercase}
+.exm-title{font-family:var(--fd);font-size:clamp(32px,5vw,58px);font-weight:800;line-height:.95;letter-spacing:-1px;text-transform:uppercase;color:var(--t1);max-width:720px;margin:10px 0 12px}
+.exm-dek{font-family:var(--fb);font-size:14px;line-height:1.55;color:var(--t3);max-width:650px}
+.exm-source{display:inline-flex;align-items:center;gap:7px;margin-top:16px;padding:6px 9px;border:1px solid rgba(245,158,11,.25);border-radius:999px;background:rgba(245,158,11,.07);font-family:var(--fu);font-size:9px;font-weight:800;letter-spacing:1px;color:var(--y);text-transform:uppercase}
+.exm-source-dot{width:6px;height:6px;border-radius:50%;background:var(--y);box-shadow:0 0 10px rgba(245,158,11,.7)}
+.exm-season-nav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.exm-season-btn{appearance:none;border:1px solid var(--g4);border-radius:8px;background:var(--g2);color:var(--t3);padding:9px 14px;font-family:var(--fu);font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:.18s ease}
+.exm-season-btn:hover{border-color:rgba(204,0,0,.55);color:var(--t1)}
+.exm-season-btn.active{background:var(--a);border-color:var(--a);color:#fff;box-shadow:0 6px 20px rgba(204,0,0,.22)}
+.exm-scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--g4);border:1px solid var(--g4);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.exm-score{background:var(--g2);padding:14px 16px;min-width:0}
+.exm-score-v{font-family:var(--fm);font-size:24px;font-weight:800;line-height:1;color:var(--t1)}
+.exm-score-l{font-family:var(--fu);font-size:8px;font-weight:800;letter-spacing:1.3px;color:var(--t4);text-transform:uppercase;margin-top:6px}
+.exm-alert{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(245,158,11,.25);border-left:3px solid var(--y);border-radius:9px;background:rgba(245,158,11,.06);padding:11px 13px;margin-bottom:14px;font-family:var(--fb);font-size:12px;line-height:1.45;color:var(--t3)}
+.exm-ledger{border:1px solid var(--g4);border-radius:14px;overflow:hidden;background:var(--g2)}
+.exm-ledger-head,.exm-ledger-row{display:grid;grid-template-columns:82px minmax(190px,1.25fr) minmax(150px,1fr) 155px minmax(160px,1fr);gap:14px;align-items:center}
+.exm-ledger-head{padding:9px 14px;background:#0b0b10;font-family:var(--fu);font-size:8px;font-weight:800;letter-spacing:1.25px;color:var(--t4);text-transform:uppercase}
+.exm-ledger-row{position:relative;padding:13px 14px;border-top:1px solid var(--g3);transition:background .18s ease}
+.exm-ledger-row:hover{background:rgba(255,255,255,.025)}
+.exm-asset{font-family:var(--fm);font-size:11px;font-weight:800;color:var(--y);letter-spacing:.4px}
+.exm-player{display:flex;align-items:center;gap:9px;min-width:0}
+.exm-player-name{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exm-team{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exm-team-from{font-family:var(--fu);font-size:8px;letter-spacing:.5px;color:var(--blu);margin-top:3px;text-transform:uppercase}
+.exm-flow{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:12px;color:var(--t3)}
+.exm-flow strong{font-size:16px;color:var(--t1)}
+.exm-note{font-family:var(--fb);font-size:11px;line-height:1.35;color:var(--t3)}
+.exm-note-empty{color:var(--t4)}
+.exm-pill{display:inline-flex;align-items:center;border-radius:999px;padding:3px 7px;font-family:var(--fu);font-size:8px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.exm-pill.trade{background:rgba(59,130,246,.12);color:var(--blu);margin-top:5px}
+.exm-pill.review{background:rgba(245,158,11,.12);color:var(--y)}
+.exm-pill.blocked{background:rgba(239,68,68,.12);color:var(--red-t)}
+@media(max-width:760px){
+  .exm-hero{padding:22px 18px}.exm-hero:after{font-size:130px;right:-2px}.exm-scoreboard{grid-template-columns:1fr 1fr}
+  .exm-ledger{background:transparent;border:0;overflow:visible}.exm-ledger-head{display:none}.exm-ledger-row{grid-template-columns:62px minmax(0,1fr);gap:8px 12px;background:var(--g2);border:1px solid var(--g4);border-left:3px solid var(--a);border-radius:11px;margin-bottom:8px;padding:13px}
+  .exm-player{grid-column:2}.exm-team{grid-column:2}.exm-flow{grid-column:2}.exm-note{grid-column:2}.exm-asset{grid-row:1 / span 4;align-self:start;padding-top:5px;font-size:10px;word-break:break-word}
+}
+
 </style>
 </head>
 <body>
@@ -1352,6 +1393,7 @@ h2.bh-tag{margin:0;font-size:inherit;font-weight:inherit;line-height:inherit;fon
   <section class="panel" id="tab-gm"></section>
   <section class="panel" id="tab-rivals"></section>
   <section class="panel" id="tab-contracts"></section>
+  <section class="panel" id="tab-exemptions"></section>
   <section class="panel" id="tab-constitution"></section>
   <section class="panel" id="tab-warroom"></section>
   <section class="panel" id="tab-pulse"></section>
@@ -1387,6 +1429,55 @@ const CFG={
 };
 // FantasyCalc dynasty values, sized to the league
 CFG.ktcUrl='https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=1&numTeams='+CFG.leagueSize+'&ppr=1';
+
+// Working exemption ledger recovered from league records and Sleeper roster history.
+// These entries are intentionally labeled provisional until commissioner sign-off.
+// Keep asset_id stable when corrections arrive so deep links and future imports survive.
+function exemptionRosterId(name){
+  var ids={'Commissioner of Power':1,'A.Woods':2,'Proud Boys':3,'Slippery007':4,'Marginally Alpha':5,'TME':6,'Hillschmeier Farms':7,'Epstein’s Client List':8,'Amon-Ra Doggin':9,'The Dak Night Rises!':10,'Coach':11,'TylerPrice12':12};
+  return ids[name]||null;
+}
+function provisionalExm(asset,p,o,pos,had,added,newY,now,from,note,trade,sid,quality){
+  var source=from||o;
+  return{record_id:asset+'-'+sid,asset_id:asset,p:p,o:o,owner_rid:exemptionRosterId(o),pos:pos,had:had,added:added,new_yrs:newY,ynow:now,from:source,source_rid:exemptionRosterId(source),note:note||'',trade:trade||'',sleeper_id:String(sid),verification:'PROVISIONAL',data_quality:quality||'REVIEW'};
+}
+const PROVISIONAL_EXEMPTIONS={
+  '2023':[
+    provisionalExm('EXM-2023-R02','Mike Evans','A.Woods','WR',null,null,3,0,'A.Woods','Pre-data exemption','',2216,'PARTIAL YEAR'),
+    provisionalExm('EXM-2023-R06','Josh Allen','TME','QB',null,null,5,3,'TME','','',4984,'PARTIAL YEAR')
+  ],
+  '2024':[
+    provisionalExm('EXM-2024-R03','Justin Jefferson','Proud Boys','WR',null,null,7,5,'Proud Boys','Later traded to chadcegelski','',6794),
+    provisionalExm('EXM-2024-R07','Kyler Murray','Hillschmeier Farms','QB',null,null,4,2,'Hillschmeier Farms','','',5849),
+    provisionalExm('EXM-2024-R09','Dontayvion Wicks','The Dak Night Rises!','WR',null,null,5,3,'Amon-Ra Doggin','','chadcegelski/Conman4 exemption swap (Chad gets Kev’s 2025 back)',9486,'SOURCE REVIEW'),
+    provisionalExm('EXM-2024-R10','Rhamondre Stevenson','The Dak Night Rises!','RB',null,null,2,0,'The Dak Night Rises!','','',7611),
+    provisionalExm('EXM-2024-R12','Puka Nacua','TylerPrice12','WR',null,null,5,3,'TylerPrice12','','',9493),
+    provisionalExm('EXM-2024-R08','Kyren Williams','TylerPrice12','RB',null,null,4,2,'Epstein’s Client List','','Jaredbenson03 traded exemption for 2024 2nd Rd pick',8150),
+    provisionalExm('EXM-2024-R01','Christian McCaffrey','Commissioner of Power','RB',null,null,4,2,'Commissioner of Power','','',4034),
+    provisionalExm('EXM-2024-R04','George Kittle','Slippery007','TE',null,null,3,1,'Slippery007','','',4217),
+    provisionalExm('EXM-2024-R05','Tyreek Hill','Marginally Alpha','WR',null,null,5,3,'Marginally Alpha','','',3321),
+    provisionalExm('EXM-2024-R11','Michael Pittman Jr.','Coach','WR',null,null,5,3,'Coach','','',6819),
+    provisionalExm('EXM-2024-R06','Keenan Allen','TME','WR',null,null,2,0,'TME','','',1479),
+    provisionalExm('EXM-2024-R02','Patrick Mahomes II','A.Woods','QB',null,null,6,4,'A.Woods','','',4046)
+  ],
+  '2025':[
+    provisionalExm('EXM-2025-R11','CeeDee Lamb','Coach','WR',0,5,5,4,'Coach','Expiring save','',6786),
+    provisionalExm('EXM-2025-R05','Tee Higgins','Coach','WR',0,4,4,3,'Marginally Alpha','Expiring save','2.01 pick + Shaheed for exemption',6801),
+    provisionalExm('EXM-2025-R09','Amon-Ra St. Brown','Amon-Ra Doggin','WR',0,7,7,5,'Amon-Ra Doggin','Expiring save','',7547),
+    provisionalExm('EXM-2025-R10','Derrick Henry','Amon-Ra Doggin','RB',0,2,2,1,'The Dak Night Rises!','Expiring save','',3198),
+    provisionalExm('EXM-2025-R03','Saquon Barkley','Proud Boys','RB',0,3,3,2,'Proud Boys','Expiring save','',4866),
+    provisionalExm('EXM-2025-R06','Trey McBride','The Dak Night Rises!','TE',1,4,5,4,'TME','Early extension','Tank Bigsby ↔ Isaac Guerendo',8130),
+    provisionalExm('EXM-2025-R02','A.J. Brown','A.Woods','WR',0,5,5,4,'A.Woods','Expiring save','',5859,'ASSET CONFLICT'),
+    provisionalExm('EXM-2025-R12','Lamar Jackson','TylerPrice12','QB',0,3,3,2,'TylerPrice12','Expiring save','',4881),
+    provisionalExm('EXM-2025-R01','Chris Godwin','Commissioner of Power','WR',0,3,3,2,'Commissioner of Power','Expiring save','',4037),
+    provisionalExm('EXM-2025-R04','Cooper Kupp','Commissioner of Power','WR',0,2,2,1,'Slippery007','Expiring save','Kupp/Jeudy/2024 1st trade — Perry’s 2025 exemption included',4039),
+    provisionalExm('EXM-2025-R07','Courtland Sutton','Hillschmeier Farms','WR',0,3,3,2,'Hillschmeier Farms','Expiring save','',5045),
+    provisionalExm('EXM-2025-R02','Alvin Kamara','A.Woods','RB',0,2,2,1,'A.Woods','Expiring save','2nd round pick for Amari Rodgers + exemption',4035,'ASSET CONFLICT')
+  ]
+};
+function provisionalExemptionHistory(){
+  var out={};Object.keys(PROVISIONAL_EXEMPTIONS).forEach(function(y){out[y]=PROVISIONAL_EXEMPTIONS[y].map(function(e){return Object.assign({},e);});});return out;
+}
 
 // Key league/NFL dates — update once each offseason
 const SEASON_DATES={
@@ -1590,7 +1681,8 @@ async function fetchContracts(ktcMap){
     return parseContractCSV(csv,ktcMap||{});
   }catch(e){
     const cached=cache.get('hd_contracts2');
-    return cached||{contracts:{},exemptions:{}};
+    if(cached){cached.exemptions=provisionalExemptionHistory();return cached;}
+    return{contracts:{},exemptions:provisionalExemptionHistory()};
   }
 }
 
@@ -1605,7 +1697,7 @@ function parseContractCSV(csv,ktcMap){
     cells.push(cur.trim());
     return cells;
   });
-  if(rows.length<2)return{contracts:{},exemptions:{}};
+  if(rows.length<2)return{contracts:{},exemptions:provisionalExemptionHistory()};
   const hdr=rows[0].map(h=>h.toLowerCase().replace(/[^\w]/g,''));
   const nameIdx=hdr.findIndex(h=>h.includes('player')||h.includes('name'));
   const idIdx=hdr.findIndex(h=>h.includes('sleeper')||h.includes('id'));
@@ -1642,8 +1734,9 @@ function parseContractCSV(csv,ktcMap){
     };
     if(sid)contracts['_id_'+sid]=contracts[name];
   }
-  cache.set('hd_contracts2',{contracts,exemptions:{}},2*60*60*1000);
-  return{contracts,exemptions:{}};
+  const exemptions=provisionalExemptionHistory();
+  cache.set('hd_contracts2',{contracts,exemptions},2*60*60*1000);
+  return{contracts,exemptions};
 }
 
 // ═══ TIER 3: HISTORICAL SEASONS ═══
@@ -1825,7 +1918,7 @@ function buildCurrentSeasonData(cur,playerDB,contractData,state,ktcMap){
 
   // ── Contracts ──
   d.contracts=contractData.contracts||{};
-  d.exemption_history=contractData.exemptions||{};
+  d.exemption_history=contractData.exemptions&&Object.keys(contractData.exemptions).length?contractData.exemptions:provisionalExemptionHistory();
   // Backfill KTC for rostered players not in CSV
   if(ktcMap){
     d.teams.forEach(t=>t.players.forEach(p=>{
@@ -2353,6 +2446,7 @@ const TABS=[
   {id:'gm',label:'GM'},
   {id:'rivals',label:'Rivals'},
   {id:'contracts',label:'Contracts'},
+  {id:'exemptions',label:'Exemptions'},
   {id:'constitution',label:'Rules'},
   {id:'warroom',label:'War Room'},
   {id:'pulse',label:'Pulse'},
@@ -2368,6 +2462,7 @@ const SECTIONS=[
   {id:'rosters',label:'Rosters',panels:[['rosters','Rosters']]},
   {id:'teams',label:'Teams',panels:[['gm','GM']]},
   {id:'contracts',label:'Contracts',panels:[['contracts','Contracts']]},
+  {id:'exemptions',label:'Exemptions',panels:[['exemptions','Exemptions']]},
   {id:'matchups',label:'Matchups',panels:[['matchups','Matchups']]},
   {id:'draft',label:'Draft',panels:[['draft','Draft']]},
   {id:'transactions',label:'Transactions',panels:[['trades','Trades'],['moves','Wire']]},
@@ -2461,7 +2556,7 @@ function crest(rid,sz){
   +'</svg>';
 }
 // Item 14: Empty state placeholders (replaced by render functions)
-const EMPTY_STATES={power:['\u25A0','POWER RANKINGS'],rosters:['\u25A0','ROSTERS'],trophies:['\u25A0','TROPHY CASE'],trades:['\u25A0','TRADE CENTER'],matchups:['\u25A0','MATCHUPS'],age:['\u25A0','AGE MAP'],scoring:['\u25A0','SCORING'],draft:['\u25A0','DRAFT BOARD'],awards:['\u25A0','AWARDS'],analytics:['\u25A0','ANALYTICS'],moves:['\u25A0','TRANSACTIONS'],gm:['\u25A0','GM PROFILE'],rivals:['\u25A0','RIVALRIES'],contracts:['\u25A0','CONTRACTS'],constitution:['\u25A0','RULES'],warroom:['\u25A0','WAR ROOM'],pulse:['\u25A0','LEAGUE PULSE'],chronicle:['\u25A0','CHRONICLE']};
+const EMPTY_STATES={power:['\u25A0','POWER RANKINGS'],rosters:['\u25A0','ROSTERS'],trophies:['\u25A0','TROPHY CASE'],trades:['\u25A0','TRADE CENTER'],matchups:['\u25A0','MATCHUPS'],age:['\u25A0','AGE MAP'],scoring:['\u25A0','SCORING'],draft:['\u25A0','DRAFT BOARD'],awards:['\u25A0','AWARDS'],analytics:['\u25A0','ANALYTICS'],moves:['\u25A0','TRANSACTIONS'],gm:['\u25A0','GM PROFILE'],rivals:['\u25A0','RIVALRIES'],contracts:['\u25A0','CONTRACTS'],exemptions:['\u25A0','EXEMPTION LEDGER'],constitution:['\u25A0','RULES'],warroom:['\u25A0','WAR ROOM'],pulse:['\u25A0','LEAGUE PULSE'],chronicle:['\u25A0','CHRONICLE']};
 function injectEmptyStates(){Object.entries(EMPTY_STATES).forEach(([id,e])=>{const el=document.getElementById('tab-'+id);if(el&&!el.innerHTML.trim()){el.innerHTML='<div class="empty-state"><div class="empty-state-icon">'+e[0]+'</div><div class="empty-state-text">'+e[1]+'</div><div class="empty-state-sub">Loading data...</div></div>';}});}
 // Item 16: Dynasty value tier tag helper
 function dtierTag(ktc){if(!ktc||ktc<=0)return'';const t=ktc>=8000?['elite','ELITE']:ktc>=6000?['star','STAR']:ktc>=4000?['starter','STARTER']:ktc>=1500?['depth','DEPTH']:['dart','DART'];return'<span class="dtier dtier-'+t[0]+'">'+t[1]+'</span>';}
@@ -2470,7 +2565,7 @@ function cpill(nm){if(!D.contracts)return'';const c=D.contracts[nm];if(!c||!c.co
 // ═══ SHARED CARD INFRASTRUCTURE ═══
 var posRgb={'QB':'239,68,68','RB':'16,185,129','WR':'59,130,246','TE':'245,158,11','DEF':'139,92,246'};
 var posCls={'QB':'var(--red-t)','RB':'var(--a)','WR':'var(--blu)','TE':'var(--y)','DEF':'var(--pur)'};
-let selConTeam=null,selConPos='ALL',selConLen='ALL',selConSort='yrs';
+let selConTeam=null,selConPos='ALL',selConLen='ALL',selConSort='yrs',selExmYear='2025';
 // Live client-side search over the contract database (no re-render, keeps input focus)
 function filterConRows(q){q=(q||'').toLowerCase().trim();var rows=document.querySelectorAll('.con-db-row');var shown=0;rows.forEach(function(r){var hit=r.getAttribute('data-nm').indexOf(q)>=0;r.style.display=hit?'':'none';if(hit)shown++;});var c=document.getElementById('con-db-count');if(c)c.textContent=shown+' players';}
 function yrsColor(yrs){return(yrs||0)>=3?'16,185,129':(yrs||0)>=2?'245,158,11':'239,68,68';}
@@ -2590,6 +2685,7 @@ async function init(){
     const cached=cache.get('hd_cache_current2');
     if(cached){
       D=cached;
+      if(!D.exemption_history||!Object.keys(D.exemption_history).length)D.exemption_history=provisionalExemptionHistory();
       initSeasonConstants();
       rebuildPlayerMap();
       injectEmptyStates();
@@ -2608,7 +2704,7 @@ async function init(){
   }
 }
 
-const TAB_RENDERERS={home:renderHome,power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
+const TAB_RENDERERS={home:renderHome,power:renderPower,rosters:renderRosters,trophies:renderTrophies,trades:renderTrades,matchups:renderMatchups,draft:()=>{selDraft=null;renderDraft();},age:renderAge,scoring:renderScoring,awards:renderAwards,analytics:renderAnalytics,moves:renderMoves,gm:renderGM,rivals:renderRivals,contracts:renderContracts,exemptions:renderExemptions,constitution:renderConstitution,warroom:renderWarRoom,pulse:renderPulse,chronicle:renderChronicle};
 function renderTab(id){const f=TAB_RENDERERS[id];if(f)f();}
 const HASH_ALIASES={agemap:'age',rankings:'power',rafters:'trophies',therafters:'trophies',rules:'constitution',feed:'pulse',history:'chronicle',standings:'power',schedule:'matchups',hq:'home',
   // section-id deep links → their first panel
@@ -4973,6 +5069,59 @@ function renderRivals(){
   // The other 60 pairings are reference data \u2014 a compact index, not 60 cards
   document.getElementById('tab-rivals').innerHTML=h;
 }
+// ═══ EXEMPTION LEDGER ═══
+function renderExemptions(){
+  var root=document.getElementById('tab-exemptions');
+  var exmH=D.exemption_history&&Object.keys(D.exemption_history).length?D.exemption_history:provisionalExemptionHistory();
+  var years=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
+  if(!years.length){root.innerHTML='<div style="text-align:center;padding:40px;color:var(--t4)">No exemption records yet.</div>';return;}
+  if(!exmH[selExmYear])selExmYear=years[0];
+  var entries=(exmH[selExmYear]||[]).slice();
+  var assetCounts={};entries.forEach(function(e){assetCounts[e.asset_id]=(assetCounts[e.asset_id]||0)+1;});
+  var uniqueAssets=Object.keys(assetCounts).length;
+  var traded=entries.filter(function(e){return e.from&&e.from!==e.o;}).length;
+  var yearsAdded=entries.reduce(function(s,e){return s+(Number(e.added)||0);},0);
+  var conflicts=Object.keys(assetCounts).filter(function(id){return assetCounts[id]>1;});
+  entries.sort(function(a,b){return a.asset_id.localeCompare(b.asset_id)||a.p.localeCompare(b.p);});
+
+  var h='<div class="exm-hero">';
+  h+='<div class="exm-kicker">The league’s most valuable renewable asset</div>';
+  h+='<div class="exm-title">The Exemption Ledger</div>';
+  h+='<div class="exm-dek">Every recovered exemption, the manager who deployed it, the contract it changed, and the deal that moved it. This is the working historical record; commissioner-confirmed entries will replace provisional labels as the archive is completed.</div>';
+  h+='<div class="exm-source"><span class="exm-source-dot"></span>Working data · Sleeper-supported · awaiting sign-off</div></div>';
+  h+='<div class="exm-season-nav">';
+  years.forEach(function(y){h+='<button class="exm-season-btn'+(y===selExmYear?' active':'')+'" onclick="selExmYear=\''+y+'\';renderExemptions()">'+y+' <span style="opacity:.65">· '+exmH[y].length+'</span></button>';});
+  h+='</div>';
+  h+='<div class="exm-scoreboard">';
+  h+='<div class="exm-score"><div class="exm-score-v">'+entries.length+'</div><div class="exm-score-l">Recovered records</div></div>';
+  h+='<div class="exm-score"><div class="exm-score-v" style="color:'+(uniqueAssets===12?'#17b169':'var(--y)')+'">'+uniqueAssets+'<span style="font-size:13px;color:var(--t4)"> / 12</span></div><div class="exm-score-l">Unique asset slots</div></div>';
+  h+='<div class="exm-score"><div class="exm-score-v" style="color:var(--blu)">'+traded+'</div><div class="exm-score-l">Used via trade</div></div>';
+  h+='<div class="exm-score"><div class="exm-score-v" style="color:var(--a)">'+(yearsAdded||'—')+'</div><div class="exm-score-l">Known years added</div></div>';
+  h+='</div>';
+  if(selExmYear==='2023'){
+    h+='<div class="exm-alert">'+icon('info',16,'var(--y)')+'<div><b>Partial season.</b> Two 2023 uses have been recovered. The other ten asset slots remain intentionally blank until the historical records are supplied.</div></div>';
+  }else if(conflicts.length){
+    var missing=[];for(var mi=1;mi<=12;mi++){var id='EXM-'+selExmYear+'-R'+String(mi).padStart(2,'0');if(!assetCounts[id])missing.push(id);}
+    h+='<div class="exm-alert">'+icon('info',16,'var(--y)')+'<div><b>One asset identity needs confirmation.</b> '+conflicts.join(', ')+' appears twice; '+(missing.join(', ')||'one slot')+' is not represented. Both player uses remain visible so no league history is hidden.</div></div>';
+  }else{
+    h+='<div class="exm-alert" style="border-color:rgba(16,185,129,.22);border-left-color:#10b981;background:rgba(16,185,129,.05)">'+icon('info',16,'#10b981')+'<div><b>All 12 asset slots are represented.</b> Player-to-roster evidence is recovered; commissioner confirmation is still pending.</div></div>';
+  }
+  h+='<div class="exm-ledger"><div class="exm-ledger-head"><span>Asset</span><span>Player</span><span>Used by / source</span><span>Contract action</span><span>Trade trail / status</span></div>';
+  entries.forEach(function(e){
+    var isTrade=e.from&&e.from!==e.o;var conflict=assetCounts[e.asset_id]>1||e.data_quality==='ASSET CONFLICT';
+    var had=e.had===null?'—':e.had;var added=e.added===null?'—':'+'+e.added;
+    h+='<div class="exm-ledger-row">';
+    h+='<div class="exm-asset">'+e.asset_id.replace('EXM-'+selExmYear+'-','')+'</div>';
+    h+='<div class="exm-player">'+pimg(e.sleeper_id,34)+'<div style="min-width:0"><div class="exm-player-name">'+e.p+'</div><span class="pl-pos pos-'+e.pos+'">'+e.pos+'</span></div></div>';
+    h+='<div><div class="exm-team">'+e.o+'</div>'+(isTrade?'<div class="exm-team-from">Asset from '+e.from+'</div>':'<div class="exm-team-from" style="color:var(--t4)">Original allocation</div>')+'</div>';
+    h+='<div class="exm-flow"><span>'+had+'</span><span style="color:var(--a)">→</span><span>'+added+'</span><span style="color:var(--a)">→</span><strong>'+e.new_yrs+'yr</strong></div>';
+    h+='<div class="exm-note">'+(e.trade?e.trade:(e.note||'<span class="exm-note-empty">No trade note</span>'))+'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">'+(isTrade?'<span class="exm-pill trade">Traded asset</span>':'')+'<span class="exm-pill '+(conflict?'blocked':'review')+'">'+(conflict?'Asset conflict':'Provisional')+'</span></div></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  root.innerHTML=h;
+}
+
 // ═══ CONTRACTS ═══
 function renderContracts(){
   if(!D.contracts){document.getElementById('tab-contracts').innerHTML='<div style="text-align:center;padding:40px;color:var(--t4)">No contract data</div>';return;}
@@ -5085,74 +5234,7 @@ function renderContracts(){
   });
   if(!rows.length)h+='<div style="padding:20px;color:var(--t4);font-family:var(--fb);font-size:12px">No players match these filters.</div>';
   h+='</div></div>';
-  // ── EXEMPTION HISTORY (timeline cards) ──
-  var exmH=D.exemption_history||{};
-  var exmYears=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a)});
-  if(exmYears.length){
-    h+='<div class="bh" id="con-exm" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Exemptions</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Contract Restructures \u2022 1 Per Team Per Year</span></div></div>';
-    h+='<div style="display:flex;gap:4px;margin-bottom:12px">';
-    exmYears.forEach(function(yr,i){
-      h+='<button class="tab-sub-btn'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.exm-yr-panel\').forEach(function(el){el.style.display=\'none\'});document.getElementById(\'exm-'+yr+'\').style.display=\'flex\';this.parentNode.querySelectorAll(\'.tab-sub-btn\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">'+yr+' ('+exmH[yr].length+')</button>';
-    });
-    h+='</div>';
-    exmYears.forEach(function(yr,i){
-      var entries=exmH[yr];
-      if(selConTeam)entries=entries.filter(function(e){return e.o===selConTeam});
-      h+='<div class="exm-yr-panel" id="exm-'+yr+'" style="display:'+(i===0?'flex':'none')+';overflow-x:auto;gap:10px;padding:8px 0">';
-      entries.forEach(function(e){
-        var isTraded=e.from&&e.from!==e.o;
-        var hadCol=e.had===0?'var(--red-t)':e.had===null?'var(--t4)':'var(--y)';
-        var ynowCol=e.ynow<=0?'var(--red-t)':e.ynow<=2?'var(--y)':'var(--a)';
-        var borderCol=isTraded?'var(--blu)':e.note==='Early extension'?'var(--pur)':'var(--y)';
-        h+='<div style="min-width:240px;max-width:260px;flex-shrink:0;background:var(--g2);border:1px solid var(--g4);border-left:3px solid '+borderCol+';border-radius:12px;padding:16px">';
-        h+='<div style="font-family:var(--fd);font-size:15px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:1px">'+e.p+'</div>';
-        h+='<div style="font-family:var(--fu);font-size:11px;color:var(--t3);margin-top:3px">'+e.o+(isTraded?' \u00b7 <span style="color:var(--blu)">via '+e.from+'</span>':'')+'</div>';
-        // Contract flow
-        h+='<div style="display:flex;align-items:center;gap:6px;margin-top:12px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px">';
-        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:'+hadCol+'">'+(e.had!==null?e.had:'--')+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">HAD</div></div>';
-        h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
-        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--a)">'+(e.added!==null?'+'+e.added:'--')+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">ADDED</div></div>';
-        h+='<div style="color:var(--a);font-size:14px">\u2192</div>';
-        h+='<div style="text-align:center"><div style="font-family:var(--fm);font-size:16px;font-weight:700;color:var(--blu)">'+e.new_yrs+'</div><div style="font-family:var(--fd);font-size:7px;font-weight:700;letter-spacing:1px;color:var(--t4)">NEW</div></div>';
-        h+='</div>';
-        // Badges
-        var badges='';
-        if(isTraded)badges+=cbadge('TRADED','blu');
-        if(e.note==='Early extension')badges+=cbadge('EARLY EXT','pur');
-        else if(e.note==='Expiring save')badges+=cbadge('EXPIRING SAVE','y');
-        else if(e.note==='Pre-data exemption')badges+=cbadge('PRE-DATA','gray');
-        if(badges)h+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">'+badges+'</div>';
-        h+='</div>';
-      });
-      if(!entries.length)h+='<div style="padding:20px;color:var(--t4);font-family:var(--fb);font-size:12px">No exemptions'+(selConTeam?' for '+selConTeam:'')+'</div>';
-      h+='</div>';
-    });
-  }
-  // ── EXEMPTION ROI ──
-  var exmH2=D.exemption_history||{};
-  var allExms=[];
-  Object.entries(exmH2).forEach(function(entry){
-    var yr=entry[0],exms=entry[1];
-    exms.forEach(function(e){
-      if(selConTeam&&e.o!==selConTeam)return;
-      var c=D.contracts&&D.contracts[e.p];
-      allExms.push({player:e.p,pos:e.pos,owner:e.o,year:yr,ktc:c?c.ktc:0,yrs:c?(c.yrs||0):0,new_yrs:e.new_yrs,note:e.note,isTraded:e.from&&e.from!==e.o,from:e.from});
-    });
-  });
-  allExms.sort(function(a,b){return b.ktc-a.ktc});
-  if(allExms.length){
-    var totalExmKtc=allExms.reduce(function(s,e){return s+e.ktc},0);
-    h+='<div class="bh" id="con-roi" style="margin-top:20px;scroll-margin-top:120px"><h2 class="bh-tag">Exemption ROI</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">'+allExms.length+' Exemptions \u2022 '+totalExmKtc.toLocaleString()+' Total KTC</span></div></div>';
-    var best=allExms[0],worst=allExms[allExms.length-1];
-    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
-    h+='<div style="background:rgba(204,0,0,.06);border:1px solid rgba(204,0,0,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--a);margin-bottom:6px">BEST EXEMPTION</div><div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+best.player+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+best.owner+' \u2022 '+best.year+'</div><div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--a);margin-top:6px">'+best.ktc.toLocaleString()+' KTC</div></div>';
-    h+='<div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:16px"><div style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--red-t);margin-bottom:6px">LOWEST VALUE</div><div style="font-family:var(--fd);font-size:16px;font-weight:800;color:var(--t1)">'+worst.player+'</div><div style="font-family:var(--fb);font-size:11px;color:var(--t3);margin-top:2px">'+worst.owner+' \u2022 '+worst.year+'</div><div style="font-family:var(--fm);font-size:18px;font-weight:800;color:var(--red-t);margin-top:6px">'+worst.ktc.toLocaleString()+' KTC</div></div>';
-    h+='</div>';
-    allExms.forEach(function(e,i){
-      var yrC=e.yrs>=4?'var(--a)':e.yrs>=2?'var(--y)':'var(--red-t)';
-      h+='<div class="h-row" style="gap:6px"><span class="h-rk">'+(i+1)+'</span><span class="pl-pos pos-'+(e.pos||'WR')+'">'+e.pos+'</span><span style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--t1);flex:1">'+e.player+'</span><span style="font-family:var(--fu);font-size:10px;color:var(--t4)">'+e.owner.substring(0,12)+' \u2022 '+e.year+'</span><span style="font-family:var(--fm);font-size:11px;font-weight:700;color:'+yrC+';min-width:28px;text-align:right">'+e.yrs+'yr</span><span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--a);min-width:52px;text-align:right">'+e.ktc.toLocaleString()+'</span>'+(e.isTraded?cbadge('TRADED','blu'):'')+'</div>';
-    });
-  }
+  // Exemptions now have a dedicated first-class ledger; Contracts stays focused.
   document.getElementById('tab-contracts').innerHTML=h;
 }
 // ═══ ANIMATED COUNTERS ═══
@@ -5250,26 +5332,22 @@ function renderWarRoom(){
   h+='</div>';
   // \u2014 Team Status Grid: exemption + expiring + draft capital in one card per team \u2014
   var curSznNum=parseInt(D.league.season)||parseInt(CURRENT_YEAR);
-  var prevSzn=String(curSznNum-1);
   var exmH=D.exemption_history||{};
-  // Exemption usage comes from the contracts sheet's exemption column (a year
-  // string) — D.exemption_history is never populated, and an all-green board
-  // built from empty data misinforms everyone during exemption season
-  // Exemption usage is derived from the contracts sheet's per-player exemption
-  // column (a year string), plus any populated exemption_history; an empty
-  // contract sheet is handled below via exmDataAvailable so the board never
-  // shows a misleading all-green when data simply failed to load.
+  var usageSeason=Object.keys(exmH).sort(function(a,b){return parseInt(b)-parseInt(a);})[0]||String(curSznNum);
   var ownerCounts={};
-  D.teams.forEach(function(t){
-    var used=0;
-    t.players.forEach(function(p){
-      var c=D.contracts&&D.contracts[p.name];
-      if(c&&c.exm&&String(c.exm).indexOf(String(curSznNum))>=0)used++;
+  if(exmH[usageSeason]&&exmH[usageSeason].length){
+    exmH[usageSeason].forEach(function(e){var key=e.owner_rid||e.o;ownerCounts[key]=(ownerCounts[key]||0)+1;});
+  }else{
+    D.teams.forEach(function(t){
+      var used=0;
+      t.players.forEach(function(p){
+        var c=D.contracts&&D.contracts[p.name];
+        if(c&&c.exm&&String(c.exm).indexOf(usageSeason)>=0)used++;
+      });
+      if(used)ownerCounts[t.roster_id]=used;
     });
-    if(used)ownerCounts[t.team_name]=used;
-  });
-  (exmH[String(curSznNum)]||[]).forEach(function(e){ownerCounts[e.o]=Math.max(ownerCounts[e.o]||0,1);});
-  var exmDataAvailable=D.contracts&&Object.keys(D.contracts).length>0;
+  }
+  var exmDataAvailable=Object.keys(exmH).length>0||(D.contracts&&Object.keys(D.contracts).length>0);
   var capMap={};
   D.pick_trades.forEach(function(p){
     var cur=p.current_owner,orig=p.original_owner;
@@ -5280,9 +5358,9 @@ function renderWarRoom(){
   });
   h+='<div class="bh" style="margin-top:8px"><h2 class="bh-tag">Franchise Status</h2><div class="bh-acc"></div><div class="bh-line"><span class="bh-sub">Exemptions \u2022 Expiring Deals \u2022 Draft Capital \u2014 One Card Per Team</span></div></div>';
   var statusCards=D.teams.map(function(t){
-    var used=ownerCounts[t.team_name]||0;
-    var exmColor=used===0?'#17b169':used===1?'var(--y)':'var(--red-t)';
-    var exmLabel=used===0?'EXEMPTION IN HAND':used>=2?'USED MULTIPLE':'CARRYOVER?';
+    var used=ownerCounts[t.roster_id]||ownerCounts[t.team_name]||0;
+    var exmColor=used===0?'var(--t4)':used===1?'#17b169':'var(--y)';
+    var exmLabel=used===0?'NO USE RECORDED':used>=2?'MULTIPLE USES':'USED';
     var exp=[];
     t.players.forEach(function(p){var c=D.contracts&&D.contracts[p.name];if(c&&c.yrs===0)exp.push(p.name);});
     var cap=capMap[t.team_name]||{gained:0,lost:0};
@@ -5302,7 +5380,7 @@ function renderWarRoom(){
     h+='<div class="wr-card-stats">';
     h+='<div class="wr-cs"><div class="wr-csv" style="color:'+(sc.exp.length?'var(--red-t)':'var(--t4)')+'">'+sc.exp.length+'</div><div class="wr-csl">EXPIRING</div></div>';
     h+='<div class="wr-cs"><div class="wr-csv" style="color:'+netCol+'">'+(sc.net>0?'+':'')+sc.net+'</div><div class="wr-csl">NET PICKS</div></div>';
-    h+='<div class="wr-cs"><div class="wr-csv" style="color:var(--t2)">'+sc.used+'</div><div class="wr-csl">EXM USED \u2019'+prevSzn.slice(2)+'</div></div>';
+    h+='<div class="wr-cs"><div class="wr-csv" style="color:var(--t2)">'+sc.used+'</div><div class="wr-csl">EXM RECORDED \u2019'+usageSeason.slice(2)+'</div></div>';
     h+='</div>';
     if(sc.exp.length)h+='<div class="wr-card-exp">'+sc.exp.slice(0,3).join(' \u00b7 ')+(sc.exp.length>3?' +'+(sc.exp.length-3):'')+'</div>';
     h+='</div>';

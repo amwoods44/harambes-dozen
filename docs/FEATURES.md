@@ -52,6 +52,9 @@ These features are live in the current build and fully functional.
 | Move Type Breakdown | Moves | Waiver vs FA vs commissioner split, most active manager | Quantify waiver activity across the league |
 | GM Dashboard | GM | Select any team, see their full profile: scoring stats, roster composition, activity, H2H vs all opponents, weekly sparkline, trade history | Your franchise command center — everything about YOUR team in one place |
 | Rivalry Tracker | Rivals | All 20 rivalry matchups ranked by total games, with dominance bar and ownership badges | Know who owns who, fuel the trash talk |
+| Contract Command Center | Contracts | Team filters, contract totals, expiry timeline, and a searchable/sortable player contract database | See contract cliffs and every deal without mixing in other league operations |
+| Exemption Ledger | Exemptions | Season ledger of recovered uses, stable asset IDs, contract changes, trade trails, completeness totals, and visible provisional/conflict states | Treat the league’s most valuable annual asset as a first-class historical record |
+| Offseason War Room | War Room | Deadlines plus per-franchise expiring deals, draft capital, and exemption usage keyed by stable roster ID | Make offseason decisions from one current-status board |
 
 ### Enhancement Features (added to existing tabs)
 
@@ -64,7 +67,7 @@ These features are live in the current build and fully functional.
 
 | Feature | Status | What It Does |
 |---------|--------|-------------|
-| 13 navigable tabs | Working | Full tab system with active states |
+| 12 navigation sections / 20 panels | Working | Intent-based navigation with deep-linkable panel routes and subviews |
 | Owner avatars | Working | Pulled from Sleeper CDN, fallback to gorilla emoji |
 | Player headshots | Working | Sleeper CDN thumbnails on roster cards and draft |
 | Responsive design | Working | Mobile-optimized at 768px, 600px, 480px, 380px breakpoints |
@@ -85,8 +88,6 @@ These are features that would make the app truly elite. They require additional 
 
 | Feature | What It Would Do | What's Missing |
 |---------|-----------------|----------------|
-| Contracts Display | Show contract years, salary, tag status on every player | Contract data not in current JSON — needs Sleeper MCP or manual entry |
-| Contract Cliff Chart | Stacked area showing when contracted talent expires per team | Contract data |
 | Optimal Lineup / Points Left on Bench | Calculate best possible lineup each week vs what was started | Per-player weekly scoring (we only have team totals) |
 | Player Journey / Trade Chains | Horizontal timeline: "Player X: Team A -> Team B -> Team C" with dates | Need trade-level player mapping (current trades show assets as strings) |
 | Post-Game Recap Cards | Auto-generated narratives: "Team A survived despite Player X's quiet 9.2" | Per-player weekly scoring |

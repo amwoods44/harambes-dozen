@@ -46,7 +46,7 @@ function svgFor(url) {
   const fx = buildFixtures(MODE);
   const srv = await serve();
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch();
+  const browser = await chromium.launch(process.env.PLAYWRIGHT_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH } : {});
   const errors = [];
 
   for (const vp of VIEWPORTS) {

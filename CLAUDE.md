@@ -39,7 +39,7 @@ index.html
 - External strings are HTML-escaped once at ingestion via `esc()` — never insert raw API/sheet strings into `D`
 - Expanded/open UI state is keyed in the `UI_OPEN` set (`data-okey` attrs + `uiToggle()`/`secOpen()`) so it survives destructive re-renders
 - Each tab has a `renderX()` function that builds HTML via string concatenation and sets `innerHTML`
-- Navigation is **11 intent sections** (`SECTIONS`, ~line 2331) layered over the 19 panels: single-panel sections jump straight in; multi-panel ones (Stats, Transactions, Front Office, Rafters, Chronicle) render a sub-tab bar (`#subnav`). `showTab(panelId)` is the workhorse — panel ids stay the routing currency (hash + `HASH_ALIASES` + `.gm-link`), so every old deep link still resolves. `showSection(secId)` jumps to a section's remembered/first panel
+- Navigation is **12 intent sections** (`SECTIONS`) layered over 20 panels: single-panel sections jump straight in; multi-panel ones (Stats, Transactions, Front Office, Rafters, Chronicle) render a sub-tab bar (`#subnav`). Contracts and Exemptions are separate first-class sections. `showTab(panelId)` is the workhorse — panel ids stay the routing currency (hash + `HASH_ALIASES` + `.gm-link`), so every old deep link still resolves. `showSection(secId)` jumps to a section's remembered/first panel
 - Tab switching via `showTab(id)` toggles `.active` on panels, syncs the section button + sub-tab bar, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
 - "My team" is `myTeamRid()`: localStorage `hd_my_team`, falling back to the roster owned by `CFG.userId`; `.gm-link` + `data-rid` makes any team name open its GM profile via a delegated handler
 - Team identity colors live in the `TC` object (keyed by roster_id)
@@ -125,7 +125,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 
 - **Annual date maintenance:** `SEASON_DATES` (exemption deadline, NFL kickoff — near the top of the script next to `CFG`) must be updated once each offseason. Everything else derives the season dynamically from the Sleeper API
 - **Chronicle start year:** the "League History • 2016–…" label hardcodes the league's 2016 founding (pre-Sleeper era); the end year is dynamic
-- **Exemption history:** `D.exemption_history` is populated from the contract sheet's `exemptions` (index.html ~1800); the War Room board derives per-team usage from the per-player `exm` column and guards the empty-sheet case via `exmDataAvailable`
+- **Exemption verification:** `D.exemption_history` currently hydrates from `PROVISIONAL_EXEMPTIONS`. The ledger labels every entry provisional, flags 2023 as partial, and exposes the known 2025 asset-ID conflict. Replace or extend those records only after commissioner confirmation; stable `owner_rid` values keep War Room usage correct across franchise renames
 
 ## Session Start (This Project)
 
