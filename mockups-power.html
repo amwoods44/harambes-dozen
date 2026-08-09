@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Rankings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#0d0b09;color:#e5e5e5;min-height:100vh;-webkit-font-smoothing:antialiased}
+.page{max-width:880px;margin:0 auto;padding:48px 32px 80px}
+
+/* Header */
+.hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:36px}
+.title{font-size:24px;font-weight:800;letter-spacing:-.3px;text-transform:uppercase;color:white}
+.meta{font-size:12px;font-weight:500;color:#444;letter-spacing:1px}
+
+/* Tier dividers */
+.tier{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#333;margin:24px 0 10px 42px}
+
+/* ═══ #1 HERO ═══ */
+.hero{display:flex;align-items:center;gap:20px;padding:24px 28px;border-radius:10px;background:linear-gradient(135deg,rgba(204,0,0,.05),rgba(204,0,0,.015));border:1px solid rgba(204,0,0,.12);position:relative;margin-bottom:8px;transition:all .3s cubic-bezier(.22,1,.36,1)}
+.hero:hover{border-color:rgba(204,0,0,.2);box-shadow:0 4px 24px rgba(204,0,0,.06)}
+.hero::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:#cc0000}
+.hero-rank{font-size:36px;font-weight:900;color:rgba(204,0,0,.8);line-height:1;min-width:36px}
+.hero-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#b30000,#800000);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(204,0,0,.15)}
+.hero-body{flex:1;min-width:0}
+.hero-name{font-size:18px;font-weight:700;color:white;letter-spacing:-.2px}
+.hero-detail{display:flex;align-items:center;gap:8px;margin-top:4px}
+.hero-record{font-size:12px;color:#777;font-weight:500}
+.hero-streak{font-size:10px;font-weight:700;letter-spacing:.8px;padding:2px 7px;border-radius:3px;text-transform:uppercase}
+.hero-streak.w{background:rgba(34,197,94,.1);color:#22c55e}
+.hero-ppg{font-size:12px;color:#555;font-weight:500}
+.hero-next{font-size:11px;color:#3a3a3a;margin-top:5px}
+.hero-next b{color:#666;font-weight:600}
+.hero-right{display:flex;align-items:center;gap:18px;margin-left:auto;flex-shrink:0}
+.hero-score{font-size:32px;font-weight:800;color:#cc0000;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.5px}
+.hero-pwr{font-size:10px;font-weight:600;color:#444;letter-spacing:2px;text-transform:uppercase;text-align:right;margin-top:3px}
+
+/* ═══ ROWS ═══ */
+.row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:4px;border-left:3px solid var(--tc,#1a1a1a);background:rgba(255,255,255,.012);position:relative;transition:all .25s cubic-bezier(.22,1,.36,1)}
+.row:hover{background:rgba(255,255,255,.035);transform:translateX(3px)}
+/* Ghost power fill */
+.row::after{content:'';position:absolute;left:0;top:0;bottom:0;width:var(--pw,0%);background:rgba(255,255,255,.006);border-radius:8px;pointer-events:none}
+.r-num{font-size:14px;font-weight:700;color:#333;min-width:22px;text-align:center;position:relative;z-index:1}
+.r-num.top{color:rgba(204,0,0,.6)}
+.r-av{width:30px;height:30px;border-radius:50%;background:#151515;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#444;position:relative;z-index:1;border:1px solid rgba(255,255,255,.04)}
+.r-body{flex:1;min-width:0;position:relative;z-index:1}
+.r-name{font-size:13px;font-weight:600;color:#ccc;display:flex;align-items:center;gap:7px}
+.r-detail{display:flex;align-items:center;gap:7px;margin-top:2px}
+.r-record{font-size:11px;color:#444;font-weight:500}
+.r-streak{font-size:9px;font-weight:700;letter-spacing:.5px;padding:1px 5px;border-radius:3px;text-transform:uppercase}
+.r-streak.hot{background:rgba(34,197,94,.08);color:rgba(34,197,94,.7)}
+.r-streak.cold{background:rgba(204,0,0,.08);color:rgba(204,0,0,.7)}
+.r-ppg{font-size:11px;color:#383838;font-weight:500}
+.r-next{font-size:10px;color:#2a2a2a;font-weight:400}
+.r-next b{color:#444;font-weight:600}
+/* Right cluster */
+.r-right{display:flex;align-items:center;gap:14px;margin-left:auto;flex-shrink:0;position:relative;z-index:1}
+.last5{display:flex;gap:3px;align-items:center}
+.d{width:6px;height:6px;border-radius:50%}
+.d.w{background:rgba(34,197,94,.65)}
+.d.l{background:rgba(204,0,0,.55)}
+.r-score{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.s1{color:#bbb}.s2{color:#666}.s3{color:#3a3a3a}
+.r-trend{font-size:9px;font-weight:700;width:14px;text-align:center}
+.r-trend.up{color:rgba(34,197,94,.6)}.r-trend.dn{color:rgba(204,0,0,.5)}.r-trend.fl{color:#222}
+
+/* ═══ POWER RACE ═══ */
+.race{margin-top:52px;padding-top:28px;border-top:1px solid rgba(255,255,255,.03)}
+.race-t{font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#666;margin-bottom:20px}
+.race-r{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.race-n{font-size:11px;font-weight:600;color:#444;min-width:110px;text-align:right}
+.race-bw{flex:1;height:14px;background:rgba(255,255,255,.012);border-radius:3px;overflow:hidden}
+.race-b{height:100%;border-radius:3px}
+.race-v{font-size:11px;font-weight:700;color:#3a3a3a;min-width:36px;font-variant-numeric:tabular-nums}
+
+/* Entrance */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.hero{animation:fadeIn .5s cubic-bezier(.22,1,.36,1) .1s both}
+.row{animation:fadeIn .35s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0) * .04s + .15s)}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hdr">
+  <div class="title">Power Rankings</div>
+  <div class="meta">WEEK 14 · UPDATED DAILY</div>
+</div>
+
+<!-- #1 -->
+<div class="hero">
+  <div class="hero-rank">1</div>
+  <div class="hero-av">PB</div>
+  <div class="hero-body">
+    <div class="hero-name">Proud Boys</div>
+    <div class="hero-detail">
+      <span class="hero-record">11-3</span>
+      <span class="hero-streak w">W5</span>
+      <span class="hero-ppg">124.3 PPG</span>
+      <span class="last5"><span class="d w"></span><span class="d w"></span><span class="d w"></span><span class="d w"></span><span class="d w"></span></span>
+    </div>
+    <div class="hero-next">Next: <b>vs GOAT Rodgers</b> · Week 15</div>
+  </div>
+  <div class="hero-right">
+    <div>
+      <div class="hero-score">99.8</div>
+      <div class="hero-pwr">PWR</div>
+    </div>
+  </div>
+</div>
+
+<div class="tier">CONTENDERS</div>
+
+<div class="row" style="--tc:#4a90d9;--pw:94%;--i:1">
+  <span class="r-num top">2</span>
+  <div class="r-av">GR</div>
+  <div class="r-body">
+    <div class="r-name">GOAT Rodgers <span class="r-streak hot">W3</span></div>
+    <div class="r-detail"><span class="r-record">10-4</span><span class="r-ppg">118.7 PPG</span><span class="r-next">Next: <b>vs Proud Boys</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d w"></span><span class="d w"></span><span class="d w"></span><span class="d l"></span><span class="d w"></span></div>
+    <span class="r-score s1">94.2</span>
+    <span class="r-trend up">&#9650;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#9b59b6;--pw:89%;--i:2">
+  <span class="r-num top">3</span>
+  <div class="r-av">DC</div>
+  <div class="r-body">
+    <div class="r-name">Dynasty Chasers <span class="r-streak cold">L2</span></div>
+    <div class="r-detail"><span class="r-record">9-5</span><span class="r-ppg">115.2 PPG</span><span class="r-next">Next: <b>vs Bench Warmers</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d l"></span><span class="d w"></span><span class="d w"></span><span class="d w"></span></div>
+    <span class="r-score s1">88.5</span>
+    <span class="r-trend dn">&#9660;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#27ae60;--pw:86%;--i:3">
+  <span class="r-num top">4</span>
+  <div class="r-av">PB</div>
+  <div class="r-body">
+    <div class="r-name">Playoff Bound <span class="r-streak hot">W2</span></div>
+    <div class="r-detail"><span class="r-record">8-6</span><span class="r-ppg">112.8 PPG</span><span class="r-next">Next: <b>vs Cellar Dwellers</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d w"></span><span class="d w"></span><span class="d l"></span><span class="d w"></span><span class="d l"></span></div>
+    <span class="r-score s1">86.1</span>
+    <span class="r-trend up">&#9650;</span>
+  </div>
+</div>
+
+<div class="tier">PLAYOFF BUBBLE</div>
+
+<div class="row" style="--tc:#e67e22;--pw:79%;--i:4">
+  <span class="r-num">5</span>
+  <div class="r-av">WK</div>
+  <div class="r-body">
+    <div class="r-name">Waiver Wire Kings <span class="r-streak cold">L3</span></div>
+    <div class="r-detail"><span class="r-record">7-7</span><span class="r-ppg">108.4 PPG</span><span class="r-next">Next: <b>vs Gridiron Gang</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d l"></span><span class="d l"></span><span class="d w"></span><span class="d w"></span></div>
+    <span class="r-score s2">79.4</span>
+    <span class="r-trend dn">&#9660;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#e74c3c;--pw:75%;--i:5">
+  <span class="r-num">6</span>
+  <div class="r-av">GG</div>
+  <div class="r-body">
+    <div class="r-name">Gridiron Gang</div>
+    <div class="r-detail"><span class="r-record">7-7</span><span class="r-ppg">104.1 PPG</span><span class="r-next">Next: <b>vs Waiver Wire Kings</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d w"></span><span class="d l"></span><span class="d w"></span><span class="d l"></span><span class="d w"></span></div>
+    <span class="r-score s2">75.0</span>
+    <span class="r-trend fl">&#8212;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#1abc9c;--pw:72%;--i:6">
+  <span class="r-num">7</span>
+  <div class="r-av">TR</div>
+  <div class="r-body">
+    <div class="r-name">The Replacements <span class="r-streak hot">W4</span></div>
+    <div class="r-detail"><span class="r-record">6-8</span><span class="r-ppg">110.9 PPG</span><span class="r-next">Next: <b>vs Draft Day Busts</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d w"></span><span class="d w"></span><span class="d w"></span><span class="d w"></span><span class="d l"></span></div>
+    <span class="r-score s2">72.1</span>
+    <span class="r-trend up">&#9650;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#f39c12;--pw:69%;--i:7">
+  <span class="r-num">8</span>
+  <div class="r-av">AS</div>
+  <div class="r-body">
+    <div class="r-name">Any Given Sunday <span class="r-streak cold">L2</span></div>
+    <div class="r-detail"><span class="r-record">6-8</span><span class="r-ppg">99.3 PPG</span><span class="r-next">Next: <b>vs Rebuild Mode</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d l"></span><span class="d w"></span><span class="d l"></span><span class="d w"></span></div>
+    <span class="r-score s2">68.5</span>
+    <span class="r-trend dn">&#9660;</span>
+  </div>
+</div>
+
+<div class="tier">REBUILDING</div>
+
+<div class="row" style="--tc:#95a5a6;--pw:62%;--i:8">
+  <span class="r-num">9</span>
+  <div class="r-av">BW</div>
+  <div class="r-body">
+    <div class="r-name">Bench Warmers</div>
+    <div class="r-detail"><span class="r-record">5-9</span><span class="r-ppg">95.1 PPG</span><span class="r-next">Next: <b>vs Dynasty Chasers</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d w"></span><span class="d l"></span><span class="d l"></span><span class="d l"></span></div>
+    <span class="r-score s3">62.4</span>
+    <span class="r-trend dn">&#9660;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#7f8c8d;--pw:59%;--i:9">
+  <span class="r-num">10</span>
+  <div class="r-av">DD</div>
+  <div class="r-body">
+    <div class="r-name">Draft Day Busts</div>
+    <div class="r-detail"><span class="r-record">4-10</span><span class="r-ppg">91.8 PPG</span><span class="r-next">Next: <b>vs The Replacements</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d l"></span><span class="d l"></span><span class="d w"></span><span class="d l"></span></div>
+    <span class="r-score s3">58.9</span>
+    <span class="r-trend fl">&#8212;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#bdc3c7;--pw:51%;--i:10">
+  <span class="r-num">11</span>
+  <div class="r-av">RM</div>
+  <div class="r-body">
+    <div class="r-name">Rebuild Mode <span class="r-streak cold">L5</span></div>
+    <div class="r-detail"><span class="r-record">3-11</span><span class="r-ppg">87.4 PPG</span><span class="r-next">Next: <b>vs Any Given Sunday</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d l"></span><span class="d l"></span><span class="d l"></span><span class="d l"></span></div>
+    <span class="r-score s3">51.2</span>
+    <span class="r-trend dn">&#9660;</span>
+  </div>
+</div>
+
+<div class="row" style="--tc:#636e72;--pw:45%;--i:11">
+  <span class="r-num">12</span>
+  <div class="r-av">CD</div>
+  <div class="r-body">
+    <div class="r-name">Cellar Dwellers</div>
+    <div class="r-detail"><span class="r-record">1-13</span><span class="r-ppg">82.1 PPG</span><span class="r-next">Next: <b>vs Playoff Bound</b></span></div>
+  </div>
+  <div class="r-right">
+    <div class="last5"><span class="d l"></span><span class="d w"></span><span class="d l"></span><span class="d l"></span><span class="d l"></span></div>
+    <span class="r-score s3">45.0</span>
+    <span class="r-trend fl">&#8212;</span>
+  </div>
+</div>
+
+<!-- Power Race -->
+<div class="race">
+<div class="race-t">POWER RACE</div>
+<div class="race-r"><div class="race-n">Proud Boys</div><div class="race-bw"><div class="race-b" style="width:100%;background:linear-gradient(90deg,#cc0000,#990000)"></div></div><div class="race-v" style="color:#cc0000">99.8</div></div>
+<div class="race-r"><div class="race-n">GOAT Rodgers</div><div class="race-bw"><div class="race-b" style="width:94%;background:linear-gradient(90deg,rgba(204,0,0,.45),rgba(204,0,0,.25))"></div></div><div class="race-v">94.2</div></div>
+<div class="race-r"><div class="race-n">Dynasty Chasers</div><div class="race-bw"><div class="race-b" style="width:89%;background:linear-gradient(90deg,rgba(204,0,0,.3),rgba(204,0,0,.15))"></div></div><div class="race-v">88.5</div></div>
+<div class="race-r"><div class="race-n">Playoff Bound</div><div class="race-bw"><div class="race-b" style="width:86%;background:linear-gradient(90deg,rgba(204,0,0,.2),rgba(204,0,0,.08))"></div></div><div class="race-v">86.1</div></div>
+<div class="race-r"><div class="race-n">Waiver Wire Kings</div><div class="race-bw"><div class="race-b" style="width:79%;background:rgba(255,255,255,.04)"></div></div><div class="race-v">79.4</div></div>
+<div class="race-r"><div class="race-n">Gridiron Gang</div><div class="race-bw"><div class="race-b" style="width:75%;background:rgba(255,255,255,.035)"></div></div><div class="race-v">75.0</div></div>
+<div class="race-r"><div class="race-n">The Replacements</div><div class="race-bw"><div class="race-b" style="width:72%;background:rgba(255,255,255,.03)"></div></div><div class="race-v">72.1</div></div>
+<div class="race-r"><div class="race-n">Any Given Sunday</div><div class="race-bw"><div class="race-b" style="width:69%;background:rgba(255,255,255,.025)"></div></div><div class="race-v">68.5</div></div>
+<div class="race-r"><div class="race-n">Bench Warmers</div><div class="race-bw"><div class="race-b" style="width:62%;background:rgba(255,255,255,.02)"></div></div><div class="race-v">62.4</div></div>
+<div class="race-r"><div class="race-n">Draft Day Busts</div><div class="race-bw"><div class="race-b" style="width:59%;background:rgba(255,255,255,.018)"></div></div><div class="race-v">58.9</div></div>
+<div class="race-r"><div class="race-n">Rebuild Mode</div><div class="race-bw"><div class="race-b" style="width:51%;background:rgba(255,255,255,.015)"></div></div><div class="race-v">51.2</div></div>
+<div class="race-r"><div class="race-n">Cellar Dwellers</div><div class="race-bw"><div class="race-b" style="width:45%;background:rgba(255,255,255,.012)"></div></div><div class="race-v">45.0</div></div>
+</div>
+
+</div>
+</body>
+</html>
