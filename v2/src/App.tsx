@@ -1,14 +1,23 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
+  Activity,
+  ArrowLeftRight,
   ArrowRight,
   Bell,
   CalendarDays,
+  ChartNoAxesColumn,
   ChevronDown,
-  Clock3,
+  FileClock,
+  House,
+  ListOrdered,
+  MoreHorizontal,
   Moon,
+  Radio,
+  Scale,
   Shield,
   Sun,
   Trophy,
+  UsersRound,
   Zap,
 } from 'lucide-react';
 
@@ -29,6 +38,7 @@ import {
   type HomeStory,
 } from './data/currentLeague';
 import type { ContractPlayer } from './data/contractLedger';
+import { sleeperEraChampions } from './data/leagueHistory';
 import type { DraftPickOwnership } from './domain/picks';
 import type { LeagueTransaction } from './domain/transactions';
 import type { ContractRepository } from './services/contractRepository';
@@ -199,12 +209,14 @@ function ManagerAvatar({
 
 function Header({
   session,
+  viewerFranchise,
   theme,
   route,
   onToggleTheme,
   onRequestSignIn,
 }: {
   session: ViewerSession;
+  viewerFranchise?: FranchiseSnapshot;
   theme: Theme;
   route: RouteId;
   onToggleTheme: () => void;
@@ -237,12 +249,17 @@ function Header({
           {theme === 'day' ? <Moon size={18} /> : <Sun size={18} />}
         </button>
         {session.kind === 'member' && (
-          <button className="icon-button" type="button" aria-label="Notifications">
+          <button className="icon-button notification-button" type="button" aria-label="Notifications">
             <Bell size={18} />
+            <span className="notification-dot" />
           </button>
         )}
         <button className="member-control" type="button" onClick={onRequestSignIn}>
-          <span>{session.kind === 'member' ? 'Member' : 'Sign in'}</span>
+          {session.kind === 'member' && viewerFranchise ? (
+            <ManagerAvatar franchise={viewerFranchise} showIdentity size="small" />
+          ) : (
+            <span>Sign in</span>
+          )}
           <ChevronDown size={15} />
         </button>
       </div>
@@ -254,10 +271,12 @@ function MyFranchise({
   franchise,
   pick,
   startsAt,
+  contracts,
 }: {
   franchise: FranchiseSnapshot;
   pick: number;
   startsAt: string;
+  contracts: ContractPlayer[];
 }) {
   const draftDate = new Intl.DateTimeFormat('en-US', {
     month: 'short',
@@ -267,6 +286,11 @@ function MyFranchise({
     timeZone: 'America/Chicago',
     timeZoneName: 'short',
   }).format(new Date(startsAt));
+  const contractsById = new Map(contracts.map((player) => [player.sleeperPlayerId, player]));
+  const rosterContracts = franchise.playerIds
+    .map((playerId) => contractsById.get(playerId))
+    .filter((player): player is ContractPlayer => Boolean(player));
+  const expiring = rosterContracts.filter((player) => player.yearsRemaining === 1);
 
   return (
     <aside className="my-franchise" id="my-franchise" role="region" aria-label="My Franchise">
@@ -287,8 +311,18 @@ function MyFranchise({
           <strong>1.{String(pick).padStart(2, '0')}</strong>
         </div>
         <div className="franchise-meta">
-          <span>Draft night</span>
+          <span>Next league event</span>
           <strong>{draftDate}</strong>
+        </div>
+        <div className="franchise-intel" aria-label="Franchise contract snapshot">
+          <div>
+            <span>Contract clock</span>
+            <strong>{rosterContracts.length ? `${expiring.length} expiring` : 'Syncing'}</strong>
+          </div>
+          <div>
+            <span>Exemption</span>
+            <strong>{expiring.length ? 'Decision due' : 'Clear'}</strong>
+          </div>
         </div>
         <a className="primary-button" href={routeHref('franchises')}>
           View franchise <ArrowRight size={17} />
@@ -351,11 +385,13 @@ function Countdown({
 function Hero({
   snapshot,
   session,
+  contracts,
   fixedNow,
   onRequestSignIn,
 }: {
   snapshot: HomeSnapshot;
   session: ViewerSession;
+  contracts: ContractPlayer[];
   fixedNow?: Date;
   onRequestSignIn: () => void;
 }) {
@@ -395,11 +431,13 @@ function Hero({
         </h1>
         <p className="hero-deck">The board is set. The group chat is already lying.</p>
         <Countdown startsAt={snapshot.draft.startsAt} parts={countdown} />
+        <span className="play-doodle play-doodle-left" aria-hidden="true">× · ○ ↗ 12</span>
       </div>
       <div className="hero-art" aria-hidden="true">
         <span className="hero-number">12</span>
         <span className="slash slash-one" />
         <span className="slash slash-two" />
+        <span className="play-doodle play-doodle-right" aria-hidden="true">○ × · · ↗</span>
         <img src="/assets/harambe-letterman.png" alt="" />
       </div>
       {viewerFranchise && viewerPick ? (
@@ -407,6 +445,7 @@ function Hero({
           franchise={viewerFranchise}
           pick={viewerPick}
           startsAt={snapshot.draft.startsAt}
+          contracts={contracts}
         />
       ) : (
         <PublicSnapshot onRequestSignIn={onRequestSignIn} />
@@ -472,10 +511,9 @@ function LeagueWire({ story }: { story: HomeStory }) {
       </div>
       <div className="wire-layout">
         <div className="wire-art" aria-hidden="true">
-          <div className="draft-board-sheet">
-            <span>01</span><span>02</span><span>03</span><span>04</span>
-          </div>
-          <span className="wire-badge"><Shield size={24} /></span>
+          <img src="/assets/league-wire-draft.webp" alt="" />
+          <span className="wire-badge"><ArrowLeftRight size={24} /></span>
+          <span className="wire-issue">12</span>
         </div>
         <div className="wire-copy">
           <div className="story-meta">
@@ -522,6 +560,7 @@ function Deadlines({ deadlines }: { deadlines: HomeDeadline[] }) {
 }
 
 function RecordsVault({ record }: { record: HomeRecord }) {
+  const championCount = new Set(sleeperEraChampions.map((season) => season.champion)).size;
   return (
     <article className="dashboard-card records-vault" id="records">
       <img src="/assets/records-vault-trophy.png" alt="The Harambe's Dozen championship cup" />
@@ -533,6 +572,7 @@ function RecordsVault({ record }: { record: HomeRecord }) {
           <span>Reigning champion</span>
           <strong>{record.champion}</strong>
           <small>{record.season} · over {record.runnerUp}</small>
+          <em>{sleeperEraChampions.length} seasons indexed · {championCount} champions</em>
         </div>
         <a href={routeHref('league')}>Enter the vault <ArrowRight size={15} /></a>
       </div>
@@ -540,35 +580,161 @@ function RecordsVault({ record }: { record: HomeRecord }) {
   );
 }
 
+const mobileIcons = {
+  home: House,
+  league: ChartNoAxesColumn,
+  franchises: UsersRound,
+  trades: ArrowLeftRight,
+} as const;
+
 function MobileNav({ route }: { route: RouteId }) {
   const mobileItems = primaryNavigation.filter((item) =>
-    ['home', 'league', 'franchises', 'trades', 'draft'].includes(item.route),
-  );
+    ['home', 'league', 'franchises', 'trades'].includes(item.route),
+  ) as Array<{ label: string; route: keyof typeof mobileIcons }>;
+  const moreIsActive = ['draft', 'league-office', 'clubhouse'].includes(route);
   return (
     <nav className="mobile-nav" aria-label="Mobile navigation">
-      {mobileItems.map((item) => (
-        <a
-          aria-current={route === item.route ? 'page' : undefined}
-          className={route === item.route ? 'active' : ''}
-          href={routeHref(item.route)}
-          key={item.route}
-        >
-          <span aria-hidden="true">{route === item.route ? '●' : '○'}</span>
-          {item.label}
-        </a>
-      ))}
+      {mobileItems.map((item) => {
+        const Icon = mobileIcons[item.route];
+        return (
+          <a
+            aria-current={route === item.route ? 'page' : undefined}
+            className={route === item.route ? 'active' : ''}
+            href={routeHref(item.route)}
+            key={item.route}
+          >
+            <Icon size={18} aria-hidden="true" />
+            {item.label}
+          </a>
+        );
+      })}
+      <details className={moreIsActive ? 'mobile-more active' : 'mobile-more'}>
+        <summary><MoreHorizontal size={20} aria-hidden="true" />More</summary>
+        <div>
+          <a href={routeHref('draft')}><ListOrdered size={17} />Draft room</a>
+          <a href={routeHref('league-office')}><FileClock size={17} />League office</a>
+          <a href={routeHref('clubhouse')}><Radio size={17} />Clubhouse</a>
+        </div>
+      </details>
     </nav>
+  );
+}
+
+function IntelligenceDesk({
+  snapshot,
+  session,
+  contracts,
+  transactions,
+  tradedPicks,
+  onRequestSignIn,
+}: {
+  snapshot: HomeSnapshot;
+  session: ViewerSession;
+  contracts: ContractPlayer[];
+  transactions: LeagueTransaction[];
+  tradedPicks: DraftPickOwnership[];
+  onRequestSignIn: () => void;
+}) {
+  if (session.kind !== 'member') {
+    return (
+      <section className="intelligence-gate" aria-label="Private league intelligence">
+        <div><Radio size={20} /><span>Inside the front office</span></div>
+        <h2>The useful layer is member-only.</h2>
+        <p>Sign in for contract pressure, pick movement, roster consequences, and the decisions Sleeper does not explain.</p>
+        <button type="button" onClick={onRequestSignIn}>Enter the league <ArrowRight size={16} /></button>
+      </section>
+    );
+  }
+
+  const franchise = snapshot.franchises.find((team) => team.ownerUserId === session.userId);
+  if (!franchise) return null;
+  const contractsById = new Map(contracts.map((player) => [player.sleeperPlayerId, player]));
+  const rosterContracts = franchise.playerIds
+    .map((playerId) => contractsById.get(playerId))
+    .filter((player): player is ContractPlayer => Boolean(player));
+  const expiring = rosterContracts.filter((player) => player.yearsRemaining === 1);
+  const twoYear = rosterContracts.filter((player) => player.yearsRemaining === 2);
+  const incoming = tradedPicks.filter(
+    (pick) => pick.currentOwnerRosterId === franchise.rosterId && pick.originalRosterId !== franchise.rosterId,
+  );
+  const outgoing = tradedPicks.filter(
+    (pick) => pick.originalRosterId === franchise.rosterId && pick.currentOwnerRosterId !== franchise.rosterId,
+  );
+  const latestMove = transactions.find((transaction) => transaction.rosterIds.includes(franchise.rosterId));
+  const pick = snapshot.draft.order.find((entry) => entry.rosterId === franchise.rosterId)?.slot;
+  const priorityExpiring = expiring.find((player) => /kenneth walker/i.test(player.playerName)) ?? expiring[0];
+  const expiringNames = priorityExpiring
+    ? `${priorityExpiring.playerName}${expiring.length > 1 ? ` + ${expiring.length - 1} more` : ''}`
+    : '';
+  const latestMoveLabel = latestMove?.type === 'commissioner'
+    ? 'commissioner move'
+    : latestMove?.type.replaceAll('_', ' ');
+
+  return (
+    <section className="intelligence-desk" aria-labelledby="intelligence-heading">
+      <header className="intelligence-heading">
+        <div>
+          <span><Radio size={16} /> Front Office Desk</span>
+          <h2 id="intelligence-heading">Your decisions, not just your data.</h2>
+        </div>
+        <a href={routeHref('franchises')}>Open full franchise <ArrowRight size={15} /></a>
+      </header>
+      <div className="intelligence-layout">
+        <article className="decision-lead">
+          <span className="decision-eyebrow">Draft leverage</span>
+          <strong className="decision-number">1.{String(pick ?? 0).padStart(2, '0')}</strong>
+          <h3>You control the first real decision window.</h3>
+          <p>Two selections come off the board before you. Your next turn is 12 picks later, so the cost of passing a tier is visible.</p>
+          <a href={routeHref('draft')}>Open the decision board <ArrowRight size={15} /></a>
+        </article>
+        <div className="decision-ledger">
+          <article>
+            <div className="decision-icon"><FileClock size={19} /></div>
+            <div>
+              <span>Contract pressure</span>
+              <strong>{expiring.length ? `${expiring.length} one-year decision${expiring.length === 1 ? '' : 's'}` : 'No matched one-year deals'}</strong>
+              <p>{expiringNames || (contracts.length ? 'No expiring player matched to the live roster.' : 'Private contract ledger is still syncing.')}</p>
+            </div>
+            <em>{twoYear.length} at 2Y</em>
+          </article>
+          <article>
+            <div className="decision-icon"><Scale size={19} /></div>
+            <div>
+              <span>Pick market</span>
+              <strong>{incoming.length} incoming · {outgoing.length} outgoing</strong>
+              <p>Transferred-pick ownership is reconciled to Sleeper; full trade context lives in the ledger.</p>
+            </div>
+            <a href={routeHref('trades')}>Trace picks</a>
+          </article>
+          <article>
+            <div className="decision-icon"><Activity size={19} /></div>
+            <div>
+              <span>Transaction pulse</span>
+              <strong>{latestMove ? `Last involved ${latestMoveLabel}` : 'No current move loaded'}</strong>
+              <p>{latestMove ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(latestMove.createdAt)) : 'The desk will update when Sleeper returns a confirmed transaction.'}</p>
+            </div>
+            <a href={routeHref('trades')}>Open desk</a>
+          </article>
+        </div>
+      </div>
+    </section>
   );
 }
 
 function HomeDashboard({
   snapshot,
   session,
+  contracts,
+  transactions,
+  tradedPicks,
   now,
   onRequestSignIn,
 }: {
   snapshot: HomeSnapshot;
   session: ViewerSession;
+  contracts: ContractPlayer[];
+  transactions: LeagueTransaction[];
+  tradedPicks: DraftPickOwnership[];
   now?: Date;
   onRequestSignIn: () => void;
 }) {
@@ -577,6 +743,7 @@ function HomeDashboard({
       <Hero
         snapshot={snapshot}
         session={session}
+        contracts={contracts}
         fixedNow={now}
         onRequestSignIn={onRequestSignIn}
       />
@@ -586,6 +753,14 @@ function HomeDashboard({
         <Deadlines deadlines={snapshot.deadlines} />
         <RecordsVault record={snapshot.records} />
       </section>
+      <IntelligenceDesk
+        snapshot={snapshot}
+        session={session}
+        contracts={contracts}
+        transactions={transactions}
+        tradedPicks={tradedPicks}
+        onRequestSignIn={onRequestSignIn}
+      />
     </>
   );
 }
@@ -668,6 +843,9 @@ export function App({
   const [signInError, setSignInError] = useState<string | null>(null);
   const { theme, toggle } = useTheme();
   const route = useRoute();
+  const viewerFranchise = session.kind === 'member'
+    ? snapshot.franchises.find((team) => team.ownerUserId === session.userId)
+    : undefined;
 
   useEffect(() => {
     if (!repository) return;
@@ -823,6 +1001,9 @@ export function App({
         <HomeDashboard
           snapshot={snapshot}
           session={session}
+          contracts={contracts}
+          transactions={transactions}
+          tradedPicks={tradedPicks}
           now={now}
           onRequestSignIn={handleSignIn}
         />
@@ -834,6 +1015,7 @@ export function App({
     <div className="app-shell">
       <Header
         session={session}
+        viewerFranchise={viewerFranchise}
         theme={theme}
         route={route}
         onToggleTheme={toggle}
@@ -854,9 +1036,9 @@ export function App({
         />
       )}
       <footer>
-        <div><LeagueCrest compact /> <span>Harambe's Dozen</span></div>
-        <span>Established 2016 · 12 teams · 1 legacy</span>
-        <span>Built for the group chat.</span>
+        <div><LeagueCrest compact /> <span>Cinematic club · members only</span></div>
+        <span>Est. 2022 · 12 teams · 1 league.</span>
+        <span>Built different.</span>
       </footer>
     </div>
   );
