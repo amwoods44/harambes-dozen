@@ -1,0 +1,64 @@
+.franchises-page { padding: clamp(18px, 3vw, 42px); background: var(--paper); }
+.franchises-hero { display: flex; min-height: 235px; align-items: flex-end; justify-content: space-between; gap: 30px; padding: clamp(28px, 5vw, 62px); color: #fff8eb; background: linear-gradient(120deg, #061725 0 66%, #0d354c 66%); border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); }
+.franchises-hero > div:first-child > span { display: flex; align-items: center; gap: 9px; color: var(--gold-light); font: 650 13px var(--display); letter-spacing: .11em; text-transform: uppercase; }
+.franchises-hero h1 { margin: 13px 0 7px; font: 700 clamp(58px, 7vw, 96px)/.82 var(--display); text-transform: uppercase; }
+.franchises-hero p { margin: 0; color: rgba(255,248,235,.7); font-size: 16px; }
+.franchise-privacy-state { display: flex; min-width: 245px; flex-direction: column; align-items: flex-start; padding: 20px; border: 1px solid rgba(255,255,255,.18); background: rgba(3,17,27,.46); }
+.franchise-privacy-state svg { color: var(--gold-light); }
+.franchise-privacy-state strong { margin-top: 12px; font: 650 21px var(--display); text-transform: uppercase; }
+.franchise-privacy-state small { color: rgba(255,248,235,.58); }
+
+.franchise-roster-panel { margin-top: 16px; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: var(--card); }
+.franchise-roster-heading { display: flex; min-height: 98px; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+.franchise-roster-heading > div > span { display: flex; align-items: center; gap: 7px; color: var(--red); font: 650 10px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.franchise-roster-heading h2 { margin: 4px 0 1px; font: 650 30px var(--display); text-transform: uppercase; }
+.franchise-roster-heading p { margin: 0; color: var(--ink-soft); font-size: 12px; }
+.franchise-roster-heading > strong { padding: 9px 13px; color: #fff; background: var(--red); font: 650 13px var(--display); letter-spacing: .07em; text-transform: uppercase; }
+.contract-roster-table { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+.contract-roster-row { display: grid; grid-template-columns: 38px minmax(130px, 1fr) 76px 78px 48px; min-height: 62px; align-items: center; gap: 10px; padding: 8px 16px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.contract-roster-row:nth-child(2n) { border-right: 0; }
+.contract-roster-row > div { display: flex; min-width: 0; flex-direction: column; }
+.contract-roster-row > div strong { overflow: hidden; font: 650 16px var(--display); text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.contract-roster-row > div small,
+.contract-roster-row > span { color: var(--ink-soft); font-size: 10px; }
+.contract-position { display: grid; width: 32px; height: 32px; place-items: center; color: #fff !important; background: var(--navy-900); border-radius: 50%; font: 650 10px var(--display) !important; }
+.contract-years { justify-self: end; color: var(--gold); font: 700 18px var(--display); }
+.contract-years[data-state='expiring'] { color: var(--red); }
+.contract-years[data-state='unknown'] { color: var(--ink-soft); }
+.contract-roster-row.is-unmatched { grid-template-columns: 1fr 1fr; }
+.franchise-roster-empty { margin: 0; padding: 28px 24px; color: var(--ink-soft); }
+
+.franchise-directory { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 16px 0 0; padding: 0; list-style: none; }
+.franchise-directory > li { min-width: 0; }
+.franchise-card { position: relative; height: 100%; min-height: 260px; overflow: hidden; border: 1px solid var(--line); border-top: 4px solid var(--club-accent); border-radius: 6px; background: var(--card); }
+.franchise-card::after { position: absolute; right: -32px; bottom: -55px; width: 150px; height: 150px; border: 24px solid color-mix(in srgb, var(--club-accent) 11%, transparent); border-radius: 50%; content: ''; pointer-events: none; }
+.franchise-card.is-viewer { box-shadow: inset 0 0 0 2px var(--gold), 0 12px 30px color-mix(in srgb, var(--gold) 15%, transparent); }
+.franchise-card-topline { display: flex; min-height: 43px; align-items: center; justify-content: space-between; padding: 0 18px; border-bottom: 1px solid var(--line); color: var(--ink-soft); font: 650 10px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.franchise-card-topline em { color: var(--red); font-style: normal; }
+.franchise-card-identity { display: grid; grid-template-columns: 78px minmax(0,1fr); gap: 16px; align-items: center; padding: 24px 18px; }
+.franchise-card-identity img,
+.franchise-card-emblem { display: grid; width: 78px; height: 78px; place-items: center; border: 2px solid color-mix(in srgb, var(--club-accent) 70%, var(--gold)); border-radius: 50%; object-fit: cover; }
+.franchise-card-identity img { filter: saturate(.75) contrast(1.06); }
+.franchise-card-emblem { color: #fff; background: linear-gradient(145deg, color-mix(in srgb, var(--club-accent) 70%, #fff), var(--club-accent)); font: 700 22px var(--display); letter-spacing: .04em; }
+.franchise-card-identity h2 { margin: 0 0 8px; font: 650 27px/.95 var(--display); text-transform: uppercase; }
+.franchise-card-identity div > span { display: block; color: var(--ink-soft); font: 650 9px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+.franchise-card-identity div > strong { display: block; overflow: hidden; margin-top: 1px; text-overflow: ellipsis; white-space: nowrap; }
+.franchise-card dl { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; margin: 0 18px 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.franchise-card dl div { padding: 13px 0; }
+.franchise-card dl div + div { padding-left: 16px; border-left: 1px solid var(--line); }
+.franchise-card dt { color: var(--ink-soft); font: 650 9px var(--display); letter-spacing: .11em; text-transform: uppercase; }
+.franchise-card dd { margin: 3px 0 0; font: 650 18px var(--display); text-transform: uppercase; }
+.franchise-card > button { position: relative; z-index: 2; display: flex; min-height: 44px; width: calc(100% - 36px); align-items: center; justify-content: space-between; margin: -7px 18px 14px; padding: 0; border: 0; border-bottom: 1px solid var(--gold); color: var(--ink); background: transparent; font: 650 11px var(--display); letter-spacing: .09em; text-transform: uppercase; cursor: pointer; }
+
+@media (max-width: 1040px) { .franchise-directory { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 1100px) { .contract-roster-table { grid-template-columns: 1fr; } .contract-roster-row { border-right: 0; } }
+@media (max-width: 720px) {
+  .franchises-page { padding: 10px 10px 92px; }
+  .franchises-hero { min-height: 0; flex-direction: column; align-items: stretch; padding: 30px 20px; }
+  .franchises-hero h1 { font-size: 58px; }
+  .franchise-privacy-state { min-width: 0; }
+  .franchise-directory { grid-template-columns: 1fr; gap: 10px; }
+  .franchise-roster-heading { align-items: flex-start; flex-direction: column; }
+  .contract-roster-row { grid-template-columns: 34px minmax(110px,1fr) 58px 42px; }
+  .contract-roster-row > span:nth-of-type(3) { display: none; }
+}

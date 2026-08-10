@@ -1,8 +1,16 @@
 # Dependencies
 node_modules/
+.node_modules-*
 
 # Build artifacts
 *.backup
+dist/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# Local QA artifacts
+artifacts/
 
 # Large binary files
 *.xlsx
@@ -17,3 +25,4 @@ Thumbs.db
 
 # Git worktrees
 .worktrees/
+.gstack/

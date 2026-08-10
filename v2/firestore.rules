@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /members/{memberId} {
+      allow read: if request.auth != null && request.auth.uid == memberId;
+      allow write: if false;
+    }
+
+    match /contracts/{playerId} {
+      allow read: if request.auth != null
+        && get(/databases/$(database)/documents/members/$(request.auth.uid)).data.active == true;
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
