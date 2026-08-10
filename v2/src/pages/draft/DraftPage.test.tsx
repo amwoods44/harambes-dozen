@@ -29,9 +29,39 @@ describe('DraftPage', () => {
     expect(within(lane).getByText('1.03')).toBeInTheDocument();
     expect(within(lane).getByText('8.03')).toBeInTheDocument();
 
+    const decisionWindow = screen.getByRole('region', { name: /1.03 decision window/i });
+    expect(decisionWindow).toHaveTextContent('2 selections before 1.03');
+    expect(decisionWindow).toHaveTextContent('11 selections before 2.03');
+    expect(decisionWindow).toHaveTextContent('15th overall');
+
+    const runway = within(decisionWindow).getByRole('region', {
+      name: /tier drop-off runway/i,
+    });
+    expect(runway).toHaveTextContent(
+      'A tier with 11 or fewer acceptable names can be exhausted before 2.03',
+    );
+    expect(runway).toHaveTextContent(/no player tiers are published in this snapshot/i);
+
+    const inputs = screen.getByRole('region', { name: /draft decision inputs/i });
+    expect(inputs).toHaveTextContent('Tier / drop-off');
+    expect(inputs).toHaveTextContent('Best fit');
+    expect(inputs).toHaveTextContent('Availability');
+    expect(inputs).toHaveTextContent(/positional needs remain unmodeled/i);
+    expect(inputs).toHaveTextContent(/confirm the live player pool in sleeper/i);
+
     const order = screen.getByRole('region', { name: /round 1 draft order/i });
     expect(within(order).getAllByRole('listitem')).toHaveLength(12);
-    expect(within(order).getAllByRole('listitem')[0]).toHaveTextContent('Marginally Alpha');
+    const firstPick = within(order).getAllByRole('listitem')[0];
+    expect(firstPick).toHaveTextContent('Marginally Alpha');
+    expect(firstPick).toHaveTextContent('17 players');
+    expect(firstPick).toHaveTextContent('Positional needs not published');
+    expect(firstPick).toHaveTextContent('Sleeper draft order');
+    expect(firstPick).toHaveTextContent('Trade provenance unavailable');
+    const viewerPick = within(order).getAllByRole('listitem')[2];
+    expect(viewerPick).toHaveTextContent('A.Woods');
+    expect(viewerPick).toHaveTextContent('22 players');
+    expect(viewerPick).toHaveTextContent('Positional needs not published');
+    expect(viewerPick).toHaveTextContent('Sleeper draft order');
     expect(within(order).getByText('AWoods')).toBeInTheDocument();
 
     expect(screen.getByText(/cached sleeper snapshot/i)).toHaveTextContent(
@@ -48,8 +78,11 @@ describe('DraftPage', () => {
 
     expect(screen.queryByRole('region', { name: /your draft lane/i })).not.toBeInTheDocument();
     expect(screen.getByRole('region', { name: /member draft view/i })).toHaveTextContent(
-      /sign in to see your eight-pick lane/i,
+      /sign in to map the wait between your picks/i,
     );
+    expect(
+      screen.queryByRole('region', { name: /decision window/i }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('AWoods')).not.toBeInTheDocument();
     expect(screen.queryByText('TyKaz')).not.toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
@@ -57,6 +90,7 @@ describe('DraftPage', () => {
     const order = screen.getByRole('region', { name: /round 1 draft order/i });
     expect(within(order).getAllByRole('listitem')).toHaveLength(12);
     expect(within(order).getByText('A.Woods')).toBeInTheDocument();
+    expect(within(order).getAllByText('Sleeper draft order')).toHaveLength(12);
   });
 
   it('announces an incomplete Sleeper order instead of presenting it as complete', () => {

@@ -50,6 +50,15 @@ function pickLabel(round: number, slot: number) {
   return `${round}.${String(slot).padStart(2, '0')}`;
 }
 
+function ordinal(value: number) {
+  const remainder = value % 100;
+  if (remainder >= 11 && remainder <= 13) return `${value}th`;
+  if (value % 10 === 1) return `${value}st`;
+  if (value % 10 === 2) return `${value}nd`;
+  if (value % 10 === 3) return `${value}rd`;
+  return `${value}th`;
+}
+
 function titleCase(value: string) {
   return value ? `${value[0].toUpperCase()}${value.slice(1)}` : 'Pending';
 }
@@ -67,13 +76,17 @@ function initials(name: string, rosterId: number) {
 }
 
 function sourceLabel(source: SourceStamp) {
-  const authority = source.authority === 'sleeper'
-    ? 'Sleeper'
-    : source.authority.replace('-', ' ');
+  const authority = sourceAuthority(source);
 
   if (source.state === 'live') return `${authority} live`;
   if (source.state === 'cached') return `Cached ${authority} snapshot`;
   return `${authority} manual record`;
+}
+
+function sourceAuthority(source: SourceStamp) {
+  return source.authority === 'sleeper'
+    ? 'Sleeper'
+    : source.authority.replace('-', ' ');
 }
 
 function DraftIdentity({
@@ -139,6 +152,12 @@ export function DraftPage({ snapshot, session }: DraftPageProps) {
   const viewerSlot = viewerEntry?.slot;
   const totalPicks = draft.rounds * draft.teams;
   const hasCompleteOrder = order.length === draft.teams;
+  const openingPick = viewerSlot ? pickLabel(1, viewerSlot) : null;
+  const nextPick = viewerSlot && draft.rounds > 1 ? pickLabel(2, viewerSlot) : null;
+  const selectionsBeforeOpening = viewerSlot ? viewerSlot - 1 : null;
+  const selectionsBeforeNextPick = viewerSlot ? draft.teams - 1 : null;
+  const nextOverall = viewerSlot ? draft.teams + viewerSlot : null;
+  const orderAuthority = sourceAuthority(draft.source);
   const sleeperLeagueUrl = `https://sleeper.com/leagues/${snapshot.leagueId}`;
 
   return (
@@ -154,7 +173,7 @@ export function DraftPage({ snapshot, session }: DraftPageProps) {
             Draft board
           </h1>
           <p className="draft-page-deck">
-            Eight rounds. One fixed lane. Ninety-six decisions before the season gets loud.
+            {draft.rounds} rounds. One fixed lane. {totalPicks} decisions before the season gets loud.
           </p>
         </div>
         <div className="draft-page-hero-number" aria-hidden="true">{draft.rounds}</div>
@@ -178,16 +197,85 @@ export function DraftPage({ snapshot, session }: DraftPageProps) {
       </section>
 
       <div className="draft-page-body">
-        <div className="draft-page-callouts">
-          {viewerFranchise && viewerSlot ? (
+        {viewerFranchise
+          && viewerSlot
+          && openingPick
+          && nextPick
+          && selectionsBeforeOpening !== null
+          && selectionsBeforeNextPick !== null
+          && nextOverall !== null ? (
+          <section
+            className="draft-strategy"
+            role="region"
+            aria-label={`${openingPick} decision window`}
+          >
+            <header className="draft-strategy-heading">
+              <div>
+                <span className="draft-micro-label">Your board position</span>
+                <h2>The turn at {openingPick}</h2>
+              </div>
+              <p>
+                You see {selectionsBeforeOpening} selections. Then the room gets{' '}
+                {selectionsBeforeNextPick} chances to reshape the board before you return.
+              </p>
+            </header>
+
+            <div className="draft-strategy-grid">
+              <div className="draft-decision-mark">
+                <span>Your opening decision</span>
+                <strong>{openingPick}</strong>
+                <small>{viewerFranchise.franchiseName}</small>
+              </div>
+
+              <div className="draft-decision-math">
+                <dl>
+                  <div>
+                    <dt>Board visibility</dt>
+                    <dd>{selectionsBeforeOpening} selections before {openingPick}</dd>
+                  </div>
+                  <div>
+                    <dt>Your return</dt>
+                    <dd>{nextPick} · {ordinal(nextOverall)} overall</dd>
+                  </div>
+                  <div>
+                    <dt>Exposure</dt>
+                    <dd>{selectionsBeforeNextPick} selections before {nextPick}</dd>
+                  </div>
+                </dl>
+
+                <section
+                  className="draft-tier-runway"
+                  role="region"
+                  aria-label="Tier drop-off runway"
+                >
+                  <div className="draft-tier-runway-heading">
+                    <div>
+                      <span className="draft-micro-label">Tier drop-off runway</span>
+                      <h3>{openingPick} → {nextPick}</h3>
+                    </div>
+                    <span>{selectionsBeforeNextPick} picks at risk</span>
+                  </div>
+                  <div className="draft-runway-track" aria-hidden="true">
+                    <span className="is-now">{openingPick}</span>
+                    <span className="is-exposure" />
+                    <span className="is-return">{nextPick}</span>
+                  </div>
+                  <p>
+                    <strong>
+                      A tier with {selectionsBeforeNextPick} or fewer acceptable names can be
+                      exhausted before {nextPick}.
+                    </strong>{' '}
+                    No player tiers are published in this snapshot; test that threshold against
+                    your own Sleeper queue.
+                  </p>
+                </section>
+              </div>
+            </div>
+
             <section className="draft-viewer-lane" role="region" aria-label="Your draft lane">
               <div className="draft-section-kicker">
-                <span>Your draft lane</span>
+                <span>Fixed linear lane</span>
                 <strong>{viewerFranchise.franchiseName}</strong>
-              </div>
-              <div className="draft-viewer-lead">
-                <span>Opening draft slot</span>
-                <strong>{String(viewerSlot).padStart(2, '0')}</strong>
               </div>
               <ol aria-label="Your picks by round">
                 {Array.from({ length: draft.rounds }, (_, index) => {
@@ -200,53 +288,84 @@ export function DraftPage({ snapshot, session }: DraftPageProps) {
                   );
                 })}
               </ol>
-              <p>Linear draft: your slot stays fixed in every round.</p>
+              <p>Same slot every round · no snake reversal</p>
             </section>
-          ) : session.kind === 'public' ? (
-            <section className="draft-public-card" role="region" aria-label="Member draft view">
-              <LockKeyhole size={22} aria-hidden="true" />
-              <div>
-                <span className="draft-micro-label">Member view</span>
-                <h2>Your lane stays private</h2>
-                <p>Sign in to see your eight-pick lane and manager identities.</p>
-              </div>
-            </section>
-          ) : (
-            <section className="draft-public-card" role="region" aria-label="Member draft view">
-              <LockKeyhole size={22} aria-hidden="true" />
-              <div>
-                <span className="draft-micro-label">Member view</span>
-                <h2>Draft lane pending</h2>
-                <p>Your signed-in Sleeper identity is not matched to a Round 1 roster yet.</p>
-              </div>
-            </section>
-          )}
-
-          <aside className="draft-execution-card" aria-labelledby="draft-execution-title">
-            <span className="draft-context-icon" aria-hidden="true"><Clock3 size={22} /></span>
+          </section>
+        ) : session.kind === 'public' ? (
+          <section className="draft-public-brief" role="region" aria-label="Member draft view">
+            <LockKeyhole size={24} aria-hidden="true" />
             <div>
-              <span className="draft-micro-label">Execution surface</span>
-              <h2 id="draft-execution-title">Picks happen in Sleeper</h2>
+              <span className="draft-micro-label">Member strategy layer</span>
+              <h2>Your decision geometry stays private</h2>
               <p>
-                This board is a read-only league companion. Submit, queue, trade, and finalize every
-                selection in Sleeper.
+                Sign in to map the wait between your picks, see manager identities, and isolate your
+                fixed lane.
               </p>
-              <a href={sleeperLeagueUrl} target="_blank" rel="noreferrer">
-                Open Sleeper league <ExternalLink size={15} aria-hidden="true" />
-              </a>
             </div>
+          </section>
+        ) : (
+          <section className="draft-public-brief" role="region" aria-label="Member draft view">
+            <LockKeyhole size={24} aria-hidden="true" />
+            <div>
+              <span className="draft-micro-label">Member strategy layer</span>
+              <h2>Draft lane pending</h2>
+              <p>Your signed-in Sleeper identity is not matched to a Round 1 roster yet.</p>
+            </div>
+          </section>
+        )}
+
+        <section className="draft-inputs" role="region" aria-label="Draft decision inputs">
+          <header>
+            <span className="draft-micro-label">Known inputs / honest gaps</span>
+            <h2>What this board can—and cannot—tell you</h2>
+          </header>
+          <div className="draft-inputs-grid">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>Tier / drop-off</h3>
+                <strong>Not in snapshot</strong>
+                <p>No player rankings or candidate tiers are published here. Bring your own board.</p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>Best fit</h3>
+                <strong>Inventory boundary</strong>
+                <p>Position-level rosters are not published here, so positional needs remain unmodeled.</p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>Availability</h3>
+                <strong>Live in Sleeper</strong>
+                <p>Confirm the live player pool in Sleeper before every selection.</p>
+              </div>
+            </article>
+          </div>
+          <aside className="draft-execution-note" aria-labelledby="draft-execution-title">
+            <Clock3 size={18} aria-hidden="true" />
+            <p>
+              <strong id="draft-execution-title">Read-only companion.</strong>{' '}
+              Submit, queue, trade, and finalize every pick in Sleeper.
+            </p>
+            <a href={sleeperLeagueUrl} target="_blank" rel="noreferrer">
+              Open Sleeper league <ExternalLink size={15} aria-hidden="true" />
+            </a>
           </aside>
-        </div>
+        </section>
 
         <section className="draft-round" role="region" aria-label="Round 1 draft order">
           <div className="draft-round-heading">
             <div>
-              <span className="draft-micro-label">On the board</span>
-              <h2>Round 1 order</h2>
+              <span className="draft-micro-label">Verified order · roster lens</span>
+              <h2>Round 1 intelligence</h2>
             </div>
             <p>
-              <span>First overall</span>
-              <strong>{order[0]?.franchiseName || 'Pending from Sleeper'}</strong>
+              <span>Pick provenance</span>
+              <strong>{orderAuthority} · {titleCase(draft.source.state)} snapshot</strong>
             </p>
           </div>
 
@@ -266,13 +385,33 @@ export function DraftPage({ snapshot, session }: DraftPageProps) {
 
               return (
                 <li className={isViewer ? 'is-viewer' : undefined} key={`${entry.slot}-${entry.rosterId}`}>
-                  <span className="draft-pick-number">{pickLabel(1, entry.slot)}</span>
-                  <DraftIdentity
-                    entry={entry}
-                    franchise={franchise}
-                    revealManager={session.kind === 'member'}
-                  />
-                  {isViewer && <span className="draft-you-label">Your pick</span>}
+                  <div className="draft-pick-owner">
+                    <span className="draft-pick-number">{pickLabel(1, entry.slot)}</span>
+                    <div className="draft-pick-identity">
+                      <DraftIdentity
+                        entry={entry}
+                        franchise={franchise}
+                        revealManager={session.kind === 'member'}
+                      />
+                    </div>
+                    {isViewer && <span className="draft-you-label">Your decision</span>}
+                  </div>
+                  <div className="draft-roster-lens">
+                    <p>
+                      <span>Roster lens</span>
+                      <strong>
+                        {franchise ? `${franchise.playerCount} players` : 'Count not published'}
+                      </strong>
+                    </p>
+                    <p>
+                      <span>Need signal</span>
+                      <strong>Positional needs not published</strong>
+                    </p>
+                  </div>
+                  <div className="draft-pick-source">
+                    <span>{orderAuthority} draft order</span>
+                    <small>Trade provenance unavailable</small>
+                  </div>
                   <ArrowUpRight className="draft-pick-arrow" size={16} aria-hidden="true" />
                 </li>
               );
