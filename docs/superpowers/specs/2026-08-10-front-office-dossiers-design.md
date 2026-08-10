@@ -1,7 +1,7 @@
 # Front Office Dossiers Design
 
-**Date:** August 10, 2026  
-**Status:** Approved direction, pending written-spec review  
+**Date:** August 10, 2026
+**Status:** Approved
 **Scope:** League Office and Franchises routes in Harambe's Dozen V2
 
 ## Purpose
@@ -28,7 +28,7 @@ Every displayed league fact must carry one of these statuses:
 
 | Status | Meaning | Examples |
 | --- | --- | --- |
-| Commissioner confirmed | Current rule or correction explicitly confirmed by the commissioner/manager record | Three starting WRs; no kicker; one IR; ordinary fumbles score zero; extensions require one year remaining; Memorial Day EOD exemption deadline |
+| Commissioner confirmed | Current rule or correction explicitly confirmed by the commissioner/manager record | Three starting WRs; no kicker; one IR; ordinary fumbles score zero; ordinary extensions require one year remaining; exemptions may renegotiate any contract; Memorial Day EOD exemption deadline |
 | Sleeper live | Current platform configuration or ownership loaded from Sleeper | League status; roster ownership; draft order; transaction history; traded-pick ownership |
 | Historical correction | Versioned correction to the league record | Corrected champions or historical ownership |
 | Legacy | Context from the 2022 constitution that has not been reconfirmed | Older rules text and procedures |
@@ -100,7 +100,7 @@ The page computes only evidence-backed contract pressure:
 - Unknown or unmatched records
 - Tags and recorded exemptions
 
-The result is described as a **pressure report**, not a contention score. It may say that a club has a high count of near-term decisions; it may not claim the club is rebuilding, contending, strong, or weak without verified inputs supporting that statement.
+The result is described as a **pressure report**, not a contention score. It may say that a club has a high count of near-term decisions; it may not claim the club is rebuilding, contending, strong, or weak without verified inputs supporting that statement. One-year players are ordinary-extension decisions, but an exemption may renegotiate a player with any number of years remaining. The eligibility rule is current; the believed 2024 change year remains unverified until supported by a dated ruling.
 
 ### 4. Draft-capital ledger
 
