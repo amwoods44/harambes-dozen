@@ -43,7 +43,7 @@ video-game avatar, casino mascot, or fantasy-world hero.
 | `BASE-TROPHY-PHOTO-001` | Aaron's photograph of the physical Harambe's Dozen trophy | Object authority | Polished gold two-handled cup, central stem, flared lower body, black stepped base, black-and-gold plaque. |
 | `ASSET-TROPHY-STUDIO-001` | `v2/public/assets/real-trophy-studio-v1.png` | Review candidate | Faithful studio cleanup derived from `BASE-TROPHY-PHOTO-001`; requires approval in the G1 specimen. |
 | `BASE-DESIGN-STD-001` | `v2/DESIGN.md` at commit `a3f921f` | Retained engineering and token context | The 440-parity baseline now governs route composition; compatible accessibility, theme, and token work may be retained. |
-| `BASE-440-PARITY-001` | 440 & Friends clean-room parity strategy approved 2026-08-11 | Approved implementation foundation | Match observable page geometry, density, avatar prominence, hierarchy, and interactions very closely; ship only Harambe's Dozen code, data, copy, and original/licensed assets. |
+| `BASE-440-PARITY-001` | 440 & Friends clean-room parity strategy approved 2026-08-11 | Approved implementation foundation | Visual system remains 90–95% 440 grammar while product architecture, features, data, identity, copy, code, and shipped assets remain Harambe's Dozen. |
 | `SPEC-440-FOUNDATION-001` | `docs/superpowers/specs/2026-08-11-440-parity-foundation-design.md` | Written-spec review pending | First bounded slice: shared shell, Home, manager-avatar system, Franchises index, and Franchise Profile wireframes. |
 
 Approved references are immutable records. They may be replaced, but not silently edited.

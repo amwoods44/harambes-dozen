@@ -23,6 +23,31 @@ existing V2 domain logic, source authority, privacy boundaries, services, tests,
 shell remain valuable. Existing route presentation remains quarantined and is not reused
 as the new visual foundation.
 
+## Asymmetric blend: visual parity, product divergence
+
+This is not a 50/50 mixture of the prior Harambe concepts and 440's visual design. That
+would create another inconsistent hybrid. The blend is intentionally asymmetric:
+
+- **Visual system: 90–95% 440 grammar.** Page geometry, spacing, density, typography
+  hierarchy, avatar prominence, profile composition, control patterns, responsive
+  priority, and handcrafted warmth remain extremely close to the reference.
+- **Product architecture and capabilities: 100% Harambe's Dozen.** Seasonal Home, My
+  Franchise, contracts, exemptions, draft-pick ownership, trade negotiation, asset
+  lineage, Live Sunday, League Office, Clubhouse, and Records Vault remain the product.
+- **Identity and content: 100% Harambe's Dozen.** Manager portraits, franchise emblems,
+  Harambe artwork, trophy, league history, copy, data, and code are original or approved
+  sources.
+
+“Visual parity” therefore does not mean feature parity. A Harambe's Dozen route may contain
+jobs that do not exist on 440. Those jobs must be presented as though the same design team
+extended the 440 system to support them. New capability is allowed; an unrelated visual
+language is not.
+
+The governing review question is:
+
+> If the 440 design team had been hired to build this Harambe's Dozen feature, would this
+> look and behave like the result?
+
 ## Clean-room boundary
 
 The parity goal does not authorize copying 440 & Friends source code or shipping its
@@ -81,6 +106,26 @@ The first five seconds of every route must answer:
 Personality is carried by original manager art, franchise identity, awards, rivalries,
 league history, and small editorial touches. Ordinary fantasy information remains
 familiar, compact, and actionable.
+
+## Full-product translation map
+
+The first implementation slice remains bounded, but the following map prevents later
+routes from interpreting parity differently.
+
+| Harambe's Dozen experience | 440 visual grammar to retain | Harambe's Dozen capability to present |
+| --- | --- | --- |
+| Home | Homepage navigation, illustrated profiles, update hierarchy, compact section index, handcrafted league character | Seasonal league moment, My Franchise, Draft Night or Live Sunday context, League Wire, deadlines, Records Vault entry, Around the League |
+| League | Standings, archive, champion, bonus, and record presentation | Current standings, six matchups, complete Live Sunday, scoring archive, luck/schedule analysis, rivalries |
+| Franchises | Profile directory, illustrated identity, profile hierarchy, banners and honors | Projected lineup, roster, contract clocks, picks, Team Horizon, manager history |
+| Trades | Update/story cards, transaction records, comparison and editorial treatments | Market, two-to-four-team builder, contract context, pick lineage, private discussion, unanimous agreement, asset tree |
+| Draft | Draft page hierarchy, manager identity, collectible/event treatment | Sleeper-mirrored board, player pool, My Picks, traded ownership, contract notation, draft history |
+| League Office | Constitution, rules, calendar, and official-update presentation | Guided contract, exemption, dues, correction, and commissioner-approval workflows |
+| Clubhouse | Updates, polls, groups, comments, and friend-group tone | Focused on-record league feed, reactions, polls, moderation, editorial promotion |
+| Records Vault | Trophy room, standings archive, champions, medals, rivalry, and collectible artifacts | Real trophy, championship paths, records, awards, rivalry history, Sacko lore, transaction anniversaries |
+| Player Dossier | Profile, statistics, banners, and historical grouping | Player production, contract timeline, acquisition history, ownership lineage, asset tree, awards and notable moments |
+
+The map preserves the existing setup and feature ideas. It changes their presentation,
+not their purpose.
 
 ## Initial implementation slice
 
@@ -223,6 +268,12 @@ Every intentional departure from the parity baseline is recorded with:
 Unrecorded visual novelty is drift. “Different for the sake of different” is not a valid
 reason.
 
+When a Harambe feature has no direct 440 equivalent, its first composition must use the
+existing parity primitives—mastheads, illustrated identity blocks, information rows,
+artifact shelves, update cards, timeline groups, and responsive tables—before proposing a
+new component family. A new primitive requires evidence that the existing grammar cannot
+express the job clearly.
+
 ## Wireframe review package
 
 The first package contains:
@@ -253,6 +304,10 @@ Aaron approves the foundation only when:
 - Player, roster, transaction, and history surfaces look like familiar fantasy-football
   interfaces rather than dossiers or novels.
 - Every visual deviation from parity has an explicit reason.
+- Existing Harambe's Dozen features remain discoverable and useful rather than being
+  deleted merely because 440 lacks an equivalent.
+- New Harambe's Dozen modules look like natural extensions of the parity system rather
+  than embedded fragments from the rejected V2 presentation.
 - Aaron believes the result is a strong starting point he can evolve rather than another
   design direction he must undo.
 

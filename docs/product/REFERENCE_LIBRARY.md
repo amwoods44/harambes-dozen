@@ -14,6 +14,12 @@ written copy, league identity, artwork, photographs, or proprietary valuation mo
 The detailed mapping and parity tolerances live in
 `docs/superpowers/specs/2026-08-11-440-parity-foundation-design.md`.
 
+Parity is visual rather than functional. Harambe's Dozen retains its approved route and
+feature architecture. A feature without a direct 440 counterpart must be expressed with
+the established 440-like component grammar before introducing a new visual family. The
+review test is whether the feature looks like a natural extension of the reference product,
+not whether the feature already exists there.
+
 ## Retained historical Home references
 
 These concepts remain information and module references. `BASE-440-PARITY-001` supersedes
