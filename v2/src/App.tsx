@@ -991,7 +991,13 @@ export function App({
       );
       break;
     case 'league-office':
-      page = <LeagueOfficePage snapshot={snapshot} />;
+      page = (
+        <LeagueOfficePage
+          snapshot={snapshot}
+          session={session}
+          contracts={contracts}
+        />
+      );
       break;
     case 'clubhouse':
       page = <ClubhousePage session={session} onRequestSignIn={handleSignIn} />;
