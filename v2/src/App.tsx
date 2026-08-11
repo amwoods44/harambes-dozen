@@ -50,6 +50,7 @@ import { FranchisesPage } from './pages/franchises/FranchisesPage';
 import { LeaguePage } from './pages/league/LeaguePage';
 import { LeagueOfficePage } from './pages/office/LeagueOfficePage';
 import { TradesPage } from './pages/trades/TradesPage';
+import { DesignSpecimenPage } from './pages/review/DesignSpecimenPage';
 
 export type ViewerSession =
   | { kind: 'public' }
@@ -72,7 +73,8 @@ type RouteId =
   | 'trades'
   | 'draft'
   | 'league-office'
-  | 'clubhouse';
+  | 'clubhouse'
+  | 'review-specimen';
 
 const primaryNavigation: ReadonlyArray<{ label: string; route: RouteId }> = [
   { label: 'Home', route: 'home' },
@@ -92,6 +94,7 @@ const implementedRoutes = new Set<RouteId>([
   'draft',
   'league-office',
   'clubhouse',
+  'review-specimen',
 ]);
 
 function routeHref(route: RouteId) {
@@ -100,6 +103,7 @@ function routeHref(route: RouteId) {
 
 function routeFromHash(hash = window.location.hash): RouteId {
   const candidate = hash.replace(/^#\/?/, '').split(/[?#]/)[0] || 'home';
+  if (candidate === 'review/specimen') return 'review-specimen';
   return primaryNavigation.some((item) => item.route === candidate)
     ? (candidate as RouteId)
     : 'home';
@@ -1010,6 +1014,9 @@ export function App({
     case 'clubhouse':
       page = <ClubhousePage session={session} onRequestSignIn={handleSignIn} />;
       break;
+    case 'review-specimen':
+      page = <DesignSpecimenPage snapshot={snapshot} session={session} contracts={contracts} />;
+      break;
     default:
       page = (
         <HomeDashboard
@@ -1026,7 +1033,7 @@ export function App({
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-route={route}>
       <Header
         session={session}
         viewerFranchise={viewerFranchise}
@@ -1035,11 +1042,12 @@ export function App({
         onToggleTheme={toggle}
         onRequestSignIn={handleSignIn}
       />
-      <MobileNav route={route} />
+      {route !== 'review-specimen' && <MobileNav route={route} />}
       {(dataNotice || activityNotice) && (
         <div className="data-notice" role="status">{dataNotice || activityNotice}</div>
       )}
       <main>{page}</main>
+      {route === 'review-specimen' && <MobileNav route={route} />}
       {signInOpen && memberSessionService && (
         <SignInDialog
           completingLink={memberSessionService.isCompletingEmailLink()}

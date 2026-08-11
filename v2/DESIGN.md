@@ -1,5 +1,8 @@
 # Harambe's Dozen Design Standard
 
+> The authoritative no-drift decisions, baseline identifiers, and approval gates now live in
+> `../docs/product/DECISION_LEDGER.md`. This file remains the concise visual standard.
+
 ## Product character
 
 Harambe's Dozen is a private fantasy-football league companion for twelve friends. It should feel like a custom sports publication and front office, not a generic fantasy app, movie poster, or video-game menu. The tone is polished, competitive, and knowingly unserious.
@@ -48,3 +51,6 @@ Live data is plumbing. The product is the explanation layered on top of it.
 - no placeholder route that is reachable in navigation without a useful league job
 - no mobile route that becomes unreachable from the primary navigation
 
+The previous Front Office dossier page treatment is superseded as a visual foundation. Its
+tested authority, privacy, and domain logic remain reusable, but new production routes must
+pass the specimen and blueprint gates in `../docs/product/REVIEW_MATRIX.md`.

@@ -118,6 +118,34 @@ describe('Harambe\'s Dozen pre-draft home', () => {
     expect(screen.queryByText('Member access confirmed')).not.toBeInTheDocument();
   });
 
+  it('serves the gated design-system specimen at its dedicated review URL', async () => {
+    window.history.replaceState(null, '', '/#/review/specimen');
+    render(
+      <App
+        initialSession={{ kind: 'member', userId: '393634863552425984' }}
+        contractRepository={{
+          loadContracts: async () => [
+            {
+              sleeperPlayerId: '4046',
+              playerName: 'Patrick Mahomes',
+              position: 'QB',
+              nflTeam: 'KC',
+              sheetFantasyTeam: 'A.Woods',
+              yearsRemaining: 4,
+              tag: null,
+              exemption: null,
+              notes: '',
+              authority: 'contracts-sheet',
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(await screen.findByRole('heading', { name: /the twelve, in one visual language/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /design specimen/i })).not.toBeInTheDocument();
+  });
+
   it('keeps contract and manager intelligence out of public dossier routes', async () => {
     const privateMarkers = [
       'Patrick Mahomes',

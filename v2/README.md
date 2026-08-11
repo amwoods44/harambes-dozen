@@ -3,6 +3,19 @@
 The private-beta rebuild of the Harambe's Dozen league companion. V2 lives beside the
 current site and does not replace production.
 
+## No-drift implementation record
+
+The current interface routes are a quarantined functional baseline while the approved V2 is
+built through explicit visual gates. The authoritative product package is:
+
+- `../docs/product/DECISION_LEDGER.md`
+- `../docs/product/ASSET_MANIFEST.md`
+- `../docs/product/REFERENCE_LIBRARY.md`
+- `../docs/product/REVIEW_MATRIX.md`
+
+No production route is considered visually approved merely because it is implemented or
+covered by tests.
+
 ## Current build
 
 The implemented private-beta build contains all seven primary areas: Home, League,
@@ -61,12 +74,19 @@ documents use the Sleeper player ID as their document ID and include `playerName
 pnpm test
 pnpm typecheck
 pnpm build
+pnpm capture:specimen http://127.0.0.1:5177/
 node scripts/capture.mjs
 node scripts/capture-routes.mjs http://127.0.0.1:5173/
 ```
 
 The capture scripts write the Home theme matrix to `artifacts/visual-qa/` and the seven-
 route desktop/mobile matrix to `artifacts/route-qa/`.
+
+The G1 command writes four deterministic review captures and metadata to
+`artifacts/specimen-review/current/`. It compares them with an approved baseline when one
+exists. A baseline can be recorded only after explicit approval by setting
+`HD12_APPROVAL_ID` and adding `--record-approved-baseline`; the approval ID is written into
+the capture manifest.
 
 ## Source authority
 
