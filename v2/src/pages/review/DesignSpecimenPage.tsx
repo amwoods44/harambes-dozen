@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import {
   AlertTriangle,
   ArrowDown,
@@ -118,7 +118,52 @@ export function DesignSpecimenPage({
   contracts,
 }: DesignSpecimenPageProps) {
   const [dossierPlayer, setDossierPlayer] = useState<ContractPlayer | null>(null);
+  const dossierDialogRef = useRef<HTMLElement | null>(null);
+  const dossierCloseRef = useRef<HTMLButtonElement | null>(null);
+  const dossierTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!dossierPlayer) {
+      dossierTriggerRef.current?.focus();
+      return;
+    }
+
+    dossierCloseRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setDossierPlayer(null);
+        return;
+      }
+
+      if (event.key !== 'Tab' || !dossierDialogRef.current) return;
+      const focusable = Array.from(
+        dossierDialogRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [dossierPlayer]);
+
   if (session.kind !== 'member') return <PublicReviewGate />;
+
+  const openDossier = (player: ContractPlayer, event: ReactMouseEvent<HTMLButtonElement>) => {
+    dossierTriggerRef.current = event.currentTarget;
+    setDossierPlayer(player);
+  };
 
   const franchise =
     snapshot.franchises.find((item) => item.ownerUserId === session.userId) ??
@@ -238,7 +283,7 @@ export function DesignSpecimenPage({
                 <button
                   className="specimen-lineup-slot"
                   type="button"
-                  onClick={() => setDossierPlayer(primaryPlayer)}
+                  onClick={(event) => openDossier(primaryPlayer, event)}
                   aria-label={`Open ${primaryPlayer.playerName} quick dossier`}
                 >
                   <span className="specimen-slot-label">QB</span>
@@ -259,7 +304,7 @@ export function DesignSpecimenPage({
                 <strong>3 starters</strong>
               </div>
               {[secondaryPlayer, thirdPlayer].filter((player): player is ContractPlayer => Boolean(player)).map((player) => (
-                <button type="button" className="specimen-roster-row" key={player.sleeperPlayerId} onClick={() => setDossierPlayer(player)}>
+                <button type="button" className="specimen-roster-row" key={player.sleeperPlayerId} onClick={(event) => openDossier(player, event)}>
                   <PlayerPortrait player={player} size="row" />
                   <span>
                     <strong>{player.playerName}</strong>
@@ -482,13 +527,14 @@ export function DesignSpecimenPage({
       {dossierPlayer && (
         <div className="specimen-dialog-backdrop" role="presentation" onMouseDown={() => setDossierPlayer(null)}>
           <section
+            ref={dossierDialogRef}
             className="specimen-dossier-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="specimen-dossier-title"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <button type="button" onClick={() => setDossierPlayer(null)} aria-label="Close player dossier"><X /></button>
+            <button ref={dossierCloseRef} type="button" onClick={() => setDossierPlayer(null)} aria-label="Close player dossier"><X /></button>
             <PlayerPortrait player={dossierPlayer} size="hero" />
             <div className="specimen-dialog-copy">
               <span>{dossierPlayer.position} · {dossierPlayer.nflTeam}</span>
