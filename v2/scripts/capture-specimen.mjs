@@ -93,6 +93,65 @@ try {
       throw new Error(`${capture.id} has horizontal overflow: ${dimensions.scrollWidth}px > ${dimensions.viewportWidth}px`);
     }
 
+    const acceptance = await page.evaluate(() => {
+      const isVisible = (element) => {
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden';
+      };
+      const describe = (element) =>
+        (element.getAttribute('aria-label') || element.textContent || element.tagName)
+          .trim()
+          .replace(/\s+/g, ' ')
+          .slice(0, 80);
+      const undersizedTargets = Array.from(
+        document.querySelectorAll('a, button, input, select, textarea, [role="button"]'),
+      )
+        .filter(isVisible)
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return { name: describe(element), width: Math.round(rect.width), height: Math.round(rect.height) };
+        })
+        .filter((target) => target.width < 44 || target.height < 44);
+      const undersizedProse = Array.from(document.querySelectorAll('p, li'))
+        .filter(isVisible)
+        .map((element) => ({
+          text: describe(element),
+          size: Number.parseFloat(window.getComputedStyle(element).fontSize),
+        }))
+        .filter((item) => item.text.length > 40 && item.size < 16);
+      const brokenImages = Array.from(document.images)
+        .filter((image) => isVisible(image) && (!image.complete || image.naturalWidth === 0))
+        .map((image) => image.alt || image.currentSrc);
+
+      return {
+        headingCount: document.querySelectorAll('h1').length,
+        landmarks: {
+          main: document.querySelectorAll('main').length,
+          navigation: document.querySelectorAll('nav').length,
+          footer: document.querySelectorAll('footer').length,
+        },
+        undersizedTargets,
+        undersizedProse,
+        brokenImages,
+      };
+    });
+    if (acceptance.headingCount !== 1 || acceptance.landmarks.main !== 1) {
+      throw new Error(`${capture.id} has invalid document hierarchy: ${JSON.stringify(acceptance)}`);
+    }
+    if (capture.viewport.width <= 390 && acceptance.undersizedTargets.length) {
+      throw new Error(`${capture.id} has touch targets below 44px: ${JSON.stringify(acceptance.undersizedTargets)}`);
+    }
+    if (capture.viewport.width <= 390 && acceptance.undersizedProse.length) {
+      throw new Error(`${capture.id} has running copy below 16px: ${JSON.stringify(acceptance.undersizedProse)}`);
+    }
+    if (acceptance.brokenImages.length) {
+      throw new Error(`${capture.id} has broken visible images: ${JSON.stringify(acceptance.brokenImages)}`);
+    }
+    if (consoleErrors.length) {
+      throw new Error(`${capture.id} produced console errors: ${JSON.stringify(consoleErrors)}`);
+    }
+
     const outputFile = path.join(currentRoot, `${capture.id}.png`);
     await page.screenshot({ path: outputFile, fullPage: true, animations: 'disabled' });
     const current = await readFile(outputFile);
@@ -113,6 +172,7 @@ try {
       sha256: sha256(current),
       comparison,
       dimensions,
+      acceptance,
       consoleErrors,
     });
     await context.close();
