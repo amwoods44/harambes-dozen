@@ -23,7 +23,6 @@ import {
 import type { ViewerSession } from '../../App';
 import type { ContractPlayer } from '../../data/contractLedger';
 import {
-  sleeperAvatarUrl,
   type FranchiseSnapshot,
   type HomeSnapshot,
 } from '../../data/currentLeague';
@@ -37,6 +36,9 @@ interface DesignSpecimenPageProps {
 
 const playerImageUrl = (playerId: string, full = false) =>
   `https://sleepercdn.com/content/nfl/players/${full ? '' : 'thumb/'}${playerId}.jpg`;
+
+const managerPortraitUrl = (avatarId: string) =>
+  `https://sleepercdn.com/avatars/${avatarId}`;
 
 function playerInitials(name: string) {
   return name
@@ -168,7 +170,7 @@ export function DesignSpecimenPage({
           <aside className="specimen-franchise-lockup" aria-label={`${franchise.franchiseName} franchise lockup`}>
             <div className="specimen-manager-portrait">
               {franchise.avatarId ? (
-                <img src={sleeperAvatarUrl(franchise.avatarId)} alt={`${franchise.managerDisplayName} portrait`} />
+                <img src={managerPortraitUrl(franchise.avatarId)} alt={`${franchise.managerDisplayName} portrait`} />
               ) : (
                 <UserRound aria-label="Manager portrait unavailable" />
               )}
