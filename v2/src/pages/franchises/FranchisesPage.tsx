@@ -161,7 +161,7 @@ function DossierMasthead({ dossier }: { dossier: FranchiseDossier }) {
       </div>
       <div className="franchise-dossier-title">
         <span>Club {String(dossier.franchise.rosterId).padStart(2, '0')} · Member dossier</span>
-        <h1>{dossier.franchise.franchiseName} franchise dossier</h1>
+        <h2>{dossier.franchise.franchiseName} franchise dossier</h2>
         <p>Managed by {dossier.franchise.managerDisplayName}</p>
       </div>
       <dl>
