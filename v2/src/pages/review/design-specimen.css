@@ -932,7 +932,7 @@
 .specimen-wire-copy { display: flex; flex-direction: column; justify-content: center; padding: 22px; }
 .specimen-wire-copy > span { display: flex; align-items: center; gap: 6px; color: var(--spec-red); font-family: var(--display); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
 .specimen-wire-copy h3 { margin: 8px 0; font-family: var(--display); font-size: 29px; line-height: 0.94; text-transform: uppercase; }
-.specimen-wire-copy p { margin: 0 0 18px; color: var(--spec-muted); font-size: 13px; line-height: 1.4; }
+.specimen-wire-copy p { margin: 0 0 18px; color: var(--spec-muted); font-size: 16px; line-height: 1.4; }
 
 .specimen-calendar { display: grid; grid-template-columns: 78px minmax(0, 1fr) auto; align-items: center; padding: 14px; }
 .specimen-calendar-icon { grid-column: 1 / 4; display: flex; align-items: center; gap: 7px; padding-bottom: 9px; border-bottom: 1px solid var(--spec-line); color: var(--spec-red); font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -1132,7 +1132,7 @@
   .specimen-title-lockup { display: block; min-height: 555px; padding: 22px 16px 0; }
   .specimen-title-lockup h1 { position: relative; z-index: 3; max-width: 340px; font-size: clamp(54px, 17vw, 72px); }
   .specimen-title-lockup h1 em { font-size: 0.5em; }
-  .specimen-title-lockup > div:first-child > p { position: relative; z-index: 3; width: 230px; font-size: 14px; }
+  .specimen-title-lockup > div:first-child > p { position: relative; z-index: 3; width: 250px; font-size: 16px; line-height: 1.4; }
   .specimen-harambe { position: absolute; right: -74px; bottom: 0; width: 330px; height: 420px; }
   .specimen-harambe img { right: 0; width: 350px; }
   .specimen-harambe > span { display: none; }
@@ -1150,7 +1150,7 @@
   .specimen-section { padding: 30px 14px 34px; }
   .specimen-section-heading { display: block; margin-bottom: 18px; }
   .specimen-section-heading h2 { margin: 7px 0 8px; font-size: 38px; }
-  .specimen-section-heading p { font-size: 13px; }
+  .specimen-section-heading p { font-size: 16px; line-height: 1.4; }
   .specimen-feature-player { display: flex; flex-direction: column; min-height: 0; }
   .specimen-feature-photo { min-height: 290px; }
   .specimen-feature-copy { padding: 20px 14px 15px; }
