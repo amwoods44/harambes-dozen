@@ -976,7 +976,15 @@ export function App({
       page = <LeaguePage snapshot={snapshot} session={session} />;
       break;
     case 'franchises':
-      page = <FranchisesPage snapshot={snapshot} session={session} contracts={contracts} />;
+      page = (
+        <FranchisesPage
+          snapshot={snapshot}
+          session={session}
+          contracts={contracts}
+          transactions={transactions}
+          tradedPicks={tradedPicks}
+        />
+      );
       break;
     case 'draft':
       page = <DraftPage snapshot={snapshot} session={session} />;

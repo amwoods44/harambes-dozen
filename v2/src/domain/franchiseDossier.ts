@@ -54,10 +54,15 @@ const positionRoomOrder: PositionRoomKey[] = [
 ];
 
 function emptyRooms(): Record<PositionRoomKey, DossierPlayer[]> {
-  return Object.fromEntries(positionRoomOrder.map((room) => [room, []])) as Record<
-    PositionRoomKey,
-    DossierPlayer[]
-  >;
+  return {
+    QB: [],
+    RB: [],
+    WR: [],
+    TE: [],
+    DEF: [],
+    OTHER: [],
+    UNMATCHED: [],
+  };
 }
 
 function positionRoom(position: string): PositionRoomKey {
@@ -124,6 +129,15 @@ export function buildFranchiseDossier({
   const matchedPlayers = positionRoomOrder
     .filter((room) => room !== 'UNMATCHED')
     .flatMap((room) => positionRooms[room]);
+  const finishes: FranchiseDossier['finishes'] = [];
+
+  for (const result of sleeperEraChampions) {
+    if (result.champion === franchise.franchiseName) {
+      finishes.push({ season: result.season, result: 'Champion' });
+    } else if (result.runnerUp === franchise.franchiseName) {
+      finishes.push({ season: result.season, result: 'Runner-up' });
+    }
+  }
 
   return {
     franchise,
@@ -157,14 +171,6 @@ export function buildFranchiseDossier({
       )
       .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
       .slice(0, 5),
-    finishes: sleeperEraChampions.flatMap((result) => {
-      if (result.champion === franchise.franchiseName) {
-        return [{ season: result.season, result: 'Champion' as const }];
-      }
-      if (result.runnerUp === franchise.franchiseName) {
-        return [{ season: result.season, result: 'Runner-up' as const }];
-      }
-      return [];
-    }),
+    finishes,
   };
 }
