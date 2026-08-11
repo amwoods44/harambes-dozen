@@ -149,9 +149,8 @@ thresholds are never loosened merely to make a changed baseline pass.
 
 | Gate | Item | State | Approval evidence |
 | --- | --- | --- | --- |
-| G0 | Ledger, manifest, references, tripwires, Tier A list | In implementation | This package; closes when required asset prerequisites are either ready or route-blocked in the manifest. |
-| G1 | Design-system specimen | Awaiting capture and Aaron review | Four captures plus rubric scorecard required. |
+| G0 | Ledger, manifest, references, tripwires, Tier A list | Complete | Control package implemented; later-route assets are explicitly route-blocked in the manifest. |
+| G1 | Design-system specimen | Implemented; awaiting Aaron approval | Four deterministic captures generated 2026-08-10; baseline remains intentionally unrecorded until explicit approval. |
 | G2 | Four-state visual Golden Home | Blocked by G1 | Explicit approval required. |
 | G3 | Live Golden Home | Blocked by G2 | Aaron + one trusted usability review; Aaron final. |
 | G4–G8 | Remaining approved plan gates | Blocked by earlier gates | See `REVIEW_MATRIX.md`. |
-

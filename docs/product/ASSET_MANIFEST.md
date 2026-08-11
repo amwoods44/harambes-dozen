@@ -32,6 +32,7 @@ route is ready or has an approved designed fallback.
 | `ASSET-HARAMBE-SACKO-001` | Sacko/league-lore treatment | Required before editorial tone/case-file review | Records, Wire | May be editorial spot art, never a cinematic villain scene. |
 | `BASE-TROPHY-PHOTO-001` | Aaron's real trophy photograph | Registered object authority | All trophy uses | Original conversation attachment must be reattached before pixel-level object audit if the cached source is unavailable. |
 | `ASSET-TROPHY-STUDIO-001` | `v2/public/assets/real-trophy-studio-v1.png` | Ready for G1 review | G1, Home, Records, awards | Derived studio presentation; do not replace the source record. |
+| `ASSET-MANAGER-AWOODS-001` | `v2/public/assets/manager-awoods-editorial-v1.png` | Ready for G1 review | G1 manager portrait treatment | Source-faithful prototype; do not generate the other eleven until Aaron approves the treatment. |
 | `ASSET-WIRE-DRAFT-001` | `v2/public/assets/league-wire-draft.webp` | Provisional | G1 story specimen | Review for team/trademark source before production publishing. |
 
 ## Franchise identity system
@@ -69,4 +70,3 @@ fixtures and non-production review states.
 
 An unchecked later-route asset does not block G1. It blocks only the route or seasonal state
 that depends on it, and must be resolved before that blueprint begins.
-
