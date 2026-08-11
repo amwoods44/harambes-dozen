@@ -60,3 +60,32 @@ baseline until Aaron explicitly approves the capture in which it appears.
 >
 > Avoid: giant Super Bowl-style trophy, ornate royal chalice, video-game trophy,
 > movie-poster drama, casino styling, excessive glow, extra badges, extra text.
+
+## ASSET-MANAGER-AWOODS-001 — A.Woods editorial portrait prototype
+
+- Status: candidate used by the G1 specimen; awaiting approval.
+- Method: OpenAI built-in image generation, precise portrait treatment.
+- Authoritative source: the full-size Sleeper avatar for member
+  `393634863552425984`, captured at `/private/tmp/awoods-sleeper-avatar.png`.
+- Generated source:
+  `/Users/aaronwoods/.codex/generated_images/019fe467-453e-73e0-9819-adc74316652b/exec-2c140b4c-5f46-4e35-b64d-cc01d7af9997.png`.
+- Project asset: `v2/public/assets/manager-awoods-editorial-v1.png`.
+- Intended use: prove the illustrated/headshot treatment in G1. The remaining
+  eleven portraits are not generated until this treatment is approved.
+
+### Prompt
+
+> Use case: precise portrait treatment. Create a premium fantasy-football
+> franchise manager portrait from the supplied square Sleeper avatar. Preserve
+> the exact recognizable person, facial expression, haircut, dark suit, white
+> shirt, and pink tie/flower so the source avatar's Sergio Dipp joke remains
+> immediately recognizable to the league. Remove the microphone, broadcast
+> lower-third, ESPN branding, background people, and all text. Reframe as a clean
+> chest-up, straight-on sports media-day portrait. Visual system: Harambe's Dozen
+> editorial sports almanac; realistic screenprint/engraved photographic treatment
+> with restrained navy, warm cream, antique gold, and a very small red accent;
+> subtle stadium-light grain; crisp face; strong silhouette. Square 1:1
+> composition with generous headroom, designed to crop into both a circular
+> manager avatar and a rectangular franchise card. No badge, no logo, no words,
+> no gorilla, no fantasy or video-game styling, no cinematic poster drama, no
+> watermark.

@@ -40,6 +40,13 @@ const playerImageUrl = (playerId: string, full = false) =>
 const managerPortraitUrl = (avatarId: string) =>
   `https://sleepercdn.com/avatars/${avatarId}`;
 
+const specimenManagerPortraitUrl = (franchise: FranchiseSnapshot) =>
+  franchise.ownerUserId === '393634863552425984'
+    ? '/assets/manager-awoods-editorial-v1.png'
+    : franchise.avatarId
+      ? managerPortraitUrl(franchise.avatarId)
+      : null;
+
 function playerInitials(name: string) {
   return name
     .split(/\s+/)
@@ -191,6 +198,7 @@ export function DesignSpecimenPage({
     exceptionPlayer ??
     secondaryPlayer;
   const viewerPick = snapshot.draft.order.find((pick) => pick.rosterId === franchise.rosterId);
+  const managerPortrait = specimenManagerPortraitUrl(franchise);
   const coach = snapshot.franchises.find((item) => item.franchiseName === 'Coach') ?? snapshot.franchises[10];
   const deadline = snapshot.deadlines[0];
   const story = snapshot.wire[0];
@@ -214,8 +222,8 @@ export function DesignSpecimenPage({
           </div>
           <aside className="specimen-franchise-lockup" aria-label={`${franchise.franchiseName} franchise lockup`}>
             <div className="specimen-manager-portrait">
-              {franchise.avatarId ? (
-                <img src={managerPortraitUrl(franchise.avatarId)} alt={`${franchise.managerDisplayName} portrait`} />
+              {managerPortrait ? (
+                <img src={managerPortrait} alt={`${franchise.managerDisplayName} portrait`} />
               ) : (
                 <UserRound aria-label="Manager portrait unavailable" />
               )}
