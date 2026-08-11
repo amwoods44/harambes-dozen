@@ -118,6 +118,38 @@ describe('Harambe\'s Dozen pre-draft home', () => {
     expect(screen.queryByText('Member access confirmed')).not.toBeInTheDocument();
   });
 
+  it('keeps contract and manager intelligence out of public dossier routes', async () => {
+    const privateMarkers = [
+      'Patrick Mahomes',
+      '4046',
+      '4Y',
+      'Conman4',
+      'sleepercdn.com/avatars',
+      'Exm',
+    ];
+
+    window.history.replaceState(null, '', '/#/franchises');
+    const franchises = render(<App initialSession={{ kind: 'public' }} />);
+
+    expect(await screen.findByRole('heading', { name: /the franchises/i })).toBeInTheDocument();
+    expect(screen.getByText(/manager and roster intelligence stays inside the dozen/i)).toBeInTheDocument();
+    for (const marker of privateMarkers) {
+      expect(document.documentElement).not.toHaveTextContent(marker);
+      expect(document.documentElement.innerHTML).not.toContain(marker);
+    }
+
+    franchises.unmount();
+    window.history.replaceState(null, '', '/#/league-office');
+    render(<App initialSession={{ kind: 'public' }} />);
+
+    expect(await screen.findByRole('heading', { name: /league office/i })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /contract ledger health/i })).not.toBeInTheDocument();
+    for (const marker of privateMarkers) {
+      expect(document.documentElement).not.toHaveTextContent(marker);
+      expect(document.documentElement.innerHTML).not.toContain(marker);
+    }
+  });
+
   it('opens the invitation-only email-link flow when Firebase is configured', async () => {
     const user = userEvent.setup();
     const submitEmail = vi.fn(async () => 'link-sent' as const);

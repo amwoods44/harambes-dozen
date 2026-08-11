@@ -9,6 +9,23 @@ The implemented private-beta build contains all seven primary areas: Home, Leagu
 Franchises, Trades, Draft, League Office, and Clubhouse. The approved sports-editorial
 Day/Night design system is shared across desktop and mobile.
 
+## Front-office dossiers
+
+League Office is the operating record, not a copy of the 2022 constitution. It separates
+current commissioner confirmations, live Sleeper settings, unresolved questions, deadlines,
+source authority, and member-only contract-ledger health. Ordinary extensions require one
+contract year remaining. An exemption may renegotiate any contract regardless of years
+remaining; the user believes that change began in 2024, but the effective season remains
+explicitly unverified until a dated ruling is supplied.
+
+Franchises is a selectable twelve-club directory. Members can open a club dossier containing
+its live Sleeper roster joined to the private contract ledger, contract runway, original and
+current draft-pick ownership, verified Sleeper transactions, and confirmed championship-game
+finishes. The interface labels corrections and unmatched records instead of inventing missing
+facts. Public visitors see club identity and opening-pick context only; manager portraits,
+handles, player ownership, contract years, exemptions, transactions, and ledger health remain
+private.
+
 The UI starts from a verified 2026 snapshot and refreshes league, roster, user, and draft
 data from Sleeper in the browser. Transactions are loaded across every Sleeper week so
 offseason moves are not missed, and traded-pick ownership preserves Sleeper's original
@@ -60,6 +77,12 @@ route desktop/mobile matrix to `artifacts/route-qa/`.
 4. The 2022 constitution as legacy context only.
 
 ## Remaining deployment configuration
+
+The review-deployment mode is a privacy-safe public demo unless Firebase web configuration,
+email-link authentication, and the private Firestore collections are supplied at build time.
+The public demo is suitable for visual review because production defaults to a public session
+and private contract source data is excluded from `dist`. It is not an authenticated member
+deployment and cannot be used to review member dossiers on the hosted URL.
 
 - Create/select the Firebase project and copy `.env.example` to `.env.local` with its
   public web configuration.
