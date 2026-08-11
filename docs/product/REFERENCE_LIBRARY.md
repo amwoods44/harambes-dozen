@@ -1,9 +1,23 @@
 # Harambe's Dozen V2 — Annotated Reference Library
 
-References define hierarchy and interaction conventions. They do not authorize copying
-another product's identity, layout, artwork, or proprietary valuation model.
+References define hierarchy and interaction conventions. The approved 440-parity reset
+authorizes a close clean-room reproduction of observable geometry, density, hierarchy,
+avatar presentation, and interaction behavior. It does not authorize copying source code,
+written copy, league identity, artwork, photographs, or proprietary valuation models.
 
-## Approved Home references
+## Approved implementation foundation
+
+| ID | Reference | Keep closely | Harambe's Dozen substitution |
+| --- | --- | --- | --- |
+| `BASE-440-PARITY-001` | Public 440 & Friends companion plus committed `docs/screenshots/` captures | Page silhouette, content width, spacing rhythm, avatar prominence, navigation, profile hierarchy, information density, responsive priority, and interaction grammar | Original manager portraits, franchise emblems, Harambe identity, real trophy, live Sleeper data, contract/exemption/pick semantics, original code and copy |
+
+The detailed mapping and parity tolerances live in
+`docs/superpowers/specs/2026-08-11-440-parity-foundation-design.md`.
+
+## Retained historical Home references
+
+These concepts remain information and module references. `BASE-440-PARITY-001` supersedes
+their route composition and visual implementation role.
 
 | ID | Reference | Keep | Do not copy / drift into |
 | --- | --- | --- | --- |
@@ -38,4 +52,3 @@ External product captures used in a blueprint packet must record the product, pa
 date, viewport, and the exact hierarchy or interaction being studied. They are review-only
 research artifacts and are not shipped. Any future internet research uses current primary
 product surfaces and must not introduce unlicensed images into the app.
-

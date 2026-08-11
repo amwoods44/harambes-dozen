@@ -38,11 +38,13 @@ video-game avatar, casino mascot, or fantasy-world hero.
 
 | ID | Baseline | Status | Notes |
 | --- | --- | --- | --- |
-| `BASE-HOME-L-001` | Approved light Draft Night Home concept supplied in the August 9–10 review | Approved north star | Cream editorial field, navy masthead, Harambe letterman hero, My Franchise, 12-pick rail, League Wire, calendar deadlines, Records Vault. |
-| `BASE-HOME-D-001` | Approved dark Draft Night Home concept supplied in the August 9–10 review | Approved north star | Separately art-directed deep navy version of the same information hierarchy. |
+| `BASE-HOME-L-001` | Approved light Draft Night Home concept supplied in the August 9–10 review | Superseded as implementation foundation; retained inspiration | Its information jobs and selected editorial modules remain useful, but the 440-parity reset replaces its cinematic composition. |
+| `BASE-HOME-D-001` | Approved dark Draft Night Home concept supplied in the August 9–10 review | Superseded as implementation foundation; retained inspiration | Its information jobs and selected editorial modules remain useful, but the 440-parity reset replaces its cinematic composition. |
 | `BASE-TROPHY-PHOTO-001` | Aaron's photograph of the physical Harambe's Dozen trophy | Object authority | Polished gold two-handled cup, central stem, flared lower body, black stepped base, black-and-gold plaque. |
 | `ASSET-TROPHY-STUDIO-001` | `v2/public/assets/real-trophy-studio-v1.png` | Review candidate | Faithful studio cleanup derived from `BASE-TROPHY-PHOTO-001`; requires approval in the G1 specimen. |
-| `BASE-DESIGN-STD-001` | `v2/DESIGN.md` at commit `a3f921f` | Active, clarified here | The sports-publication character remains. This ledger adds formal gates, tripwires, and supersession. |
+| `BASE-DESIGN-STD-001` | `v2/DESIGN.md` at commit `a3f921f` | Retained engineering and token context | The 440-parity baseline now governs route composition; compatible accessibility, theme, and token work may be retained. |
+| `BASE-440-PARITY-001` | 440 & Friends clean-room parity strategy approved 2026-08-11 | Approved implementation foundation | Match observable page geometry, density, avatar prominence, hierarchy, and interactions very closely; ship only Harambe's Dozen code, data, copy, and original/licensed assets. |
+| `SPEC-440-FOUNDATION-001` | `docs/superpowers/specs/2026-08-11-440-parity-foundation-design.md` | Written-spec review pending | First bounded slice: shared shell, Home, manager-avatar system, Franchises index, and Franchise Profile wireframes. |
 
 Approved references are immutable records. They may be replaced, but not silently edited.
 
@@ -128,6 +130,8 @@ with CSS.
 | `SPEC-FO-DOSSIER-001` | `docs/superpowers/specs/2026-08-10-front-office-dossiers-design.md` | The dossier/page presentation and repeated evidence-panel visual model | Tested rule authority, privacy logic, joins, contract calculations, pick semantics | This ledger, the G1 specimen, and approved route blueprints |
 | `IMPL-V2-ROUTES-001` | Existing route components under `v2/src/pages` | Production visual foundation | Useful data access, domain helpers, accessibility and privacy tests | New approved production route tree after G1/G3 gates |
 | `FEATURES-LEGACY-001` | `docs/FEATURES.md` single-file dashboard framing | Navigation and product framing | Inventory of historical calculations and datasets worth normalizing | Feature-to-destination inventory above |
+| `G1-SPECIMEN-001` | Existing G1 design-system specimen and 2026-08-10 captures | Visual implementation foundation | Tested accessibility states, portrait sourcing, trophy candidate, privacy and presentation-model work | `BASE-440-PARITY-001` and `SPEC-440-FOUNDATION-001`; specimen remains logic/state reference only |
+| `BASE-HOME-CONCEPTS-001` | `BASE-HOME-L-001` and `BASE-HOME-D-001` | Cinematic Home composition and route-wide visual foundation | My Franchise, league-moment priority, pick context, League Wire, deadlines, Records Vault, trophy emphasis | `BASE-440-PARITY-001`; reason: Aaron consistently preferred 440's human, illustrated companion structure and approved close parity on 2026-08-11 |
 
 The superseded route components remain quarantined for logic reference. They are not evidence
 that a future route has passed design approval.
@@ -150,7 +154,8 @@ thresholds are never loosened merely to make a changed baseline pass.
 | Gate | Item | State | Approval evidence |
 | --- | --- | --- | --- |
 | G0 | Ledger, manifest, references, tripwires, Tier A list | Complete | Control package implemented; later-route assets are explicitly route-blocked in the manifest. |
-| G1 | Design-system specimen | Implemented; awaiting Aaron approval | Four deterministic captures generated 2026-08-10; baseline remains intentionally unrecorded until explicit approval. |
-| G2 | Four-state visual Golden Home | Blocked by G1 | Explicit approval required. |
+| G1 | Design-system specimen | Rejected as visual foundation; superseded | Aaron rejected the cinematic/information-portal drift and approved the 440-first parity reset on 2026-08-11. |
+| G1R | 440-parity foundation spec and wireframes | Written-spec review pending | `SPEC-440-FOUNDATION-001`; requires spec approval, implementation plan, then desktop/mobile wireframe approval. |
+| G2 | Four-state visual Golden Home | Blocked by G1R | Rebased Draft Night Home plus remaining seasonal states after parity foundation approval. |
 | G3 | Live Golden Home | Blocked by G2 | Aaron + one trusted usability review; Aaron final. |
 | G4–G8 | Remaining approved plan gates | Blocked by earlier gates | See `REVIEW_MATRIX.md`. |

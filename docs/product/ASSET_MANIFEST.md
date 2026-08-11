@@ -21,7 +21,7 @@ route is ready or has an approved designed fallback.
 
 | ID | Asset | Status | Essential for | Fallback / next action |
 | --- | --- | --- | --- | --- |
-| `ASSET-HARAMBE-DRAFT-001` | `v2/public/assets/harambe-letterman.png` | Ready; approval inherited from Home direction | G1, Draft Home | Transparent letterman treatment already implemented. |
+| `ASSET-HARAMBE-DRAFT-001` | `v2/public/assets/harambe-letterman.png` | Rejected as production visual; quarantined | Historical G1 reference only | Aaron rejected the smirking/cinematic treatment. The 440-parity foundation uses original restrained mascot/crest art after separate approval. |
 | `ASSET-HARAMBE-SUNDAY-001` | Live Sunday broadcast treatment | Required before G2 Live Sunday capture | Home | Route remains blocked; use no generic football hero. |
 | `ASSET-HARAMBE-PLAYOFF-001` | Playoff/trophy-chase treatment | Required before G2 Playoffs capture | Home | Route remains blocked. |
 | `ASSET-HARAMBE-OFFICE-001` | Offseason/front-office treatment | Required before G2 Offseason capture | Home | Route remains blocked. |
@@ -32,7 +32,7 @@ route is ready or has an approved designed fallback.
 | `ASSET-HARAMBE-SACKO-001` | Sacko/league-lore treatment | Required before editorial tone/case-file review | Records, Wire | May be editorial spot art, never a cinematic villain scene. |
 | `BASE-TROPHY-PHOTO-001` | Aaron's real trophy photograph | Registered object authority | All trophy uses | Original conversation attachment must be reattached before pixel-level object audit if the cached source is unavailable. |
 | `ASSET-TROPHY-STUDIO-001` | `v2/public/assets/real-trophy-studio-v1.png` | Ready for G1 review | G1, Home, Records, awards | Derived studio presentation; do not replace the source record. |
-| `ASSET-MANAGER-AWOODS-001` | `v2/public/assets/manager-awoods-editorial-v1.png` | Ready for G1 review | G1 manager portrait treatment | Source-faithful prototype; do not generate the other eleven until Aaron approves the treatment. |
+| `ASSET-MANAGER-AWOODS-001` | `v2/public/assets/manager-awoods-editorial-v1.png` | Superseded portrait experiment | Source and crop reference only | The new twelve-manager system must match the approved 440-like illustration grammar and receive contact-sheet approval before route use. |
 | `ASSET-WIRE-DRAFT-001` | `v2/public/assets/league-wire-draft.webp` | Provisional | G1 story specimen | Review for team/trademark source before production publishing. |
 
 ## Franchise identity system
@@ -63,10 +63,11 @@ fixtures and non-production review states.
 - [x] League crest and masthead.
 - [x] Real manager portrait source with privacy-safe fallback.
 - [x] Real Sleeper player image source plus missing-image treatment.
-- [x] Draft letterman Harambe art.
+- [ ] Original restrained Harambe crest/spot treatment for the parity foundation.
 - [x] Real-trophy studio treatment candidate.
 - [x] Editorial Wire image candidate.
-- [ ] Aaron approval of all five treatments together in light/dark desktop/mobile captures.
+- [ ] Aaron approval of the parity shell, twelve-manager contact sheet, player imagery,
+  real-trophy treatment, and story composition in desktop/mobile captures.
 
 An unchecked later-route asset does not block G1. It blocks only the route or seasonal state
 that depends on it, and must be resolved before that blueprint begins.
