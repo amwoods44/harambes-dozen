@@ -20,7 +20,7 @@ Fantasy football dynasty league dashboard for a 12-team PPR league. Single-file 
 ```
 index.html
 ├── <style> — ~1,090 lines of CSS (design tokens, components, responsive)
-├── <body>  — Loading screen, header, hero, cast strip, nav, 19 tab panels (incl. home front page), footer
+├── <body>  — Loading screen, header, hero, cast strip, nav (11 intent sections) + sub-tab bar, 19 tab panels (incl. home front page), footer
 └── <script>
     ├── Config (CFG) + fetch utilities + cache helpers
     ├── Data pipeline: discoverLeague → fetchCurrentSeason → fetchPlayerDB → buildCurrentSeasonData
@@ -28,18 +28,19 @@ index.html
     ├── Global state: let D = {} (single mutable object holds all app data)
     ├── 19 render functions in TAB_RENDERERS: renderHome(), renderPower(), renderRosters(), etc.
     ├── URL builders: PI() (player thumb), PIF() (player full), TL() (team logo)
-    ├── Helpers: pimg() (player img HTML), av() (avatar → tcInit), tcInit() (gradient circle), cpill() (contract pill), dtierTag() (tier badge)
+    ├── Helpers: pimg() (player img HTML), av() (team avatar: real owner photo if present, else crest()), crest() (broadcast SVG emblem badge per team), tcInit() (gradient-initials circle, legacy), cpill() (contract pill), dtierTag() (tier badge)
     └── PWA install banner + service worker registration
 ```
 
 **Key patterns:**
 
-- Configuration lives in the `CFG` object (~line 1271): `userId`, `leagueName`, `sheetCsvUrl`, `ktcUrl`, `avatarOverrides`, API base URLs; annual dates live in `SEASON_DATES` just below it
+- Configuration lives in the `CFG` object (~line 1360): 3 required fields (`userId`, `leagueName`, `sheetCsvUrl`) + league-identity fields (`foundedYear`, `leagueSize`, `format`, `heroTags`, `preSleeperPlatform`) + `avatarOverrides`; `ktcUrl` is derived from `leagueSize`. `applyBranding()` paints the hero from `CFG`. Annual dates live in `SEASON_DATES` just below. Fork/deploy guide: `SETUP.md`
 - Caching via the `cache` object (~line 1337): `get(key)`, `set(key, data, ttl)`, `has(key)` wrapping localStorage
 - External strings are HTML-escaped once at ingestion via `esc()` — never insert raw API/sheet strings into `D`
 - Expanded/open UI state is keyed in the `UI_OPEN` set (`data-okey` attrs + `uiToggle()`/`secOpen()`) so it survives destructive re-renders
 - Each tab has a `renderX()` function that builds HTML via string concatenation and sets `innerHTML`
-- Tab switching calls `showTab(id)` which toggles `.active` class on panels, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
+- Navigation is **11 intent sections** (`SECTIONS`, ~line 2331) layered over the 19 panels: single-panel sections jump straight in; multi-panel ones (Stats, Transactions, Front Office, Rafters, Chronicle) render a sub-tab bar (`#subnav`). `showTab(panelId)` is the workhorse — panel ids stay the routing currency (hash + `HASH_ALIASES` + `.gm-link`), so every old deep link still resolves. `showSection(secId)` jumps to a section's remembered/first panel
+- Tab switching via `showTab(id)` toggles `.active` on panels, syncs the section button + sub-tab bar, sets `body.compact` (interior tabs hide the hero/cast/stat masthead), and updates `document.title`
 - "My team" is `myTeamRid()`: localStorage `hd_my_team`, falling back to the roster owned by `CFG.userId`; `.gm-link` + `data-rid` makes any team name open its GM profile via a delegated handler
 - Team identity colors live in the `TC` object (keyed by roster_id)
 - Player images come from Sleeper CDN: `sleepercdn.com/content/nfl/players/`
@@ -55,13 +56,17 @@ Every visual element must feel like a broadcast graphic or magazine editorial �
 - If a design looks like "a styled div with smaller styled divs inside it," it's not done
 - Go bold first, pull back if needed — don't iterate timidly
 
-After any UI change, run `/visual-verify` before considering the task done. In remote sessions where the network policy blocks the live APIs, use the mock-API harness instead: `dev/audit/` (see its README) screenshots every tab against generated fixture data in offseason and midseason states.
+After any UI change, verify visually before considering the task done — but **lean by default** (owner directive, 2026-06: full-suite runs were burning usage):
+
+- Screenshot ONLY the tab(s) and viewport you actually changed (`dev/audit/capture.js --tabs=<tab> --viewports=<vp>` in remote sessions where the network policy blocks live APIs; `/visual-verify` locally). Look at 1–2 images, not the whole set
+- Full multi-mode/all-tab regression is reserved for genuinely global changes: type system, palette, spacing tokens, global CSS, shared components used everywhere
+- One verification pass per change — don't re-screenshot unaffected tabs "to be safe"
 
 ## Design System
 
 **Palette:** Dark warm theme. Base `#120e0c`, accent red `#cc0000`, gold `#ffcc00`
-**Fonts:** Oswald (display/headings), Inter (body), JetBrains Mono (stats/numbers)
-**Font weights:** 600-900 on headings is intentional — broadcast aesthetic, not a bug
+**Fonts:** Two-tier type system (2026-06): Oswald is DISPLAY-ONLY (hero, section tags, card titles, big numerals, nav, tier labels — `--fd`); everything ≤13px (labels, sublines, chips, buttons, data rows) uses Inter via `--fu`. Inter body (`--fb`), JetBrains Mono stats (`--fm`)
+**Font weights:** 600-900 on display headings is intentional — broadcast aesthetic, not a bug. Don't put Oswald on small text — the owner flagged it as too decorative
 **Spacing:** 4px base unit (`--sp-1` through `--sp-10`)
 **Component identity:** Broadcast headers (`.bh`) with angled clip-path, team-colored accents throughout
 
@@ -120,7 +125,7 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 
 - **Annual date maintenance:** `SEASON_DATES` (exemption deadline, NFL kickoff — near the top of the script next to `CFG`) must be updated once each offseason. Everything else derives the season dynamically from the Sleeper API
 - **Chronicle start year:** the "League History • 2016–…" label hardcodes the league's 2016 founding (pre-Sleeper era); the end year is dynamic
-- **Exemption history:** `D.exemption_history` is never populated from the sheet — the War Room exemption board only reflects current-season exemptions
+- **Exemption history:** `D.exemption_history` is populated from the contract sheet's `exemptions` (index.html ~1800); the War Room board derives per-team usage from the per-player `exm` column and guards the empty-sheet case via `exmDataAvailable`
 
 ## Session Start (This Project)
 
@@ -148,7 +153,8 @@ When claiming a data change affects rendering, verify two things: (1) **render o
 | `manifest.json` | PWA manifest |
 | `sw.js` | Service worker (cache strategy) |
 | `harambe-logo.png` | App logo (also favicon, touch icon, PWA icon) |
-| `assets/avatars/Kevin.png`, `Chuck.png` | Custom manager avatar overrides (`CFG.avatarOverrides`) |
+| `SETUP.md` | Deploy/fork guide — the 3 required `CFG` edits, identity fields, avatar drop-in, annual maintenance |
+| `assets/avatars/Kevin.png`, `Chuck.png` | Owner portrait cards. To add one: drop `assets/avatars/<Name>.png`, add a line to `CFG.avatarOverrides` keyed by roster_id or lowercase Sleeper display name |
 | `features.html` | Marketing/status page (not the app) |
 | `data/contracts.csv` | Contract source material — NOT read by the app at runtime (app reads the published Google Sheet) |
 | `data/sheets-setup.js` | Google Sheets formatting helper, not app code |

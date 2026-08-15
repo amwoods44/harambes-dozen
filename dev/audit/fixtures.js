@@ -146,14 +146,21 @@ function buildFixtures(mode) {
     const wins = Array(13).fill(0), losses = Array(13).fill(0), fpts = Array(13).fill(0), fptsA = Array(13).fill(0);
     const matchups = {}, transactions = {};
     const score = i => Math.round(Math.max(72, Math.min(196, strength[i] + (rnd() - 0.5) * 56)) * 100) / 100;
+    const splitPts = (total, starters) => {
+      const w = starters.map(() => 0.5 + rnd());
+      const sw = w.reduce((a, b) => a + b, 0);
+      const m = {};
+      starters.forEach((pid, i) => { m[pid] = Math.round(total * w[i] / sw * 10) / 10; });
+      return m;
+    };
 
     for (let w = 1; w <= regWeeks; w++) {
       const entries = [];
       schedule[(w - 1) % 14].forEach(([a, b], mi) => {
         const pa = score(a - 1), pb = score(b - 1);
         entries.push(
-          { matchup_id: mi + 1, roster_id: a, points: pa, players: rosterPlayers[a - 1], starters: rosterStarters[a - 1], players_points: {} },
-          { matchup_id: mi + 1, roster_id: b, points: pb, players: rosterPlayers[b - 1], starters: rosterStarters[b - 1], players_points: {} });
+          { matchup_id: mi + 1, roster_id: a, points: pa, players: rosterPlayers[a - 1], starters: rosterStarters[a - 1], players_points: splitPts(pa, rosterStarters[a - 1]) },
+          { matchup_id: mi + 1, roster_id: b, points: pb, players: rosterPlayers[b - 1], starters: rosterStarters[b - 1], players_points: splitPts(pb, rosterStarters[b - 1]) });
         fpts[a] += pa; fpts[b] += pb; fptsA[a] += pb; fptsA[b] += pa;
         if (pa >= pb) { wins[a]++; losses[b]++; } else { wins[b]++; losses[a]++; }
       });
@@ -184,9 +191,10 @@ function buildFixtures(mode) {
         const entries = [];
         games.forEach((g, gi) => {
           const winPts = score(g.w - 1) + 8, losePts = score(g.l - 1) - 4;
+          const wp = Math.round(winPts * 100) / 100, lp = Math.round(losePts * 100) / 100;
           entries.push(
-            { matchup_id: gi + 1, roster_id: g.w, points: Math.round(winPts * 100) / 100, players: rosterPlayers[g.w - 1], starters: rosterStarters[g.w - 1], players_points: {} },
-            { matchup_id: gi + 1, roster_id: g.l, points: Math.round(losePts * 100) / 100, players: rosterPlayers[g.l - 1], starters: rosterStarters[g.l - 1], players_points: {} });
+            { matchup_id: gi + 1, roster_id: g.w, points: wp, players: rosterPlayers[g.w - 1], starters: rosterStarters[g.w - 1], players_points: splitPts(wp, rosterStarters[g.w - 1]) },
+            { matchup_id: gi + 1, roster_id: g.l, points: lp, players: rosterPlayers[g.l - 1], starters: rosterStarters[g.l - 1], players_points: splitPts(lp, rosterStarters[g.l - 1]) });
         });
         matchups[w] = entries;
       });

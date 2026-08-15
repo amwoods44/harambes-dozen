@@ -22,13 +22,13 @@ families + broadcast patterns, all inline in the single file.
 | `--blu` / `--pur` | `#3b82f6` / `#8b5cf6` | Info / special (exemptions, draft) |
 
 ### Typography
-- `--fd` **Oswald** (display: headings, labels, buttons — weights 300–900 loaded; 600–900 used; heavy weights are intentional broadcast identity)
+- `--fd` **Oswald** (display ONLY: hero, section tags, card titles, big numerals, nav, tier labels). `--fu` **Inter** carries everything ≤13px — labels, sublines, chips, buttons, data rows (2026-06 split after owner feedback that Oswald-everywhere read too decorative; small-label tracking reduced ~35% in the same pass)
 - `--fb` **Inter** (body — 400–900)
 - `--fm` **JetBrains Mono** (stats/numbers — 500–800, always `tabular-nums` for scores)
 - Loaded via Google Fonts `@import` at the top of the style block (line ~23)
 - Type scale, 1.25 ratio off 14px: `--text-2xs:10 · xs:11 · sm:12 · base:14 · md:16 · lg:20 · xl:26 · 2xl:34 · 3xl:44 · 4xl:56`
 - Display sizes above the scale use `clamp()` (hero headline 52–88px)
-- Labels/eyebrows: Oswald 9–12px, 700–800, `letter-spacing: 1.5–3px`, uppercase
+- Labels/eyebrows: Inter (`--fu`) 9–12px, 700–800, `letter-spacing: 1–2px`, uppercase
 
 ### Spacing, radius, elevation, surfaces, motion
 - Spacing: 4px base — `--sp-1:4 · 2:8 · 3:12 · 4:16 · 5:20 · 6:24 · 7:32 · 8:40 · 9:48 · 10:64`
